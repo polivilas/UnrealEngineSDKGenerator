@@ -1,3 +1,7 @@
+// Unreal Engine SDK Generator
+// by KN4CK3R
+// https://www.oldschoolhack.me
+
 #include <windows.h>
 
 #include <fstream>
