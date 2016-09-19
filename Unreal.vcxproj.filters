@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Engine\Main.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Target\Unreal\GenericTypes.cpp">
+    </ClCompile>
+    <ClCompile Include="Target\Unreal\ObjectsStore.cpp">
+    </ClCompile>
+    <ClCompile Include="Target\Unreal\NamesStore.cpp">
+    </ClCompile>
+    <ClCompile Include="Target\Unreal\Generator.cpp">
+    </ClCompile>
+    <ClCompile Include="Engine\Logger.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Package.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\NameValidator.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PatternFinder.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UE1\Package.cpp">
+      <Filter>Engine\UE1</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ObjectsStore.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\NamesStore.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UE1\GenericTypes.cpp">
+      <Filter>Engine\UE1</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UE1\Flags.cpp">
+      <Filter>Engine\UE1</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PrintHelper.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{5fb70966-5939-4bcf-b096-6b909315ed0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UE1">
+      <UniqueIdentifier>{77ff275a-574c-4908-9ae5-345300346f41}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Target\Unreal\EngineClasses.hpp">
+    </ClInclude>
+    <ClInclude Include="Engine\UE1\GenericTypes.hpp">
+      <Filter>Engine\UE1</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ObjectsStore.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\NamesStore.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\tinyformat.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Logger.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Package.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\NameValidator.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UE1\Flags.hpp">
+      <Filter>Engine\UE1</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\cpplinq.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PatternFinder.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\IGenerator.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PrintHelper.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
