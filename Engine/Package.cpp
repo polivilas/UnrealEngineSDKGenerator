@@ -461,7 +461,7 @@ void Package::GenerateClass(const UEClass& classObj)
 	{
 		static auto ptr = UObject::FindClass(%s);
 		return ptr;
-	})", generator->ShouldXorStrings() ? tfm::format("_xor_(\"%s\")", c.FullName) : c.FullName)));
+	})", generator->ShouldXorStrings() ? tfm::format("_xor_(\"%s\")", c.FullName) : tfm::format("\"%s\"", c.FullName))));
 	}
 	else
 	{
