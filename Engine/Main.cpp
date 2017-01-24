@@ -174,18 +174,18 @@ DWORD WINAPI OnAttach(LPVOID lpParameter)
 {
 	if (!ObjectsStore::Initialize())
 	{
-		MessageBoxA(0, "ObjectsStore::Initialize failed", "Error", 0);
+		MessageBoxA(nullptr, "ObjectsStore::Initialize failed", "Error", 0);
 		return -1;
 	}
 	if (!NamesStore::Initialize())
 	{
-		MessageBoxA(0, "NamesStore::Initialize failed", "Error", 0);
+		MessageBoxA(nullptr, "NamesStore::Initialize failed", "Error", 0);
 		return -1;
 	}
 
 	if (!generator->Initialize(lpParameter))
 	{
-		MessageBoxA(0, "Initialize failed", "Error", 0);
+		MessageBoxA(nullptr, "Initialize failed", "Error", 0);
 		return -1;
 	}
 
@@ -195,7 +195,7 @@ DWORD WINAPI OnAttach(LPVOID lpParameter)
 		char buffer[2048];
 		if (GetModuleFileNameA((HMODULE)lpParameter, buffer, sizeof(buffer)) == 0)
 		{
-			MessageBoxA(0, "GetModuleFileName failed", "Error", 0);
+			MessageBoxA(nullptr, "GetModuleFileName failed", "Error", 0);
 			return -1;
 		}
 
@@ -223,7 +223,7 @@ DWORD WINAPI OnAttach(LPVOID lpParameter)
 
 	Logger::SetStream(nullptr);
 
-	MessageBoxA(0, "Finished!", "Info", 0);
+	MessageBoxA(nullptr, "Finished!", "Info", 0);
 
 	return 0;
 }
