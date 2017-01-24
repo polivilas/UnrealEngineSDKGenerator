@@ -920,12 +920,14 @@ void Package::PrintClass(std::ostream& os, const Class& c) const
 
 std::string Package::BuildMethodSignature(const Method& m, const std::string& className, bool inHeader) const
 {
+	extern IGenerator* generator;
+
 	using namespace cpplinq;
 	using Type = Method::Parameter::Type;
 
 	std::ostringstream ss;
 
-	if (m.IsStatic && inHeader)
+	if (m.IsStatic && inHeader && !generator->ShouldConvertStaticMethods())
 	{
 		ss << "static ";
 	}
@@ -945,6 +947,10 @@ std::string Package::BuildMethodSignature(const Method& m, const std::string& cl
 	if (!className.empty())
 	{
 		ss << className << "::";
+	}
+	if (m.IsStatic && generator->ShouldConvertStaticMethods())
+	{
+		ss << "STATIC_";
 	}
 	ss << m.Name;
 
@@ -1020,7 +1026,7 @@ std::string Package::BuildMethodBody(const Method& m) const
 
 	ss << "\n";
 
-	if (m.IsStatic)
+	if (m.IsStatic && !generator->ShouldConvertStaticMethods())
 	{
 		ss << "\tstatic auto defaultObj = StaticClass()->CreateDefaultObject();\n";
 		ss << "\tdefaultObj->ProcessEvent(fn, &params);\n\n";

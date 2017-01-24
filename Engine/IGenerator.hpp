@@ -85,7 +85,17 @@ public:
 	}
 
 	/// <summary>
-	/// Gets namespace name for the classes. If the name is empty no nammespace gets generated.
+	/// Check if static methods should get converted to normal methods.
+	/// Static methods require a CreateDefaultObject() method in the UObject class.
+	/// </summary>
+	/// <returns>true if static methods should get converted to normal methods.</returns>
+	virtual bool ShouldConvertStaticMethods() const
+	{
+		return true;
+	}
+
+	/// <summary>
+	/// Gets namespace name for the classes. If the name is empty no namespace gets generated.
 	/// </summary>
 	/// <returns>The namespace name.</returns>
 	virtual std::string GetNamespaceName() const

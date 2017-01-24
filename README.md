@@ -96,6 +96,9 @@ Warning: The index may change on updates or even on every start of the games.
 If this method returns true (default: false) the strings printed by the generator get surrounded by `_xor_(...)`. With the XorStr library these strings get xor encrypted at compile time.
 https://svn.oldschoolhack.me/listing.php?repname=XorStr+%28...%2Fxorstr%29
 
+`ShouldConvertStaticMethods()`
+If this method returns true (default) the static methods of a class are converted to normal methods. Static methods are only syntactic sugar from the engine. They are normal methods but called with the default object of a class. From the user point of view they are static methods but in reality they are not. If you want to use static methods you need to provide a method called `CreateDefaultObject()` in the UObject class. Some of the projects have signatures for the engine method but they could be hard to find. `ShouldConvertStaticMethods()` allows to rewrite the static methods to work like normal methods which require a class instance to get called. Additionaly these methods get a "STATIC_" prefix.
+
 `GetNamespaceName()`
 To seperated the generated classes from the rest of your project you can surround the classes with a namespace. By default no namespace is generated.
 This method should return the name of the namespace. If an empty name is given no namespace will be generated. (ex. "Classes")
