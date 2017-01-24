@@ -8,7 +8,7 @@
 class IGenerator
 {
 public:
-	~IGenerator() = default;
+	virtual ~IGenerator() = default;
 
 	/// <summary>
 	/// Initializes this object.

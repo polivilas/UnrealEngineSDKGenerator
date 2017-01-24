@@ -37,13 +37,13 @@ FUObjectArray* GlobalObjects = nullptr;
 
 bool ObjectsStore::Initialize()
 {
-	auto address = FindPattern(GetModuleHandleW(L"UE4-CoreUObject-Win64-Shipping.dll"), (const unsigned char*)"\x48\x8D\x0D\x00\x00\x00\x00\xC6\x05", "xxx????xx");
+	auto address = FindPattern(GetModuleHandleW(L"UE4-CoreUObject-Win64-Shipping.dll"), reinterpret_cast<const unsigned char*>("\x48\x8D\x0D\x00\x00\x00\x00\xC6\x05"), "xxx????xx");
 	if (address == -1)
 	{
 		return false;
 	}
 	auto offset = *reinterpret_cast<uint32_t*>(address + 3);
-	GlobalObjects = (decltype(GlobalObjects))(address + 7 + offset);
+	GlobalObjects = reinterpret_cast<decltype(GlobalObjects)>(address + 7 + offset);
 
 	return true;
 }

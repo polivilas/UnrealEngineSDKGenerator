@@ -9,17 +9,17 @@ TArray<UObject*>* GlobalObjects = nullptr;
 
 bool ObjectsStore::Initialize()
 {
-	auto address = FindPattern(GetModuleHandleW(nullptr), (const unsigned char*)"\xA1\x00\x00\x00\x00\x8B\x00\x00\x8B\x00\x00\x25\x00\x02\x00\x00", "x????x??x??xxxxx");
+	auto address = FindPattern(GetModuleHandleW(nullptr), reinterpret_cast<const unsigned char*>("\xA1\x00\x00\x00\x00\x8B\x00\x00\x8B\x00\x00\x25\x00\x02\x00\x00"), "x????x??x??xxxxx");
 	if (address == -1)
 	{
 		return false;
 	}
 
-	GlobalObjects = (decltype(GlobalObjects))*reinterpret_cast<uint32_t*>(address + 1);
+	GlobalObjects = reinterpret_cast<decltype(GlobalObjects)>(*reinterpret_cast<uint32_t*>(address + 1));
 
-	char bla[100];
+	/*char bla[100];
 	sprintf(bla, "Objects: %X", GlobalObjects);
-	MessageBoxA(0, bla, bla, 0);
+	MessageBoxA(0, bla, bla, 0);*/
 
 	return true;
 }

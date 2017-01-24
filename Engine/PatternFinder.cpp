@@ -5,10 +5,10 @@
 
 uintptr_t FindPattern(HMODULE module, const unsigned char* pattern, const char* mask)
 {
-	MODULEINFO info = { 0 };
+	MODULEINFO info = { };
 	GetModuleInformation(GetCurrentProcess(), module, &info, sizeof(MODULEINFO));
 
-	return FindPattern((uintptr_t)module, info.SizeOfImage, pattern, mask);
+	return FindPattern(reinterpret_cast<uintptr_t>(module), info.SizeOfImage, pattern, mask);
 }
 
 uintptr_t FindPattern(uintptr_t start, size_t length, const unsigned char* pattern, const char* mask)
@@ -19,7 +19,7 @@ uintptr_t FindPattern(uintptr_t start, size_t length, const unsigned char* patte
 	auto startAdress = start;
 	for (auto it = startAdress; it < startAdress + length; ++it)
 	{
-		if (*(unsigned char*)it == pattern[pos] || mask[pos] == '?')
+		if (*reinterpret_cast<unsigned char*>(it) == pattern[pos] || mask[pos] == '?')
 		{
 			if (mask[pos + 1] == '\0')
 			{

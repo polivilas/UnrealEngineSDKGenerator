@@ -21,17 +21,17 @@ TArray<FNameEntry*>* GlobalNames = nullptr;
 
 bool NamesStore::Initialize()
 {
-	auto address = FindPattern(GetModuleHandleW(nullptr), (const unsigned char*)"\x8B\x0D\x00\x00\x00\x00\x83\x3C\x81\x00\x74", "xx????xxxxx");
+	auto address = FindPattern(GetModuleHandleW(nullptr), reinterpret_cast<const unsigned char*>("\x8B\x0D\x00\x00\x00\x00\x83\x3C\x81\x00\x74"), "xx????xxxxx");
 	if (address == -1)
 	{
 		return false;
 	}
 
-	GlobalNames = (decltype(GlobalNames))*reinterpret_cast<uint32_t*>(address + 2);
+	GlobalNames = reinterpret_cast<decltype(GlobalNames)>(*reinterpret_cast<uint32_t*>(address + 2));
 
-	char bla[100];
+	/*char bla[100];
 	sprintf(bla, "Names: %X", GlobalNames);
-	MessageBoxA(0, bla, bla, 0);
+	MessageBoxA(0, bla, bla, 0);*/
 
 	return true;
 }

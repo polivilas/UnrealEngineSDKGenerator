@@ -1,5 +1,4 @@
 #include "GenericTypes.hpp"
-#include "../NameValidator.hpp"
 
 void* UEObject::GetAddress() const
 {

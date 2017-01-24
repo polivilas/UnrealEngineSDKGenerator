@@ -85,12 +85,10 @@ bool Package::Save(const fs::path& path) const
 
 		return true;
 	}
-	else
-	{
-		Logger::Log("skip empty Package: %s", packageObj.GetName());
+	
+	Logger::Log("skip empty Package: %s", packageObj.GetName());
 
-		return false;
-	}
+	return false;
 }
 
 void Package::GenerateScriptStructPrerequisites(const UEScriptStruct& scriptStructObj)
@@ -183,8 +181,8 @@ void Package::GenerateMemberPrerequisites(const UEProperty& first)
 
 			for (auto innerProp : innerProperties)
 			{
-				auto info = innerProp.GetInfo();
-				if (info.Type == UEProperty::PropertyType::CustomStruct)
+				auto innerInfo = innerProp.GetInfo();
+				if (innerInfo.Type == UEProperty::PropertyType::CustomStruct)
 				{
 					GenerateScriptStructPrerequisites(innerProp.Cast<UEStructProperty>().GetStruct());
 				}
@@ -1002,10 +1000,10 @@ std::string Package::BuildMethodBody(const Method& m) const
 	}
 	ss << "\t} params;\n";
 
-	auto default = from(m.Parameters) >> where([](auto&& param) { return param.ParamType == Type::Default; });
-	if (default >> any())
+	auto defaultParameters = from(m.Parameters) >> where([](auto&& param) { return param.ParamType == Type::Default; });
+	if (defaultParameters >> any())
 	{
-		for (auto&& param : default >> experimental::container())
+		for (auto&& param : defaultParameters >> experimental::container())
 		{
 			ss << "\tparams." << param.Name << " = " << param.Name << ";\n";
 		}

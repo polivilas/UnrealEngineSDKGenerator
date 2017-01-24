@@ -37,13 +37,13 @@ FUObjectArray* GlobalObjects = nullptr;
 
 bool ObjectsStore::Initialize()
 {
-	auto address = FindPattern(GetModuleHandleW(nullptr), (const unsigned char*)"\x48\x8D\x15\x00\x00\x00\x00\x48\x8D\x4C\x24\x00\x45\x8B\xFE", "xxx????xxxx?xxx");
+	auto address = FindPattern(GetModuleHandleW(nullptr), reinterpret_cast<const unsigned char*>("\x48\x8D\x15\x00\x00\x00\x00\x48\x8D\x4C\x24\x00\x45\x8B\xFE"), "xxx????xxxx?xxx");
 	if (address == -1)
 	{
 		return false;
 	}
 	auto offset = *reinterpret_cast<uint32_t*>(address + 3);
-	GlobalObjects = (decltype(GlobalObjects))(address + 7 + offset);
+	GlobalObjects = reinterpret_cast<decltype(GlobalObjects)>(address + 7 + offset);
 
 	return true;
 }

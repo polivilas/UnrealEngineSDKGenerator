@@ -193,7 +193,7 @@ DWORD WINAPI OnAttach(LPVOID lpParameter)
 	if (!outputDirectory.is_absolute())
 	{
 		char buffer[2048];
-		if (GetModuleFileNameA((HMODULE)lpParameter, buffer, sizeof(buffer)) == 0)
+		if (GetModuleFileNameA(static_cast<HMODULE>(lpParameter), buffer, sizeof(buffer)) == 0)
 		{
 			MessageBoxA(nullptr, "GetModuleFileName failed", "Error", 0);
 			return -1;

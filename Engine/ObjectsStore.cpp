@@ -63,7 +63,7 @@ ObjectsIterator& ObjectsIterator::operator++()
 
 ObjectsIterator ObjectsIterator::operator++(int)
 {
-	ObjectsIterator tmp(*this);
+	auto tmp(*this);
 	++(*this);
 	return tmp;
 }

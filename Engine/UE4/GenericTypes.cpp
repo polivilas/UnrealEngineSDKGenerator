@@ -1,5 +1,4 @@
 #include "GenericTypes.hpp"
-#include "../NameValidator.hpp"
 
 void* UEObject::GetAddress() const
 {
@@ -55,7 +54,7 @@ std::string UEObject::GetNameCPP() const
 				name += "A";
 				break;
 			}
-			else if (className == "Object")
+			if (className == "Object")
 			{
 				name += "U";
 				break;

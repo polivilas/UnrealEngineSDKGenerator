@@ -60,9 +60,8 @@ protected:
 namespace std
 {
 	template<>
-	class hash<UEObject>
+	struct hash<UEObject>
 	{
-	public:
 		size_t operator()(const UEObject& obj) const
 		{
 			return std::hash<void*>()(obj.GetAddress());

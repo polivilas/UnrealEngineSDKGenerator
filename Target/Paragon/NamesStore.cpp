@@ -67,13 +67,13 @@ TNameEntryArray* GlobalNames = nullptr;
 
 bool NamesStore::Initialize()
 {
-	auto address = FindPattern(GetModuleHandleW(nullptr), (const unsigned char*)"\x48\x89\x05\x00\x00\x00\x00\x48\x83\xC4\x28\xC3\xE9", "xxx????xxxxxx");
+	auto address = FindPattern(GetModuleHandleW(nullptr), reinterpret_cast<const unsigned char*>("\x48\x89\x05\x00\x00\x00\x00\x48\x83\xC4\x28\xC3\xE9"), "xxx????xxxxxx");
 	if (address == -1)
 	{
 		return false;
 	}
 	auto offset = *reinterpret_cast<uint32_t*>(address + 3);
-	GlobalNames = (decltype(GlobalNames))*reinterpret_cast<uintptr_t*>(address + 7 + offset);
+	GlobalNames = reinterpret_cast<decltype(GlobalNames)>(*reinterpret_cast<uintptr_t*>(address + 7 + offset));
 
 	return true;
 }

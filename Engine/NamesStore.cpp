@@ -51,7 +51,7 @@ NamesIterator& NamesIterator::operator++()
 
 NamesIterator NamesIterator::operator++ (int)
 {
-	NamesIterator tmp(*this);
+	auto tmp(*this);
 	++(*this);
 	return tmp;
 }
