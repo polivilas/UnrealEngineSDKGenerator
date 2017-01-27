@@ -92,7 +92,7 @@ public:
 		};
 
 		predefinedMethods["Class CoreUObject.Object"] = {
-			PredefinedMethod::Inline(R"(	inline TArray<UObject*>& UObject::GetGlobalObjects()
+			PredefinedMethod::Inline(R"(	static inline TArray<UObject*>& UObject::GetGlobalObjects()
 	{
 		return GObjects->ObjObjects;
 	})"),
@@ -189,7 +189,7 @@ public:
 	}
 	virtual std::string GetGameVersion() const override
 	{
-		return "238.6";
+		return "253.98";
 	}
 
 	virtual std::string GetNamespaceName() const override
