@@ -279,8 +279,15 @@ The SDK folder contains the generated code for every package. You need to copy t
 Files you may always need:
 ```
 XXX_Basic.cpp
-XXX_Core_functions.cpp
+XXX_Core(UObject)_functions.cpp
 XXX_Engine_functions.cpp
 ```
+To find these files just sort the SDK folder by file size. The biggest files are the files you are looking for.
 
 Now you can use the SDK in your project. Have fun. :smile:
+
+## Known Errors
+Sometimes you can't compile the generated SDK. Here are some known errors and a solution how to fix them:
+
+- (UE4) In the generated enum EPixelFormat (CoreUObject_classes.hpp) is a PF_MAX value. The windows.h header defines a constant with the same name so this will keep you from compiling. Just remove the PF_MAX value from enum and all should work.
+- Sometimes class members or method parameters get a name like "return", "continue", "break" which are reserved keywords so the compiler will complain. To fix this error just rename these to something else.
