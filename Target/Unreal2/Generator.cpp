@@ -93,7 +93,7 @@ public:
 		{
 			auto object = GetGlobalObjects().GetByIndex(i);
 	
-			if (object == nullptr || !object->IsA(T::StaticClass()))
+			if (object == nullptr)
 			{
 				continue;
 			}
