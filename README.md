@@ -45,15 +45,19 @@ Each game has 5 files you may need to change.
 
 _EngineClasses.hpp_
 This file contains the classes which are needed to generate the SDK. The classes are game dependend and usually you need to make changes here.
+
 _Generator.cpp_
 This file contains settings which control the SDK generation. The classes are game dependen and usually you need to make changes here.
+
 _GenericTypes.cpp_
 This file contains wrapper classes which map the classes from _EngineClasses.hpp_ to an interface which allows the generator to work with every version of Unreal Engine without making changes everywhere.
 Normaly you don't need to make changes here.
+
 _NamesStore.cpp_
 This file contains the game dependend access to the names used by the game. Here you need to provide access to the global names array used by Unreal Engine. With the pattern library you can use signatures to automaticly find the correct adress at runtime.
+
 _ObjectsStore.cpp_
-Same as the _NamesStore.cpp_ but with code for the objects array used by Unreal Engine.
+Same as the _NamesStore.cpp_ but with code for the objects array used by Unreal Engine.  
 
 ## 3. Reverse engineer the needed classes
 To get the classes you need to insert into _EngineClasses.hpp_ I recommend this video https://www.youtube.com/watch?v=yNe4jz1v0R4 from The Feckless.
