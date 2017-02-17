@@ -494,9 +494,9 @@ void Package::GenerateClass(const UEClass& classObj)
 		{
 			for (auto i = 0u; i < methodCount; ++i)
 			{
-				if (vtable[i] != 0 && FindPattern(vtable[i], 0x200, reinterpret_cast<const unsigned char*>(std::get<0>(pattern)), std::get<1>(pattern)) != -1)
+				if (vtable[i] != 0 && FindPattern(vtable[i], std::get<2>(pattern), reinterpret_cast<const unsigned char*>(std::get<0>(pattern)), std::get<1>(pattern)) != -1)
 				{
-					c.PredefinedMethods.push_back(IGenerator::PredefinedMethod::Inline(tfm::format(std::get<2>(pattern), i)));
+					c.PredefinedMethods.push_back(IGenerator::PredefinedMethod::Inline(tfm::format(std::get<3>(pattern), i)));
 					break;
 				}
 			}

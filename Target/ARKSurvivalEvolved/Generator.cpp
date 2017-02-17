@@ -25,13 +25,13 @@ public:
 		};
 
 		virtualFunctionPattern["Class CoreUObject.Object"] = {
-			{ "\x48\x89\x85\x00\x00\x00\x00\x8B\x41\x08\x33\xFF", "xxx????xxxxx", R"(	inline void ProcessEvent(class UFunction* function, void* parms)
+			{ "\x48\x89\x85\x00\x00\x00\x00\x8B\x41\x08\x33\xFF", "xxx????xxxxx", 0x200, R"(	inline void ProcessEvent(class UFunction* function, void* parms)
 	{
 		return GetVFunction<void(*)(UObject*, class UFunction*, void*)>(this, %d)(this, function, parms);
 	})" }
 		};
 		virtualFunctionPattern["Class CoreUObject.Class"] = {
-			{ "\x4C\x8B\xDC\x57\x48\x81\xEC", "xxxxxxx", R"(	UObject* CreateDefaultObject()
+			{ "\x4C\x8B\xDC\x57\x48\x81\xEC", "xxxxxxx", 0x200, R"(	UObject* CreateDefaultObject()
 	{
 		return GetVFunction<UObject*(*)(UClass*)>(this, %d)(this);
 	})" }

@@ -215,7 +215,7 @@ public:
 		return false;
 	}
 
-	using VirtualFunctionPatterns = std::vector<std::tuple<const char*, const char*, const char*>>;
+	using VirtualFunctionPatterns = std::vector<std::tuple<const char*, const char*, size_t, const char*>>;
 
 	/// <summary>
 	/// Gets the patterns of virtual functions of the specific class.

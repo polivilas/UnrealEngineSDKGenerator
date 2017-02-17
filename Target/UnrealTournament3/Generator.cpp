@@ -8,10 +8,10 @@ public:
 
 	virtual bool Initialize(void* module) override
 	{
-		overrideTypes = {
+		/*overrideTypes = {
 			{ "struct FVector", "class Vector3D" },
 			{ "struct FVector2D", "class Vector2D" }
-		};
+		};*/
 
 		predefinedStaticMembers["Class Core.Object"] = {
 			{ "TArray<UObject*>*", "GObjects" }
@@ -56,7 +56,7 @@ public:
 		};
 
 		virtualFunctionPattern["Class Core.Object"] = {
-			{ "\x74\x00\x83\xC0\x07\x83\xE0\xF8\xE8\x00\x00\x00\x00\x8B\xC4", "x?xxxxxxx????xx", R"(	inline void ProcessEvent(class UFunction* function, void* parms)
+			{ "\x74\x00\x83\xC0\x07\x83\xE0\xF8\xE8\x00\x00\x00\x00\x8B\xC4", "x?xxxxxxx????xx", 0x280, R"(	inline void ProcessEvent(class UFunction* function, void* parms)
 	{
 		return GetVFunction<void(__thiscall *)(UObject*, class UFunction*, void*)>(this, %d)(this, function, parms);
 	})" }
@@ -176,8 +176,8 @@ public:
 	virtual std::vector<std::string> GetIncludes() const override
 	{
 		return {
-			R"("../../Math/Vector3D.hpp")",
-			R"("../../Math/Vector2D.hpp")"
+			/*R"("../../Math/Vector3D.hpp")",
+			R"("../../Math/Vector2D.hpp")"*/
 		};
 	}
 

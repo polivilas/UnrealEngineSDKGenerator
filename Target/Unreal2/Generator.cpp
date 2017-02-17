@@ -13,7 +13,7 @@ public:
 		};
 
 		virtualFunctionPattern["Class Core.Object"] = {
-			{ "\x33\xF6\x89\x65\xF0\x89\x4D\xEC\x89\x75\xFC\x0F\x31", "xxxxxxxxxxxxx", R"(	void ProcessEvent(class UFunction* function, void* parms)
+			{ "\x33\xF6\x89\x65\xF0\x89\x4D\xEC\x89\x75\xFC\x0F\x31", "xxxxxxxxxxxxx", 0x200, R"(	void ProcessEvent(class UFunction* function, void* parms)
 	{
 		return GetVFunction<void(__thiscall *)(UObject*, class UFunction*, void*, void*)>(this, %d)(this, function, parms, nullptr);
 	})" }
