@@ -27,12 +27,12 @@ public:
 		predefinedMembers["Class Core.Function"] = {
 			{ "unsigned long", "FunctionFlags" },
 			{ "unsigned long", "iNative" },
-			{ "unsinged long", "RepOffset" },
+			{ "unsigned long", "RepOffset" },
 			{ "FName", "FriendlyName" },
 			{ "unsigned short", "NumParms" },
 			{ "unsigned short", "ParmsSize" },
 			{ "unsigned long", "ReturnValueOffset" },
-			{ "unsigned char", "UnknownData00[0x4"},
+			{ "unsigned char", "UnknownData00[0x4]" },
 			{ "void*", "Func" }
 		};
 		predefinedMembers["Class Core.Class"] = {
