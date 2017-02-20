@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hawken", "Hawken.vcxproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AloneInTheDarkIllumination", "AloneInTheDarkIllumination.vcxproj", "{58C2A29B-4885-4C38-8615-A2763F25F696}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RocketLeague", "RocketLeague.vcxproj", "{309CD0F6-6B32-4D38-9298-221351A54B4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -107,6 +109,12 @@ Global
 		{58C2A29B-4885-4C38-8615-A2763F25F696}.Release|x64.ActiveCfg = Release|x64
 		{58C2A29B-4885-4C38-8615-A2763F25F696}.Release|x64.Build.0 = Release|x64
 		{58C2A29B-4885-4C38-8615-A2763F25F696}.Release|x86.ActiveCfg = Release|x64
+		{309CD0F6-6B32-4D38-9298-221351A54B4C}.Debug|x64.ActiveCfg = Debug|Win32
+		{309CD0F6-6B32-4D38-9298-221351A54B4C}.Debug|x86.ActiveCfg = Debug|Win32
+		{309CD0F6-6B32-4D38-9298-221351A54B4C}.Debug|x86.Build.0 = Debug|Win32
+		{309CD0F6-6B32-4D38-9298-221351A54B4C}.Release|x64.ActiveCfg = Release|Win32
+		{309CD0F6-6B32-4D38-9298-221351A54B4C}.Release|x86.ActiveCfg = Release|Win32
+		{309CD0F6-6B32-4D38-9298-221351A54B4C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
