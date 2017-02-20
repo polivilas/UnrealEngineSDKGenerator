@@ -93,10 +93,10 @@
     <ClCompile Include="Engine\ObjectsStore.cpp" />
     <ClCompile Include="Engine\UE3\Flags.cpp" />
     <ClCompile Include="Engine\UE3\Package.cpp" />
-    <ClCompile Include="Target\RocketLeagueSDK\Generator.cpp" />
-    <ClCompile Include="Target\RocketLeagueSDK\GenericTypes.cpp" />
-    <ClCompile Include="Target\RocketLeagueSDK\NamesStore.cpp" />
-    <ClCompile Include="Target\RocketLeagueSDK\ObjectsStore.cpp" />
+    <ClCompile Include="Target\RocketLeague\Generator.cpp" />
+    <ClCompile Include="Target\RocketLeague\GenericTypes.cpp" />
+    <ClCompile Include="Target\RocketLeague\NamesStore.cpp" />
+    <ClCompile Include="Target\RocketLeague\ObjectsStore.cpp" />
     <ClCompile Include="Engine\Logger.cpp" />
     <ClCompile Include="Engine\Main.cpp" />
     <ClCompile Include="Engine\NameValidator.cpp" />
@@ -111,7 +111,7 @@
     <ClInclude Include="Engine\NamesStore.hpp" />
     <ClInclude Include="Engine\ObjectsStore.hpp" />
     <ClInclude Include="Engine\UE3\Flags.hpp" />
-    <ClInclude Include="Target\RocketLeagueSDK\EngineClasses.hpp" />
+    <ClInclude Include="Target\RocketLeague\EngineClasses.hpp" />
     <ClInclude Include="Engine\Logger.hpp" />
     <ClInclude Include="Engine\NameValidator.hpp" />
     <ClInclude Include="Engine\Package.hpp" />

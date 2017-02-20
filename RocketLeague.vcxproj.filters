@@ -4,13 +4,13 @@
     <ClCompile Include="Engine\Main.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Target\RocketLeagueSDK\GenericTypes.cpp">
+    <ClCompile Include="Target\RocketLeague\GenericTypes.cpp">
     </ClCompile>
-    <ClCompile Include="Target\RocketLeagueSDK\ObjectsStore.cpp">
+    <ClCompile Include="Target\RocketLeague\ObjectsStore.cpp">
     </ClCompile>
-    <ClCompile Include="Target\RocketLeagueSDK\NamesStore.cpp">
+    <ClCompile Include="Target\RocketLeague\NamesStore.cpp">
     </ClCompile>
-    <ClCompile Include="Target\RocketLeagueSDK\Generator.cpp">
+    <ClCompile Include="Target\RocketLeague\Generator.cpp">
     </ClCompile>
     <ClCompile Include="Engine\Logger.cpp">
       <Filter>Engine</Filter>
@@ -52,7 +52,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Target\RocketLeagueSDK\EngineClasses.hpp">
+    <ClInclude Include="Target\RocketLeague\EngineClasses.hpp">
     </ClInclude>
     <ClInclude Include="Engine\UE3\GenericTypes.hpp">
       <Filter>Engine\UE3</Filter>
