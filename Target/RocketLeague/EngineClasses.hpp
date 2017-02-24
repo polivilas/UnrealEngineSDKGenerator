@@ -130,7 +130,7 @@ public:
 	FPointer			StateFrame;
 	class UObject*      Linker;
 	FPointer			LinkerIndex;
-	int					ObjectInternalInteger; 
+	int					ObjectInternalInteger;
 	int                 NetIndex;
 	class UObject*		Outer; 
 	FName				Name;
@@ -176,10 +176,11 @@ class UFunction : public UStruct
 {
 public:
 	unsigned long		FunctionFlags;
-	unsigned long		iNative;
-	unsigned long		RepOffset;
+	unsigned short		iNative;
+	unsigned short		RepOffset;
 	FName				FriendlyName;
-	unsigned short		NumParms;
+	unsigned char		OperPrecedence;
+	unsigned char		NumParms;
 	unsigned short 		ParmsSize;
 	unsigned long		ReturnValueOffset;
 	unsigned char		UnknownData00[0x4];
