@@ -18,6 +18,10 @@ public:
 	/// </returns>
 	static bool Initialize();
 
+	/// <summary>Gets the address of the global objects store.</summary>
+	/// <returns>The address of the global objects store.</returns>
+	static void* GetAddress();
+
 	ObjectsIterator begin();
 
 	ObjectsIterator begin() const;

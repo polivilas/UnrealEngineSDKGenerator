@@ -37,6 +37,11 @@ bool NamesStore::Initialize()
 	return true;
 }
 
+void* NamesStore::GetAddress()
+{
+	return GlobalNames;
+}
+
 size_t NamesStore::GetNamesNum() const
 {
 	return GlobalNames->Num();

@@ -17,11 +17,12 @@ bool ObjectsStore::Initialize()
 
 	GlobalObjects = reinterpret_cast<decltype(GlobalObjects)>(*reinterpret_cast<uint32_t*>(address + 1));
 
-	/*char bla[100];
-	sprintf(bla, "Objects: %X", GlobalObjects);
-	MessageBoxA(0, bla, bla, 0);*/
-
 	return true;
+}
+
+void* ObjectsStore::GetAddress()
+{
+	return GlobalObjects;
 }
 
 size_t ObjectsStore::GetObjectsNum() const

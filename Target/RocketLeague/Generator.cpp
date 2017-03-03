@@ -26,10 +26,11 @@ public:
 		};
 		predefinedMembers["Class Core.Function"] = {
 			{ "unsigned long", "FunctionFlags" },
-			{ "unsigned long", "iNative" },
-			{ "unsigned long", "RepOffset" },
+			{ "unsigned short", "iNative" },
+			{ "unsigned short", "RepOffset" },
 			{ "FName", "FriendlyName" },
-			{ "unsigned short", "NumParms" },
+			{ "unsigned char", "OperPrecedence" },
+			{ "unsigned char", "NumParms" },
 			{ "unsigned short", "ParmsSize" },
 			{ "unsigned long", "ReturnValueOffset" },
 			{ "unsigned char", "UnknownData00[0x4]" },

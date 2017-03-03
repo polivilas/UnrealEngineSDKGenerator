@@ -18,6 +18,10 @@ public:
 	/// <returns>true if it succeeds, false if it fails.</returns>
 	static bool Initialize();
 
+	/// <summary>Gets the address of the global names store.</summary>
+	/// <returns>The address of the global names store.</returns>
+	static void* GetAddress();
+
 	NamesIterator begin();
 
 	NamesIterator begin() const;

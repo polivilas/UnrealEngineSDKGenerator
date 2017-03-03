@@ -29,11 +29,12 @@ bool NamesStore::Initialize()
 
 	GlobalNames = reinterpret_cast<decltype(GlobalNames)>(*reinterpret_cast<uint32_t*>(address + 2));
 
-	/*char bla[100];
-	sprintf(bla, "Names: %X", GlobalNames);
-	MessageBoxA(0, bla, bla, 0);*/
-
 	return true;
+}
+
+void* NamesStore::GetAddress()
+{
+	return GlobalNames;
 }
 
 size_t NamesStore::GetNamesNum() const

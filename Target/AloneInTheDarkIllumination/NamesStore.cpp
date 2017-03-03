@@ -72,11 +72,18 @@ bool NamesStore::Initialize()
 	{
 		return false;
 	}
+
 	address += 5;
+
 	auto offset = *reinterpret_cast<uint32_t*>(address + 3);
 	GlobalNames = reinterpret_cast<decltype(GlobalNames)>(*reinterpret_cast<uintptr_t*>(address + 7 + offset));
 
 	return true;
+}
+
+void* NamesStore::GetAddress()
+{
+	return GlobalNames;
 }
 
 size_t NamesStore::GetNamesNum() const

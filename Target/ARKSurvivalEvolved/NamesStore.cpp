@@ -20,7 +20,7 @@ public:
 		wchar_t WideName[1024];
 	};
 
-	inline const int32_t GetIndex() const
+	inline int32_t GetIndex() const
 	{
 		return Index >> NAME_INDEX_SHIFT;
 	}
@@ -90,11 +90,18 @@ bool NamesStore::Initialize()
 	{
 		return false;
 	}
+
 	address += 12;
+
 	auto offset = *reinterpret_cast<uint32_t*>(address + 3);
 	GlobalNames = reinterpret_cast<decltype(GlobalNames)>(*reinterpret_cast<uintptr_t*>(address + 7 + offset));
 
 	return true;
+}
+
+void* NamesStore::GetAddress()
+{
+	return GlobalNames;
 }
 
 size_t NamesStore::GetNamesNum() const

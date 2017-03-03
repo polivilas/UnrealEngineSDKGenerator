@@ -32,6 +32,7 @@ void Dump(const fs::path& path)
 {
 	{
 		std::ofstream o(path / "ObjectsDump.txt");
+		tfm::format(o, "Address: 0x%P\n\n", ObjectsStore::GetAddress());
 
 		for (auto obj : ObjectsStore())
 		{
@@ -41,6 +42,7 @@ void Dump(const fs::path& path)
 
 	{
 		std::ofstream o(path / "NamesDump.txt");
+		tfm::format(o, "Address: 0x%P\n\n", NamesStore::GetAddress());
 
 		for (auto name : NamesStore())
 		{

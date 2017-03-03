@@ -24,10 +24,16 @@ bool ObjectsStore::Initialize()
 	{
 		return false;
 	}
+
 	auto offset = *reinterpret_cast<uint32_t*>(address + 3);
 	GlobalObjects = reinterpret_cast<decltype(GlobalObjects)>(address + 7 + offset);
 
 	return true;
+}
+
+void* ObjectsStore::GetAddress()
+{
+	return GlobalObjects;
 }
 
 size_t ObjectsStore::GetObjectsNum() const

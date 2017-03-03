@@ -20,6 +20,11 @@ bool ObjectsStore::Initialize()
 	return true;
 }
 
+void* ObjectsStore::GetAddress()
+{
+	return GlobalObjects;
+}
+
 size_t ObjectsStore::GetObjectsNum() const
 {
 	return GlobalObjects->Num();

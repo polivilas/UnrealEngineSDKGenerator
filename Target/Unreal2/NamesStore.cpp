@@ -10,7 +10,7 @@ struct FNameEntry
 	char UnknownData00[0xC];
 	wchar_t Data[0x10];
 	
-	std::string GetName()
+	std::string GetName() const
 	{
 		auto length = std::wcslen(Data);
 		auto neededLength = WideCharToMultiByte(CP_UTF8, 0, Data, length, nullptr, 0, nullptr, nullptr);
@@ -33,6 +33,11 @@ bool NamesStore::Initialize()
 	GlobalNames = reinterpret_cast<decltype(GlobalNames)>(*reinterpret_cast<uint32_t*>(address + 1));
 
 	return true;
+}
+
+void* NamesStore::GetAddress()
+{
+	return GlobalNames;
 }
 
 size_t NamesStore::GetNamesNum() const

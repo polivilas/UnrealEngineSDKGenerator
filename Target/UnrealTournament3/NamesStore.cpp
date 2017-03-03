@@ -12,7 +12,7 @@ public:
 	char UnknownData00[0x0C];
 	wchar_t WideName[1024];
 
-	inline const int32_t GetIndex() const
+	inline int32_t GetIndex() const
 	{
 		return Index;
 	}
@@ -47,6 +47,11 @@ bool NamesStore::Initialize()
 	GlobalNames = reinterpret_cast<decltype(GlobalNames)>(*reinterpret_cast<uint32_t*>(address + 2));
 
 	return true;
+}
+
+void* NamesStore::GetAddress()
+{
+	return GlobalNames;
 }
 
 size_t NamesStore::GetNamesNum() const
