@@ -12,16 +12,23 @@ std::string MakeValidName(std::string&& name)
 	{
 		if (valid[i] == ' '
 			|| valid[i] == '?'
+			|| valid[i] == '+'
 			|| valid[i] == '-'
 			|| valid[i] == ':'
 			|| valid[i] == '/'
+			|| valid[i] == '^'
 			|| valid[i] == '('
 			|| valid[i] == ')'
 			|| valid[i] == '['
 			|| valid[i] == ']'
+			|| valid[i] == '<'
+			|| valid[i] == '>'
 			|| valid[i] == '&'
 			|| valid[i] == '.'
-			|| valid[i] == '#')
+			|| valid[i] == '#'
+			|| valid[i] == '\''
+			|| valid[i] == '"'
+			|| valid[i] == '%')
 		{
 			valid[i] = '_';
 		}
