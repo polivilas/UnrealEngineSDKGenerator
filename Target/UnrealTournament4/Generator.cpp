@@ -319,19 +319,6 @@ public:
 		return i < Num();
 	}
 
-	inline void Add(T InputData)
-	{
-		Data = (T*)realloc(Data, sizeof(T) * (Count + 1));
-		Data[Count++] = InputData;
-		Max = Count;
-	};
-
-	inline void Clear()
-	{
-		free(Data);
-		Count = Max = 0;
-	};
-
 private:
 	T* Data;
 	int32_t Count;
