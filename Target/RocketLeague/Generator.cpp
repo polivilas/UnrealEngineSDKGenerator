@@ -15,14 +15,15 @@ public:
 		};
 
 		predefinedMembers["Class Core.Field"] = {
-			{ "class UField*", "Next" }
+			{ "class UField*", "Next" },
+			{ "char", "UnknownData00[0x08]" }
 		};
 		predefinedMembers["Class Core.Struct"] = {
-			{ "unsigned char", "UnknownData00[0x08]" },
+			{ "char", "UnknownData00[0x08]" },
 			{ "class UField*", "SuperField" },
 			{ "class UField*", "Children" },
 			{ "unsigned long", "PropertySize" },
-			{ "unsigned char", "UnknownData01[0x30]" }
+			{ "char", "UnknownData01[0x30]" }
 		};
 		predefinedMembers["Class Core.Function"] = {
 			{ "unsigned long", "FunctionFlags" },
@@ -33,7 +34,7 @@ public:
 			{ "unsigned char", "NumParms" },
 			{ "unsigned short", "ParmsSize" },
 			{ "unsigned long", "ReturnValueOffset" },
-			{ "unsigned char", "UnknownData00[0x4]" },
+			{ "char", "UnknownData00[0x4]" },
 			{ "void*", "Func" }
 		};
 		predefinedMembers["Class Core.Class"] = {
@@ -164,7 +165,7 @@ public:
 	}
 	virtual std::string GetGameVersion() const override
 	{
-		return "1.1 - 2/12/2017";
+		return "1.31";
 	}
 
 	virtual std::string GetNamespaceName() const override

@@ -142,6 +142,7 @@ class UField : public UObject
 {
 public:
 	UField*				Next;
+	char				UnknownData00[0x08];
 };
 
 class UEnum : public UField

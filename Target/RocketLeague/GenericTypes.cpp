@@ -243,7 +243,14 @@ UEClass UEObjectProperty::GetPropertyClass() const
 //---------------------------------------------------------------------------
 UEProperty::Info UEObjectProperty::GetInfo() const
 {
-	return Info::Create(PropertyType::Primitive, sizeof(void*), false, "class " + MakeValidName(GetPropertyClass().GetNameCPP()) + "*");
+	auto propertyClass = GetPropertyClass();
+	if (!propertyClass.IsValid())
+	{
+		// There are now some UObjectProperties without a valid PropertyClass?!
+		return { PropertyType::Unknown };
+	}
+
+	return Info::Create(PropertyType::Primitive, sizeof(void*), false, "class " + MakeValidName(propertyClass.GetNameCPP()) + "*");
 }
 //---------------------------------------------------------------------------
 UEClass UEObjectProperty::StaticClass()

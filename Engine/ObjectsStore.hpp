@@ -95,6 +95,7 @@ class ObjectsIterator : public std::iterator<std::forward_iterator_tag, UEObject
 {
 	const ObjectsStore& store;
 	size_t index;
+	UEObject current;
 
 public:
 

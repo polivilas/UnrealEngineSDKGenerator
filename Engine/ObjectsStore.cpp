@@ -40,7 +40,8 @@ ObjectsIterator::ObjectsIterator(const ObjectsStore& _store)
 
 ObjectsIterator::ObjectsIterator(const ObjectsStore& _store, size_t _index)
 	: store(_store),
-	  index(_index)
+	  index(_index),
+	  current(_store.GetById(_index))
 {
 }
 
@@ -53,7 +54,8 @@ ObjectsIterator& ObjectsIterator::operator++()
 {
 	for (++index; index < store.GetObjectsNum(); ++index)
 	{
-		if (store.GetById(index).IsValid())
+		current = store.GetById(index);
+		if (current.IsValid())
 		{
 			break;
 		}
@@ -80,10 +82,10 @@ bool ObjectsIterator::operator!=(const ObjectsIterator& rhs) const
 
 UEObjectInfo ObjectsIterator::operator*() const
 {
-	return { index, store.GetById(index) };
+	return { index, current };
 }
 
 UEObjectInfo ObjectsIterator::operator->() const
 {
-	return { index, store.GetById(index) };
+	return { index, current };
 }
