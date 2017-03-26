@@ -58,7 +58,7 @@ public:
 		virtualFunctionPattern["Class Core.Object"] = {
 			{ "\x74\x00\x83\xC0\x07\x83\xE0\xF8\xE8\x00\x00\x00\x00\x8B\xC4", "x?xxxxxxx????xx", 0x280, R"(	inline void ProcessEvent(class UFunction* function, void* parms)
 	{
-		return GetVFunction<void(__thiscall *)(UObject*, class UFunction*, void*)>(this, %d)(this, function, parms);
+		return GetVFunction<void(__thiscall *)(UObject*, class UFunction*, void*, uint32_t)>(this, %d)(this, function, parms, NULL);
 	})" }
 		};
 		predefinedMethods["Class Core.Object"] = {
