@@ -77,7 +77,7 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 		{
 			std::ofstream os2(path / "SDK" / tfm::format("%s_Basic.hpp", generator->GetGameNameShort()));
 
-			PrintFileHeader(os2);
+			PrintFileHeader(os2, true);
 			
 			os2 << generator->GetBasicDeclarations() << "\n";
 
@@ -88,7 +88,7 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 		{
 			std::ofstream os2(path / "SDK" / tfm::format("%s_Basic.cpp", generator->GetGameNameShort()));
 
-			PrintFileHeader(os2, { "\"../SDK.hpp\"" });
+			PrintFileHeader(os2, { "\"../SDK.hpp\"" }, false);
 
 			os2 << generator->GetBasicDefinitions() << "\n";
 
@@ -104,7 +104,7 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 	{
 		std::ofstream os2(path / "SDK" / tfm::format("%s_MISSING.hpp", generator->GetGameNameShort()));
 
-		PrintFileHeader(os2);
+		PrintFileHeader(os2, true);
 
 		for (auto&& s : missing >> select([](auto&& kv) { return kv.first.Cast<UEStruct>(); }) >> experimental::container())
 		{

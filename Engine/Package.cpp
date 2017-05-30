@@ -718,7 +718,7 @@ void Package::SaveStructs(const fs::path& path) const
 
 	std::ofstream os(path / GenerateFileName(FileContentType::Structs));
 
-	PrintFileHeader(os);
+	PrintFileHeader(os, true);
 
 	if (!scriptStructs.empty())
 	{
@@ -735,7 +735,7 @@ void Package::SaveClasses(const fs::path& path) const
 
 	std::ofstream os(path / GenerateFileName(FileContentType::Classes));
 
-	PrintFileHeader(os);
+	PrintFileHeader(os, true);
 
 	if (!constants.empty())
 	{
@@ -774,11 +774,11 @@ void Package::SaveFunctions(const fs::path& path) const
 	{
 		SaveFunctionParameters(path);
 
-		PrintFileHeader(os, { "\"../SDK.hpp\"", GenerateFileName(FileContentType::FunctionParameters) });
+		PrintFileHeader(os, { "\"../SDK.hpp\"", GenerateFileName(FileContentType::FunctionParameters) }, false);
 	}
 	else
 	{
-		PrintFileHeader(os, { "\"../SDK.hpp\"" });
+		PrintFileHeader(os, { "\"../SDK.hpp\"" }, false);
 	}
 
 	PrintSectionHeader(os, "Functions");
@@ -833,7 +833,7 @@ void Package::SaveFunctionParameters(const fs::path& path) const
 
 	std::ofstream os(path / GenerateFileName(FileContentType::FunctionParameters));
 
-	PrintFileHeader(os, { "\"../SDK.hpp\"" });
+	PrintFileHeader(os, { "\"../SDK.hpp\"" }, true);
 
 	PrintSectionHeader(os, "Parameters");
 

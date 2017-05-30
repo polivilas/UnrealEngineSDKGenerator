@@ -4,12 +4,16 @@
 
 #include "IGenerator.hpp"
 
-void PrintFileHeader(std::ostream& os, const std::vector<std::string>& includes)
+void PrintFileHeader(std::ostream& os, const std::vector<std::string>& includes, bool isHeaderFile)
 {
 	extern IGenerator* generator;
 
-	os << "#pragma once\n\n"
-		<< tfm::format("// %s (%s) SDK\n\n", generator->GetGameName(), generator->GetGameVersion())
+	if (isHeaderFile)
+	{
+		os << "#pragma once\n\n";
+	}
+
+	os << tfm::format("// %s (%s) SDK\n\n", generator->GetGameName(), generator->GetGameVersion())
 		<< tfm::format("#ifdef _MSC_VER\n\t#pragma pack(push, 0x%X)\n#endif\n\n", generator->GetGlobalMemberAlignment());
 
 	if (!includes.empty())
@@ -24,11 +28,11 @@ void PrintFileHeader(std::ostream& os, const std::vector<std::string>& includes)
 	}
 }
 
-void PrintFileHeader(std::ostream& os)
+void PrintFileHeader(std::ostream& os, bool isHeaderFile)
 {
 	extern IGenerator* generator;
 
-	PrintFileHeader(os, std::vector<std::string>());
+	PrintFileHeader(os, std::vector<std::string>(), isHeaderFile);
 }
 
 void PrintFileFooter(std::ostream& os)
