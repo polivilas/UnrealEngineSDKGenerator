@@ -207,6 +207,8 @@ class UEByteProperty : public UEProperty
 public:
 	using UEProperty::UEProperty;
 
+	bool IsEnum() const;
+
 	UEEnum GetEnum() const;
 
 	UEProperty::Info GetInfo() const;

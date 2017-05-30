@@ -33,6 +33,7 @@ public:
 	bool Save(const fs::path& path) const;
 
 private:
+	bool Package::UpdatePackageOrder(const UEObject& package) const;
 
 	/// <summary>
 	/// Checks and generates the prerequisites of the script structure.

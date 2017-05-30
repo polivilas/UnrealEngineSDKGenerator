@@ -197,6 +197,8 @@ class UEByteProperty : public UENumericProperty
 public:
 	using UENumericProperty::UENumericProperty;
 
+	bool IsEnum() const;
+
 	UEEnum GetEnum() const;
 
 	UEProperty::Info GetInfo() const;

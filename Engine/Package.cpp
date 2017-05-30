@@ -91,6 +91,35 @@ bool Package::Save(const fs::path& path) const
 	return false;
 }
 
+bool Package::UpdatePackageOrder(const UEObject& package) const
+{
+	if (std::find(std::begin(packageOrder), std::end(packageOrder), packageObj) == std::end(packageOrder))
+	{
+		packageOrder.push_back(packageObj);
+	}
+
+	if (package != packageObj)
+	{
+		auto itPO = std::find(std::begin(packageOrder), std::end(packageOrder), package);
+		auto itPTP = std::find(std::begin(packageOrder), std::end(packageOrder), packageObj);
+
+		if (itPO == std::end(packageOrder))
+		{
+			packageOrder.insert(itPTP, package);
+		}
+		else if (itPO > itPTP)
+		{
+			packageOrder.insert(itPTP, package);
+			//iterator may be invalid after the insert
+			itPO = std::next(std::find(std::rbegin(packageOrder), std::rend(packageOrder), package)).base();
+			packageOrder.erase(itPO);
+		}
+
+		return false;
+	}
+	return true;
+}
+
 void Package::GenerateScriptStructPrerequisites(const UEScriptStruct& scriptStructObj)
 {
 	if (!scriptStructObj.IsValid())
@@ -108,32 +137,14 @@ void Package::GenerateScriptStructPrerequisites(const UEScriptStruct& scriptStru
 
 	definedClasses[scriptStructObj] |= false;
 
-	auto classPackage = scriptStructObj.GetPackageObject();
-	if (!classPackage.IsValid())
+	auto structPackage = scriptStructObj.GetPackageObject();
+	if (!structPackage.IsValid())
 	{
 		return;
 	}
 
-	if (std::find(std::begin(packageOrder), std::end(packageOrder), packageObj) == std::end(packageOrder))
+	if (!UpdatePackageOrder(structPackage))
 	{
-		packageOrder.push_back(packageObj);
-	}
-
-	if (classPackage != packageObj)
-	{
-		auto itPO = std::find(std::begin(packageOrder), std::end(packageOrder), classPackage);
-		auto itPTP = std::find(std::begin(packageOrder), std::end(packageOrder), packageObj);
-
-		if (itPO == std::end(packageOrder))
-		{
-			packageOrder.insert(itPTP, classPackage);
-		}
-		else if (itPO > itPTP)
-		{
-			packageOrder.erase(itPO);
-			packageOrder.insert(itPTP, classPackage);
-		}
-
 		return;
 	}
 
@@ -157,8 +168,21 @@ void Package::GenerateScriptStructPrerequisites(const UEScriptStruct& scriptStru
 
 void Package::GenerateMemberPrerequisites(const UEProperty& first)
 {
+	using namespace cpplinq;
+
 	for (auto prop = first; prop.IsValid(); prop = prop.GetNext().Cast<UEProperty>())
 	{
+		if (prop.IsA<UEByteProperty>())
+		{
+			auto byteProperty = prop.Cast<UEByteProperty>();
+			if (byteProperty.IsEnum())
+			{
+				UpdatePackageOrder(byteProperty.GetEnum().GetPackageObject());
+
+				continue;
+			}
+		}
+
 		auto info = prop.GetInfo();
 		if (info.Type == UEProperty::PropertyType::CustomStruct)
 		{
@@ -179,13 +203,11 @@ void Package::GenerateMemberPrerequisites(const UEProperty& first)
 				innerProperties.push_back(mapProp.GetValueProperty());
 			}
 
-			for (auto innerProp : innerProperties)
+			for (auto innerProp : from(innerProperties)
+				>> where([](auto&& p) { return p.GetInfo().Type == UEProperty::PropertyType::CustomStruct; })
+				>> experimental::container())
 			{
-				auto innerInfo = innerProp.GetInfo();
-				if (innerInfo.Type == UEProperty::PropertyType::CustomStruct)
-				{
-					GenerateScriptStructPrerequisites(innerProp.Cast<UEStructProperty>().GetStruct());
-				}
+				GenerateScriptStructPrerequisites(innerProp.Cast<UEStructProperty>().GetStruct());
 			}
 		}
 	}
@@ -261,8 +283,6 @@ void Package::GenerateScriptStruct(const UEScriptStruct& scriptStructObj)
 
 void Package::GenerateEnum(const UEEnum& enumObj)
 {
-	extern IGenerator* generator;
-
 	Enum e;
 	e.Name = MakeUniqueCppName(enumObj);
 
@@ -331,28 +351,8 @@ void Package::GenerateClassPrerequisites(const UEClass& classObj)
 		return;
 	}
 
-	if (std::find(std::begin(packageOrder), std::end(packageOrder), packageObj) == std::end(packageOrder))
+	if (!UpdatePackageOrder(classPackage))
 	{
-		packageOrder.push_back(packageObj);
-	}
-
-	if (classPackage != packageObj)
-	{
-		auto itPO = std::find(std::begin(packageOrder), std::end(packageOrder), classPackage);
-		auto itPTP = std::find(std::begin(packageOrder), std::end(packageOrder), packageObj);
-
-		if (itPO == std::end(packageOrder))
-		{
-			packageOrder.insert(itPTP, classPackage);
-		}
-		else if (itPO >= itPTP)
-		{
-			packageOrder.insert(itPTP, classPackage);
-			//iterator may be invalid after the insert
-			itPO = std::next(std::find(std::rbegin(packageOrder), std::rend(packageOrder), classPackage)).base();
-			packageOrder.erase(itPO);
-		}
-
 		return;
 	}
 
@@ -619,6 +619,15 @@ void Package::GenerateMethods(const UEClass& classObj, std::vector<Method>& meth
 				if (param.GetElementSize() == 0)
 				{
 					continue;
+				}
+
+				if (param.IsA<UEByteProperty>())
+				{
+					auto byteProperty = param.Cast<UEByteProperty>();
+					if (byteProperty.IsEnum())
+					{
+						UpdatePackageOrder(byteProperty.GetEnum().GetPackageObject());
+					}
 				}
 
 				auto info = param.GetInfo();

@@ -176,10 +176,9 @@ UEEnum UEByteProperty::GetEnum() const
 //---------------------------------------------------------------------------
 UEProperty::Info UEByteProperty::GetInfo() const
 {
-	auto enumObj = GetEnum();
-	if (enumObj.IsValid())
+	if (IsEnum())
 	{
-		return Info::Create(PropertyType::Primitive, sizeof(uint8_t), false, "TEnumAsByte<enum class " + MakeUniqueCppName(enumObj) + ">");
+		return Info::Create(PropertyType::Primitive, sizeof(uint8_t), false, "TEnumAsByte<enum class " + MakeUniqueCppName(GetEnum()) + ">");
 	}
 	return Info::Create(PropertyType::Primitive, sizeof(uint8_t), false, "unsigned char");
 }

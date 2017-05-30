@@ -184,3 +184,8 @@ UEProperty::Info UEProperty::GetInfo() const
 	}
 	return { PropertyType::Unknown };
 }
+
+bool UEByteProperty::IsEnum() const
+{
+	return GetEnum().IsValid();
+}
