@@ -81,7 +81,7 @@ bool Package::Save(const fs::path& path) const
 	{
 		SaveStructs(path);
 		SaveClasses(path);
-		SaveMethods(path);
+		SaveFunctions(path);
 
 		return true;
 	}
@@ -686,11 +686,37 @@ void Package::GenerateMethods(const UEClass& classObj, std::vector<Method>& meth
 	}
 }
 
+std::string Package::GenerateFileName(FileContentType type) const
+{
+	extern IGenerator* generator;
+
+	const char* name;
+	switch (type)
+	{
+		case FileContentType::Structs:
+			name = "%s_%s_structs.hpp";
+			break;
+		case FileContentType::Classes:
+			name = "%s_%s_classes.hpp";
+			break;
+		case FileContentType::Functions:
+			name = "%s_%s_functions.cpp";
+			break;
+		case FileContentType::FunctionParameters:
+			name = "%s_%s_parameters.hpp";
+			break;
+		default:
+			assert(false);
+	}
+
+	return tfm::format(name, generator->GetGameNameShort(), packageObj.GetName());
+}
+
 void Package::SaveStructs(const fs::path& path) const
 {
 	extern IGenerator* generator;
 
-	std::ofstream os(path / tfm::format("%s_%s_structs.hpp", generator->GetGameNameShort(), packageObj.GetName()));
+	std::ofstream os(path / GenerateFileName(FileContentType::Structs));
 
 	PrintFileHeader(os);
 
@@ -707,7 +733,7 @@ void Package::SaveClasses(const fs::path& path) const
 {
 	extern IGenerator* generator;
 
-	std::ofstream os(path / tfm::format("%s_%s_classes.hpp", generator->GetGameNameShort(), packageObj.GetName()));
+	std::ofstream os(path / GenerateFileName(FileContentType::Classes));
 
 	PrintFileHeader(os);
 
@@ -736,15 +762,24 @@ void Package::SaveClasses(const fs::path& path) const
 	PrintFileFooter(os);
 }
 
-void Package::SaveMethods(const fs::path& path) const
+void Package::SaveFunctions(const fs::path& path) const
 {
 	extern IGenerator* generator;
 
 	using namespace cpplinq;
 
-	std::ofstream os(path / tfm::format("%s_%s_functions.cpp", generator->GetGameNameShort(), packageObj.GetName()));
+	std::ofstream os(path / GenerateFileName(FileContentType::Functions));
 
-	PrintFileHeader(os, { "\"../SDK.hpp\"" });
+	if (generator->ShouldGenerateFunctionParametersFile())
+	{
+		SaveFunctionParameters(path);
+
+		PrintFileHeader(os, { "\"../SDK.hpp\"", GenerateFileName(FileContentType::FunctionParameters) });
+	}
+	else
+	{
+		PrintFileHeader(os, { "\"../SDK.hpp\"" });
+	}
 
 	PrintSectionHeader(os, "Functions");
 
@@ -787,6 +822,33 @@ void Package::SaveMethods(const fs::path& path) const
 			os << BuildMethodSignature(m, c.NameCpp, false) << "\n";
 			os << BuildMethodBody(m) << "\n\n";
 		}
+	}
+
+	PrintFileFooter(os);
+}
+
+void Package::SaveFunctionParameters(const fs::path& path) const
+{
+	using namespace cpplinq;
+
+	std::ofstream os(path / GenerateFileName(FileContentType::FunctionParameters));
+
+	PrintFileHeader(os, { "\"../SDK.hpp\"" });
+
+	PrintSectionHeader(os, "Parameters");
+
+	for (auto&& m : from(classes)
+		>> select_many([](auto&& c) { return from(c.Methods); })
+		>> where([](auto&& m) { return !m.Parameters.empty(); })
+		>> experimental::container())
+	{
+		os << "// " << m.FullName << "\n";
+		tfm::format(os, "\tstruct %s_Params\n{\n", m.Name);
+		for (auto&& param : m.Parameters)
+		{
+			tfm::format(os, "\t%-30s %-30s// (%s)\n", param.CppType, param.Name + ";", param.FlagsString);
+		}
+		os << "};\n\n";
 	}
 
 	PrintFileFooter(os);
@@ -874,7 +936,7 @@ void Package::PrintClass(std::ostream& os, const Class& c) const
 	//Member
 	for (auto&& m : c.Members)
 	{
-		tfm::format(os, "\t%-50s %-50s\t\t// 0x%04X(0x%04X)", m.Type, m.Name + ";", m.Offset, m.Size);
+		tfm::format(os, "\t%-50s %-58s// 0x%04X(0x%04X)", m.Type, m.Name + ";", m.Offset, m.Size);
 		if (!m.Comment.empty())
 		{
 			os << " " << m.Comment;
@@ -999,12 +1061,19 @@ std::string Package::BuildMethodBody(const Method& m) const
 	}
 
 	//Parameters
-	ss << "\tstruct\n\t{\n";
-	for (auto&& param : m.Parameters)
+	if (generator->ShouldGenerateFunctionParametersFile())
 	{
-		tfm::format(ss, "\t\t%-30s %s;\n", param.CppType, param.Name);
+		ss << "\t" << m.Name << "_Params params;\n";
 	}
-	ss << "\t} params;\n";
+	else
+	{
+		ss << "\tstruct\n\t{\n";
+		for (auto&& param : m.Parameters)
+		{
+			tfm::format(ss, "\t\t%-30s %s;\n", param.CppType, param.Name);
+		}
+		ss << "\t} params;\n";
+	}
 
 	auto defaultParameters = from(m.Parameters) >> where([](auto&& param) { return param.ParamType == Type::Default; });
 	if (defaultParameters >> any())

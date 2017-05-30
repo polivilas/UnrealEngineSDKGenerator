@@ -95,6 +95,17 @@ public:
 	}
 
 	/// <summary>
+	/// Check if we should generate a function parameters file.
+	/// Otherwise the parameters are declared inside the function body.
+	/// If hooks with access to the parameters are need, this method should return true.
+	/// </summary>
+	/// <returns>True if a function parameters file should be generated.</returns>
+	virtual bool ShouldGenerateFunctionParametersFile() const
+	{
+		return true;
+	}
+
+	/// <summary>
 	/// Gets namespace name for the classes. If the name is empty no namespace gets generated.
 	/// </summary>
 	/// <returns>The namespace name.</returns>

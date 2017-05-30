@@ -76,23 +76,46 @@ private:
 	/// <param name="classObj">The class object.</param>
 	void GenerateClass(const UEClass& classObj);
 
+	enum class FileContentType
+	{
+		Structs,
+		Classes,
+		Functions,
+		FunctionParameters
+	};
+
 	/// <summary>
-	/// Saves the structures.
+	/// Generates a file name composed by the game name and the package object.
+	/// </summary>
+	/// <param name="type">The type of the file.</param>
+	/// <returns>
+	/// The generated file name.
+	/// </returns>
+	std::string Package::GenerateFileName(FileContentType type) const;
+
+	/// <summary>
+	/// Writes all structs into the appropriate file.
 	/// </summary>
 	/// <param name="path">The path to save to.</param>
 	void SaveStructs(const fs::path& path) const;
 
 	/// <summary>
-	/// Saves the classes.
+	/// Writes all classes into the appropriate file.
 	/// </summary>
 	/// <param name="path">The path to save to.</param>
 	void SaveClasses(const fs::path& path) const;
 
 	/// <summary>
-	/// Saves the methods.
+	/// Writes all functions into the appropriate file.
 	/// </summary>
 	/// <param name="path">The path to save to.</param>
-	void SaveMethods(const fs::path& path) const;
+	void SaveFunctions(const fs::path& path) const;
+
+	/// <summary>
+	/// Writes all function parameters into the appropriate file.
+	/// </summary>
+	/// <param name="path">The path to save to.</param>
+	void SaveFunctionParameters(const fs::path& path) const;
 
 	const UEObject& packageObj;
 	std::vector<UEObject>& packageOrder;
