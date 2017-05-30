@@ -783,7 +783,7 @@ void Package::SaveFunctions(const fs::path& path) const
 	{
 		SaveFunctionParameters(path);
 
-		PrintFileHeader(os, { "\"../SDK.hpp\"", GenerateFileName(FileContentType::FunctionParameters) }, false);
+		PrintFileHeader(os, { "\"../SDK.hpp\"", "\"" + GenerateFileName(FileContentType::FunctionParameters) + "\"" }, false);
 	}
 	else
 	{
@@ -828,8 +828,8 @@ void Package::SaveFunctions(const fs::path& path) const
 			}
 
 			os << "\n";
-			os << BuildMethodSignature(m, c.NameCpp, false) << "\n";
-			os << BuildMethodBody(m) << "\n\n";
+			os << BuildMethodSignature(m, c, false) << "\n";
+			os << BuildMethodBody(c, m) << "\n\n";
 		}
 	}
 
@@ -846,18 +846,18 @@ void Package::SaveFunctionParameters(const fs::path& path) const
 
 	PrintSectionHeader(os, "Parameters");
 
-	for (auto&& m : from(classes)
-		>> select_many([](auto&& c) { return from(c.Methods); })
-		>> where([](auto&& m) { return !m.Parameters.empty(); })
-		>> experimental::container())
+	for (auto&& c : classes)
 	{
-		os << "// " << m.FullName << "\n";
-		tfm::format(os, "\tstruct %s_Params\n{\n", m.Name);
-		for (auto&& param : m.Parameters)
+		for (auto&& m : c.Methods)
 		{
-			tfm::format(os, "\t%-30s %-30s// (%s)\n", param.CppType, param.Name + ";", param.FlagsString);
+			os << "// " << m.FullName << "\n";
+			tfm::format(os, "struct %s_%s_Params\n{\n", c.NameCpp, m.Name);
+			for (auto&& param : m.Parameters)
+			{
+				tfm::format(os, "\t%-50s %-58s// (%s)\n", param.CppType, param.Name + ";", param.FlagsString);
+			}
+			os << "};\n\n";
 		}
-		os << "};\n\n";
 	}
 
 	PrintFileFooter(os);
@@ -898,7 +898,7 @@ void Package::PrintStruct(std::ostream& os, const ScriptStruct& ss) const
 	//Member
 	os << (from(ss.Members)
 		>> select([](auto&& m) {
-				return tfm::format("\t%-50s %-50s\t\t// 0x%04X(0x%04X)", m.Type, m.Name + ";", m.Offset, m.Size)
+				return tfm::format("\t%-50s %-58s// 0x%04X(0x%04X)", m.Type, m.Name + ";", m.Offset, m.Size)
 					+ (!m.Comment.empty() ? " " + m.Comment : "")
 					+ (!m.FlagsString.empty() ? " (" + m.FlagsString + ")" : "");
 			})
@@ -989,7 +989,7 @@ void Package::PrintClass(std::ostream& os, const Class& c) const
 	os << "};\n\n";
 }
 
-std::string Package::BuildMethodSignature(const Method& m, const std::string& className, bool inHeader) const
+std::string Package::BuildMethodSignature(const Method& m, const Class& c, bool inHeader) const
 {
 	extern IGenerator* generator;
 
@@ -1015,9 +1015,9 @@ std::string Package::BuildMethodSignature(const Method& m, const std::string& cl
 	}
 	ss << " ";
 
-	if (!className.empty())
+	if (!inHeader)
 	{
-		ss << className << "::";
+		ss << c.NameCpp << "::";
 	}
 	if (m.IsStatic && generator->ShouldConvertStaticMethods())
 	{
@@ -1037,7 +1037,7 @@ std::string Package::BuildMethodSignature(const Method& m, const std::string& cl
 	return ss.str();
 }
 
-std::string Package::BuildMethodBody(const Method& m) const
+std::string Package::BuildMethodBody(const Class& c, const Method& m) const
 {
 	extern IGenerator* generator;
 
@@ -1072,7 +1072,7 @@ std::string Package::BuildMethodBody(const Method& m) const
 	//Parameters
 	if (generator->ShouldGenerateFunctionParametersFile())
 	{
-		ss << "\t" << m.Name << "_Params params;\n";
+		ss << "\t" << c.NameCpp << "_" << m.Name << "_Params params;\n";
 	}
 	else
 	{

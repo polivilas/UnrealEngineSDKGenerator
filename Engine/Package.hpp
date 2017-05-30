@@ -246,6 +246,12 @@ private:
 	/// <param name="methods">[out] The methods of the class.</param>
 	void GenerateMethods(const UEClass& classObj, std::vector<Method>& methods) const;
 
+	struct Class : ScriptStruct
+	{
+		std::vector<std::string> VirtualFunctions;
+		std::vector<Method> Methods;
+	};
+
 	/// <summary>
 	/// Builds the C++ method signature.
 	/// </summary>
@@ -253,20 +259,14 @@ private:
 	/// <param name="className">Name of the class.</param>
 	/// <param name="inHeader">true if the signature is used as decleration.</param>
 	/// <returns>The method signature.</returns>
-	std::string BuildMethodSignature(const Method& m, const std::string& className, bool inHeader) const;
+	std::string BuildMethodSignature(const Method& m, const Class& c, bool inHeader) const;
 
 	/// <summary>
 	/// Builds the c++ method body.
 	/// </summary>
 	/// <param name="m">The Method to process.</param>
 	/// <returns>The method body.</returns>
-	std::string BuildMethodBody(const Method& m) const;
-
-	struct Class : public ScriptStruct
-	{
-		std::vector<std::string> VirtualFunctions;
-		std::vector<Method> Methods;
-	};
+	std::string BuildMethodBody(const Class& c, const Method& m) const;
 
 	/// <summary>
 	/// Print the C++ code of the class.
