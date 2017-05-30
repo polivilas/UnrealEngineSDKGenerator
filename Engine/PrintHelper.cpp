@@ -3,6 +3,7 @@
 #include <tinyformat.h>
 
 #include "IGenerator.hpp"
+#include "GenericTypes.hpp"
 
 void PrintFileHeader(std::ostream& os, const std::vector<std::string>& includes, bool isHeaderFile)
 {
@@ -52,4 +53,30 @@ void PrintSectionHeader(std::ostream& os, const char* name)
 	os << "//---------------------------------------------------------------------------\n"
 		<< "//" << name << "\n"
 		<< "//---------------------------------------------------------------------------\n\n";
+}
+
+std::string GenerateFileName(FileContentType type, const UEObject& package)
+{
+	extern IGenerator* generator;
+
+	const char* name;
+	switch (type)
+	{
+	case FileContentType::Structs:
+		name = "%s_%s_structs.hpp";
+		break;
+	case FileContentType::Classes:
+		name = "%s_%s_classes.hpp";
+		break;
+	case FileContentType::Functions:
+		name = "%s_%s_functions.cpp";
+		break;
+	case FileContentType::FunctionParameters:
+		name = "%s_%s_parameters.hpp";
+		break;
+	default:
+		assert(false);
+	}
+
+	return tfm::format(name, generator->GetGameNameShort(), package.GetName());
 }

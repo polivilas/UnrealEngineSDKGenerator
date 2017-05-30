@@ -124,8 +124,12 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 
 	for (auto&& package : packageOrder)
 	{
-		os << R"(#include "SDK/)" << tfm::format("%s_%s_structs.hpp", generator->GetGameNameShort(), package.GetName()) << "\"\n";
-		os << R"(#include "SDK/)" << tfm::format("%s_%s_classes.hpp", generator->GetGameNameShort(), package.GetName()) << "\"\n";
+		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Structs, package) << "\"\n";
+		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Classes, package) << "\"\n";
+		if (generator->ShouldGenerateFunctionParametersFile())
+		{
+			os << R"(#include "SDK/)" << GenerateFileName(FileContentType::FunctionParameters, package) << "\"\n";
+		}
 	}
 }
 

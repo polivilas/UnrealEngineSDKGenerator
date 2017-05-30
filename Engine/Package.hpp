@@ -77,23 +77,6 @@ private:
 	/// <param name="classObj">The class object.</param>
 	void GenerateClass(const UEClass& classObj);
 
-	enum class FileContentType
-	{
-		Structs,
-		Classes,
-		Functions,
-		FunctionParameters
-	};
-
-	/// <summary>
-	/// Generates a file name composed by the game name and the package object.
-	/// </summary>
-	/// <param name="type">The type of the file.</param>
-	/// <returns>
-	/// The generated file name.
-	/// </returns>
-	std::string Package::GenerateFileName(FileContentType type) const;
-
 	/// <summary>
 	/// Writes all structs into the appropriate file.
 	/// </summary>

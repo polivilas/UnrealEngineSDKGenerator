@@ -695,37 +695,11 @@ void Package::GenerateMethods(const UEClass& classObj, std::vector<Method>& meth
 	}
 }
 
-std::string Package::GenerateFileName(FileContentType type) const
-{
-	extern IGenerator* generator;
-
-	const char* name;
-	switch (type)
-	{
-		case FileContentType::Structs:
-			name = "%s_%s_structs.hpp";
-			break;
-		case FileContentType::Classes:
-			name = "%s_%s_classes.hpp";
-			break;
-		case FileContentType::Functions:
-			name = "%s_%s_functions.cpp";
-			break;
-		case FileContentType::FunctionParameters:
-			name = "%s_%s_parameters.hpp";
-			break;
-		default:
-			assert(false);
-	}
-
-	return tfm::format(name, generator->GetGameNameShort(), packageObj.GetName());
-}
-
 void Package::SaveStructs(const fs::path& path) const
 {
 	extern IGenerator* generator;
 
-	std::ofstream os(path / GenerateFileName(FileContentType::Structs));
+	std::ofstream os(path / GenerateFileName(FileContentType::Structs, packageObj));
 
 	PrintFileHeader(os, true);
 
@@ -742,7 +716,7 @@ void Package::SaveClasses(const fs::path& path) const
 {
 	extern IGenerator* generator;
 
-	std::ofstream os(path / GenerateFileName(FileContentType::Classes));
+	std::ofstream os(path / GenerateFileName(FileContentType::Classes, packageObj));
 
 	PrintFileHeader(os, true);
 
@@ -777,18 +751,14 @@ void Package::SaveFunctions(const fs::path& path) const
 
 	using namespace cpplinq;
 
-	std::ofstream os(path / GenerateFileName(FileContentType::Functions));
-
 	if (generator->ShouldGenerateFunctionParametersFile())
 	{
 		SaveFunctionParameters(path);
+	}
 
-		PrintFileHeader(os, { "\"../SDK.hpp\"", "\"" + GenerateFileName(FileContentType::FunctionParameters) + "\"" }, false);
-	}
-	else
-	{
-		PrintFileHeader(os, { "\"../SDK.hpp\"" }, false);
-	}
+	std::ofstream os(path / GenerateFileName(FileContentType::Functions, packageObj));
+
+	PrintFileHeader(os, { "\"../SDK.hpp\"" }, false);
 
 	PrintSectionHeader(os, "Functions");
 
@@ -840,7 +810,7 @@ void Package::SaveFunctionParameters(const fs::path& path) const
 {
 	using namespace cpplinq;
 
-	std::ofstream os(path / GenerateFileName(FileContentType::FunctionParameters));
+	std::ofstream os(path / GenerateFileName(FileContentType::FunctionParameters, packageObj));
 
 	PrintFileHeader(os, { "\"../SDK.hpp\"" }, true);
 
