@@ -706,6 +706,22 @@ void Package::SaveStructs(const fs::path& path) const
 
 	PrintFileHeader(os, true);
 
+	if (!constants.empty())
+	{
+		PrintSectionHeader(os, "Constants");
+		for (auto&& c : constants) { PrintConstant(os, c); }
+
+		os << "\n";
+	}
+
+	if (!enums.empty())
+	{
+		PrintSectionHeader(os, "Enums");
+		for (auto&& e : enums) { PrintEnum(os, e); os << "\n"; }
+
+		os << "\n";
+	}
+
 	if (!scriptStructs.empty())
 	{
 		PrintSectionHeader(os, "Script Structs");
@@ -722,22 +738,6 @@ void Package::SaveClasses(const fs::path& path) const
 	std::ofstream os(path / GenerateFileName(FileContentType::Classes, packageObj));
 
 	PrintFileHeader(os, true);
-
-	if (!constants.empty())
-	{
-		PrintSectionHeader(os, "Constants");
-		for (auto&& c : constants) { PrintConstant(os, c); }
-
-		os << "\n";
-	}
-
-	if (!enums.empty())
-	{
-		PrintSectionHeader(os, "Enums");
-		for (auto&& e : enums) { PrintEnum(os, e); os << "\n"; }
-
-		os << "\n";
-	}
 
 	if (!classes.empty())
 	{
