@@ -518,7 +518,10 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 		if (offset < prop.GetOffset())
 		{
 			auto size = prop.GetOffset() - offset;
-			members.emplace_back(Member::Unknown(unknownDataCounter++, offset, size, "MISSED OFFSET"));
+			if (size >= generator->GetGlobalMemberAlignment())
+			{
+				members.emplace_back(Member::Unknown(unknownDataCounter++, offset, size, "MISSED OFFSET"));
+			}
 		}
 
 		auto info = prop.GetInfo();
