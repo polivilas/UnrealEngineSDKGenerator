@@ -193,7 +193,7 @@ UEProperty::Info UEByteProperty::GetInfo() const
 {
 	if (IsEnum())
 	{
-		return Info::Create(PropertyType::Primitive, sizeof(uint8_t), false, "TEnumAsByte<enum class " + MakeUniqueCppName(GetEnum()) + ">");
+		return Info::Create(PropertyType::Primitive, sizeof(uint8_t), false, "TEnumAsByte<" + MakeUniqueCppName(GetEnum()) + ">");
 	}
 	return Info::Create(PropertyType::Primitive, sizeof(uint8_t), false, "unsigned char");
 }
