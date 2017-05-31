@@ -63,7 +63,12 @@ std::string MakeUniqueCppName(const UEConst& c)
 
 std::string MakeUniqueCppName(const UEEnum& e)
 {
-	return MakeUniqueCppNameImpl(e);
+	auto name = MakeUniqueCppNameImpl(e);
+	if (!name.empty() && name[0] != 'E')
+	{
+		name = 'E' + name;
+	}
+	return name;
 }
 
 std::string MakeUniqueCppName(const UEStruct& ss)
