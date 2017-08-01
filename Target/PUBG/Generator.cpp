@@ -183,15 +183,15 @@ public:
 
 	virtual std::string GetGameName() const override
 	{
-		return "Unreal Tournament 4";
+		return "PLAYERUNKNOWN'S BATTLEGROUNDS";
 	}
 	virtual std::string GetGameNameShort() const override
 	{
-		return "UT4";
+		return "PUBG";
 	}
 	virtual std::string GetGameVersion() const override
 	{
-		return "Pre Alpha";
+		return "2.4.24";
 	}
 
 	virtual std::string GetNamespaceName() const override
