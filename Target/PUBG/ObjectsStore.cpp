@@ -37,7 +37,7 @@ FUObjectArray* GlobalObjects = nullptr;
 
 bool ObjectsStore::Initialize()
 {
-	auto address = FindPattern(GetModuleHandleW(L"UE4-CoreUObject-Win64-Shipping.dll"), reinterpret_cast<const unsigned char*>("\x48\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x8B\xD6\x48\x89\xB5"), "xxx????x????x????xxxxxx");
+	auto address = FindPattern(GetModuleHandleW(nullptr), reinterpret_cast<const unsigned char*>("\x48\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x8B\xD6\x48\x89\xB5"), "xxx????x????x????xxxxxx");
 	if (address == -1)
 	{
 		return false;
