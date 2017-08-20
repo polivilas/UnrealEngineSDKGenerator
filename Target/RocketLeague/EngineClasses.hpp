@@ -115,7 +115,7 @@ public:
 
 struct FScriptDelegate
 {
-	unsigned char UnknownData[0x0C];
+	unsigned char UnknownData[0x10];
 };
 
 class UClass;
@@ -194,10 +194,10 @@ public:
 	char				UnknownData00[0x48];
 };
 
-class UClass : public UStruct
+class UClass : public UState
 {
 public:
-	char				UnknownData00[0x88];
+	char				UnknownData00[0x40];
 	UObject*			ClassDefaultObject;
 	char				UnknownData01[0x70];
 };
