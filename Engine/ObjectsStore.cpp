@@ -1,4 +1,5 @@
 #include "ObjectsStore.hpp"
+#include <cassert>
 
 ObjectsIterator ObjectsStore::begin()
 {
@@ -82,10 +83,12 @@ bool ObjectsIterator::operator!=(const ObjectsIterator& rhs) const
 
 UEObjectInfo ObjectsIterator::operator*() const
 {
+	assert(current.IsValid() && "ObjectsIterator::current is not valid!");
+
 	return { index, current };
 }
 
 UEObjectInfo ObjectsIterator::operator->() const
 {
-	return { index, current };
+	return operator*();
 }
