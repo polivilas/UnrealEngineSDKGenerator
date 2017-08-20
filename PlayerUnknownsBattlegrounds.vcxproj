@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C9338E0E-7CCC-4256-AE59-B1B1CEF6CCE5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>PUBG</RootNamespace>
+    <RootNamespace>PlayerUnknownsBattlegrounds</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <ProjectName>PlayerunknownsBattlegrounds</ProjectName>
   </PropertyGroup>

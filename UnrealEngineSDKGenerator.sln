@@ -31,7 +31,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RocketLeague", "RocketLeagu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fortnite", "Fortnite.vcxproj", "{42AFB8A2-F17E-4EEA-94E6-ABC8B7886DA4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PUBG", "PUBG.vcxproj", "{C9338E0E-7CCC-4256-AE59-B1B1CEF6CCE5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlayerUnknownsBattlegrounds", "PlayerUnknownsBattlegrounds.vcxproj", "{C9338E0E-7CCC-4256-AE59-B1B1CEF6CCE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
