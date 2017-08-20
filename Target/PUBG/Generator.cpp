@@ -183,7 +183,7 @@ public:
 
 	virtual std::string GetGameName() const override
 	{
-		return "PLAYERUNKNOWN'S BATTLEGROUNDS";
+		return "PlayerUnknown's Battlegrounds";
 	}
 	virtual std::string GetGameNameShort() const override
 	{

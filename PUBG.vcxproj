@@ -15,6 +15,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PUBG</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <ProjectName>PlayerunknownsBattlegrounds</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -56,7 +57,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;UNREALENGINESDKGENERATOR_EXPORTS;NOMINMAX;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;UNREALENGINESDKGENERATOR_EXPORTS;NOMINMAX;WIN32_LEAN_AND_MEAN;UNREALENGINE_VERSION=0400;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
       <AdditionalIncludeDirectories>.\Engine;.\Engine\UE4</AdditionalIncludeDirectories>
     </ClCompile>
@@ -73,7 +74,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;UNREALENGINESDKGENERATOR_EXPORTS;NOMINMAX;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;UNREALENGINESDKGENERATOR_EXPORTS;NOMINMAX;WIN32_LEAN_AND_MEAN;UNREALENGINE_VERSION=0400;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
       <AdditionalIncludeDirectories>.\Engine;.\Engine\UE4</AdditionalIncludeDirectories>
     </ClCompile>
