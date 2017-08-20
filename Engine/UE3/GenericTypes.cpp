@@ -63,6 +63,10 @@ std::string UEObject::GetNameCPP() const
 			c = c.GetSuper().Cast<UEClass>();
 		}
 	}
+	else if (IsA<UEState>())
+	{
+		name += "S";
+	}
 	else
 	{
 		name += "F";

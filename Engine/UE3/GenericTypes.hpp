@@ -134,10 +134,18 @@ public:
 	static UEClass StaticClass();
 };
 
-class UEClass : public UEStruct
+class UEState : public UEStruct
 {
 public:
 	using UEStruct::UEStruct;
+
+	static UEClass StaticClass();
+};
+
+class UEClass : public UEState
+{
+public:
+	using UEState::UEState;
 
 	static UEClass StaticClass();
 };
