@@ -53,7 +53,11 @@ void Package::Process()
 			{
 				GenerateConst(obj.Object.Cast<UEConst>());
 			}
-			else if (obj.Object.IsA<UEClass>())
+			else if (obj.Object.IsA<UEClass>()
+#if UNREALENGINE_VERSION < 0400
+				|| obj.Object.IsA<UEState>() // handle UStates like UClass
+#endif
+			)
 			{
 				GenerateClassPrerequisites(obj.Object.Cast<UEClass>());
 			}
