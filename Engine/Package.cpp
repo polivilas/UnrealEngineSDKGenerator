@@ -31,10 +31,10 @@ bool ComparePropertyLess(const UEProperty& lhs, const UEProperty& rhs)
 	return lhs.GetOffset() < rhs.GetOffset();
 }
 
-Package::Package(const UEObject& _packageObj, std::vector<UEObject>& _packageOrder, std::unordered_map<UEObject, bool>& _definedClasses)
+Package::Package(const UEObject& _packageObj, std::vector<UEObject>& _packageOrder, std::unordered_map<UEObject, bool>& _processedObjects)
 	: packageObj(_packageObj),
 	  packageOrder(_packageOrder),
-	  definedClasses(_definedClasses)
+	  processedObjects(_processedObjects)
 {
 }
 
@@ -53,17 +53,13 @@ void Package::Process()
 			{
 				GenerateConst(obj.Object.Cast<UEConst>());
 			}
-			else if (obj.Object.IsA<UEClass>()
-#if UNREALENGINE_VERSION < 0400
-				|| obj.Object.IsA<UEState>() // handle UStates like UClass
-#endif
-			)
+			else if (obj.Object.IsA<UEClass>())
 			{
-				GenerateClassPrerequisites(obj.Object.Cast<UEClass>());
+				GeneratePrerequisites(obj.Object.Cast<UEClass>());
 			}
 			else if (obj.Object.IsA<UEScriptStruct>())
 			{
-				GenerateScriptStructPrerequisites(obj.Object.Cast<UEScriptStruct>());
+				GeneratePrerequisites(obj.Object.Cast<UEScriptStruct>());
 			}
 		}
 	}
@@ -124,14 +120,21 @@ bool Package::UpdatePackageOrder(const UEObject& package) const
 	return true;
 }
 
-void Package::GenerateScriptStructPrerequisites(const UEScriptStruct& scriptStructObj)
+void Package::GeneratePrerequisites(const UEObject& obj)
 {
-	if (!scriptStructObj.IsValid())
+	if (!obj.IsValid())
 	{
 		return;
 	}
 
-	auto name = scriptStructObj.GetName();
+	auto isClass = obj.IsA<UEClass>();
+	auto isScriptStruct = obj.IsA<UEScriptStruct>();
+	if (!isClass && !isScriptStruct)
+	{
+		return;
+	}
+
+	auto name = obj.GetName();
 	if (name.find("Default__") != std::string::npos
 		|| name.find("<uninitialized>") != std::string::npos
 		|| name.find("PLACEHOLDER-CLASS") != std::string::npos)
@@ -139,34 +142,47 @@ void Package::GenerateScriptStructPrerequisites(const UEScriptStruct& scriptStru
 		return;
 	}
 
-	definedClasses[scriptStructObj] |= false;
+	processedObjects[obj] |= false;
 
-	auto structPackage = scriptStructObj.GetPackageObject();
-	if (!structPackage.IsValid())
+	auto classPackage = obj.GetPackageObject();
+	if (!classPackage.IsValid())
 	{
 		return;
 	}
 
-	if (!UpdatePackageOrder(structPackage))
+	if (!UpdatePackageOrder(classPackage))
 	{
 		return;
 	}
 
-	auto fullName = scriptStructObj.GetFullName();
-
-	if (definedClasses[scriptStructObj] == false)
+	if (processedObjects[obj] == false)
 	{
-		definedClasses[scriptStructObj] = true;
+		processedObjects[obj] = true;
 
-		auto super = scriptStructObj.GetSuper();
-		if (super.IsValid() && super != scriptStructObj && definedClasses[super] == false)
+		auto outer = obj.GetOuter();
+		if (outer.IsValid() && outer != obj)
 		{
-			GenerateScriptStructPrerequisites(super.Cast<UEScriptStruct>());
+			GeneratePrerequisites(outer);
 		}
 
-		GenerateMemberPrerequisites(scriptStructObj.GetChildren().Cast<UEProperty>());
+		auto structObj = obj.Cast<UEStruct>();
 
-		GenerateScriptStruct(scriptStructObj);
+		auto super = structObj.GetSuper();
+		if (super.IsValid() && super != obj)
+		{
+			GeneratePrerequisites(super);
+		}
+
+		GenerateMemberPrerequisites(structObj.GetChildren().Cast<UEProperty>());
+
+		if (isClass)
+		{
+			GenerateClass(obj.Cast<UEClass>());
+		}
+		else
+		{
+			GenerateScriptStruct(obj.Cast<UEScriptStruct>());
+		}
 	}
 }
 
@@ -190,7 +206,7 @@ void Package::GenerateMemberPrerequisites(const UEProperty& first)
 		auto info = prop.GetInfo();
 		if (info.Type == UEProperty::PropertyType::CustomStruct)
 		{
-			GenerateScriptStructPrerequisites(prop.Cast<UEStructProperty>().GetStruct());
+			GeneratePrerequisites(prop.Cast<UEStructProperty>().GetStruct());
 		}
 		else if (info.Type == UEProperty::PropertyType::Container)
 		{
@@ -211,7 +227,7 @@ void Package::GenerateMemberPrerequisites(const UEProperty& first)
 				>> where([](auto&& p) { return p.GetInfo().Type == UEProperty::PropertyType::CustomStruct; })
 				>> experimental::container())
 			{
-				GenerateScriptStructPrerequisites(innerProp.Cast<UEStructProperty>().GetStruct());
+				GeneratePrerequisites(innerProp.Cast<UEStructProperty>().GetStruct());
 			}
 		}
 	}
@@ -331,49 +347,6 @@ void Package::GenerateConst(const UEConst& constObj)
 	}
 
 	constants[name] = constObj.GetValue();
-}
-
-void Package::GenerateClassPrerequisites(const UEClass& classObj)
-{
-	if (!classObj.IsValid())
-	{
-		return;
-	}
-
-	auto name = classObj.GetName();
-	if (name.find("Default__") != std::string::npos
-		|| name.find("PLACEHOLDER-CLASS") != std::string::npos)
-	{
-		return;
-	}
-
-	definedClasses[classObj] |= false;
-
-	auto classPackage = classObj.GetPackageObject();
-	if (!classPackage.IsValid())
-	{
-		return;
-	}
-
-	if (!UpdatePackageOrder(classPackage))
-	{
-		return;
-	}
-
-	if (definedClasses[classObj] == false)
-	{
-		definedClasses[classObj] = true;
-
-		auto super = classObj.GetSuper();
-		if (super.IsValid())
-		{
-			GenerateClassPrerequisites(super.Cast<UEClass>());
-		}
-
-		GenerateMemberPrerequisites(classObj.GetChildren().Cast<UEProperty>());
-
-		GenerateClass(classObj);
-	}
 }
 
 void Package::GenerateClass(const UEClass& classObj)
@@ -510,7 +483,7 @@ void Package::GenerateClass(const UEClass& classObj)
 	classes.emplace_back(std::move(c));
 }
 
-void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const std::vector<UEProperty>& properties, std::vector<Member>& members)
+void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const std::vector<UEProperty>& properties, std::vector<Member>& members) const
 {
 	extern IGenerator* generator;
 

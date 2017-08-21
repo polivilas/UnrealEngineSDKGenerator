@@ -16,8 +16,8 @@ public:
 	/// </summary>
 	/// <param name="packageObj">The package object.</param>
 	/// <param name="packageOrder">[in,out] The package order.</param>
-	/// <param name="definedClasses">[in,out] The defined classes.</param>
-	Package(const UEObject& packageObj, std::vector<UEObject>& packageOrder, std::unordered_map<UEObject, bool>& definedClasses);
+	/// <param name="processedObjects">[in,out] The defined classes.</param>
+	Package(const UEObject& packageObj, std::vector<UEObject>& packageOrder, std::unordered_map<UEObject, bool>& processedObjects);
 
 	/// <summary>
 	/// Process the classes the package contains.
@@ -36,10 +36,11 @@ private:
 	bool Package::UpdatePackageOrder(const UEObject& package) const;
 
 	/// <summary>
-	/// Checks and generates the prerequisites of the script structure.
+	/// Checks and generates the prerequisites of the object.
+	/// Should be a UEClass or UEScriptStruct.
 	/// </summary>
-	/// <param name="scriptStructObj">The script structure object.</param>
-	void GenerateScriptStructPrerequisites(const UEScriptStruct& scriptStructObj);
+	/// <param name="obj">The object.</param>
+	void GeneratePrerequisites(const UEObject& obj);
 
 	/// <summary>
 	/// Checks and generates the prerequisites of the members.
@@ -64,12 +65,6 @@ private:
 	/// </summary>
 	/// <param name="enumObj">The enum object.</param>
 	void GenerateEnum(const UEEnum& enumObj);
-
-	/// <summary>
-	/// Checks and generates the prerequisites of the class.
-	/// </summary>
-	/// <param name="classObj">The class object.</param>
-	void GenerateClassPrerequisites(const UEClass& classObj);
 
 	/// <summary>
 	/// Generates the class.
@@ -103,7 +98,7 @@ private:
 
 	const UEObject& packageObj;
 	std::vector<UEObject>& packageOrder;
-	std::unordered_map<UEObject, bool>& definedClasses;
+	std::unordered_map<UEObject, bool>& processedObjects;
 
 	/// <summary>
 	/// Prints the c++ code of the constant.
@@ -161,7 +156,7 @@ private:
 	/// <param name="offset">The start offset.</param>
 	/// <param name="properties">The properties describing the members.</param>
 	/// <param name="members">[out] The members of the struct or class.</param>
-	void GenerateMembers(const UEStruct& structObj, size_t offset, const std::vector<UEProperty>& properties, std::vector<Member>& members);
+	void GenerateMembers(const UEStruct& structObj, size_t offset, const std::vector<UEProperty>& properties, std::vector<Member>& members) const;
 
 	struct ScriptStruct
 	{

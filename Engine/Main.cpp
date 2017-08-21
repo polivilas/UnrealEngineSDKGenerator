@@ -55,9 +55,9 @@ void Dump(const fs::path& path)
 /// Generates the sdk header.
 /// </summary>
 /// <param name="path">The path where to create the sdk header.</param>
-/// <param name="definedClasses">The defined classes info.</param>
+/// <param name="processedObjects">The list of processed objects.</param>
 /// <param name="packageOrder">The package order info.</param>
-void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool>& definedClasses, const std::vector<UEObject>& packageOrder)
+void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool>& processedObjects, const std::vector<UEObject>& packageOrder)
 {
 	std::ofstream os(path / "SDK.hpp");
 
@@ -99,7 +99,7 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 	using namespace cpplinq;
 
 	//check for missing structs
-	auto missing = from(definedClasses) >> where([](auto&& kv) { return kv.second == false; });
+	auto missing = from(processedObjects) >> where([](auto&& kv) { return kv.second == false; });
 	if (missing >> any())
 	{
 		std::ofstream os2(path / "SDK" / tfm::format("%s_MISSING.hpp", generator->GetGameNameShort()));
@@ -146,7 +146,7 @@ void ProcessPackages(const fs::path& path)
 	std::unordered_set<UEObject> excludePackage;
 	std::vector<UEObject> packageOrder;
 
-	std::unordered_map<UEObject, bool> definedClasses;
+	std::unordered_map<UEObject, bool> processedObjects;
 
 	for (auto obj : ObjectsStore())
 	{
@@ -157,7 +157,7 @@ void ProcessPackages(const fs::path& path)
 			{
 				uniquePackages.insert(packageObj);
 
-				Package package(packageObj, packageOrder, definedClasses);
+				Package package(packageObj, packageOrder, processedObjects);
 				package.Process();
 				if (!package.Save(sdkPath))
 				{
@@ -173,7 +173,7 @@ void ProcessPackages(const fs::path& path)
 		packageOrder.erase(std::remove(std::begin(packageOrder), std::end(packageOrder), package), std::end(packageOrder));
 	}
 
-	SaveSDKHeader(path, definedClasses, packageOrder);
+	SaveSDKHeader(path, processedObjects, packageOrder);
 }
 
 DWORD WINAPI OnAttach(LPVOID lpParameter)
