@@ -479,7 +479,7 @@ public:
 
 struct FScriptDelegate
 {
-	unsigned char UnknownData[0x0C];
+	unsigned char UnknownData[0x10];
 };)";
 	}
 
