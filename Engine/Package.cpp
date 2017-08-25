@@ -442,7 +442,7 @@ void Package::GenerateClass(const UEClass& classObj)
 	{
 		c.PredefinedMethods.push_back(IGenerator::PredefinedMethod::Inline(tfm::format(R"(	static UClass* StaticClass()
 	{
-		static auto ptr = static_class<UClass*>(UObject::GetGlobalObjects().GetByIndex(%d));
+		static auto ptr = static_cast<UClass*>(UObject::GetGlobalObjects().GetByIndex(%d));
 		return ptr;
 	})", classObj.GetIndex())));
 	}
