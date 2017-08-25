@@ -442,7 +442,7 @@ void Package::GenerateClass(const UEClass& classObj)
 	{
 		c.PredefinedMethods.push_back(IGenerator::PredefinedMethod::Inline(tfm::format(R"(	static UClass* StaticClass()
 	{
-		static auto ptr = static_cast<UClass*>(UObject::GetGlobalObjects().GetByIndex(%d));
+		static auto ptr = UObject::GetObjectCasted<UClass>(%d);
 		return ptr;
 	})", classObj.GetIndex())));
 	}
@@ -1016,7 +1016,7 @@ std::string Package::BuildMethodBody(const Class& c, const Method& m) const
 	}
 	else
 	{
-		ss << " = static_cast<UFunction*>(UObject::GetGlobalObjects().GetByIndex(" << m.Index << "));\n\n";
+		ss << " = UObject::GetObjectCasted<UFunction>(" << m.Index << ");\n\n";
 	}
 
 	//Parameters
