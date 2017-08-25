@@ -353,37 +353,22 @@ public:
 	static UEClass StaticClass();
 };
 
-namespace Internal
-{
-	template<typename T>
-	bool IsA(const UEObject &obj)
-	{
-		auto cmp = T::StaticClass();
-		if (!cmp.IsValid())
-		{
-			return false;
-		}
-
-		for (auto super = obj.GetClass(); super.IsValid(); super = super.GetSuper().Cast<UEClass>())
-		{
-			if (super.GetAddress() == cmp.GetAddress())
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-}
-
 template<typename T>
 bool UEObject::IsA() const
 {
-	return Internal::IsA<T>(*this);
-}
+	auto cmp = T::StaticClass();
+	if (!cmp.IsValid())
+	{
+		return false;
+	}
 
-template<>
-inline bool UEObject::IsA<UEClass>() const
-{
-	return Internal::IsA<UEState>(*this);
+	for (auto super = GetClass(); super.IsValid(); super = super.GetSuper().Cast<UEClass>())
+	{
+		if (super.object == cmp.object)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

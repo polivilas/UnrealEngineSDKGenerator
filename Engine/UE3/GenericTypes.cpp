@@ -43,7 +43,7 @@ std::string UEObject::GetNameCPP() const
 {
 	std::string name;
 
-	if (Internal::IsA<UEClass>(*this))
+	if (IsA<UEClass>())
 	{
 		auto c = Cast<UEClass>();
 		while (c.IsValid())
@@ -61,15 +61,6 @@ std::string UEObject::GetNameCPP() const
 			}
 
 			c = c.GetSuper().Cast<UEClass>();
-		}
-	}
-	else if (Internal::IsA<UEState>(*this))
-	{
-		name += "S";
-		auto outer = GetOuter();
-		if (outer.IsValid() && Internal::IsA<UEClass>(outer))
-		{
-			name += outer.GetName() + "_";
 		}
 	}
 	else
