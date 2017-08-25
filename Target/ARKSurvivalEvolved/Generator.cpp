@@ -155,9 +155,14 @@ public:
 	{
 		return FindObject<UClass>(name);
 	})"),
+			PredefinedMethod::Inline(R"(	template<typename T>
+	static T* GetObjectCasted(std::size_t index)
+	{
+		return static_cast<T*>(GetGlobalObjects().GetByIndex(index));
+	})"),
 			PredefinedMethod::Default("bool IsA(UClass* cmp) const", R"(bool UObject::IsA(UClass* cmp) const
 {
-	for (auto super = Class; super; super = (UClass*)super->SuperField)
+	for (auto super = Class; super; super = static_cast<UClass*>(super->SuperField))
 	{
 		if (super == cmp)
 		{
