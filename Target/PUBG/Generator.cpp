@@ -196,7 +196,7 @@ public:
 	}
 	virtual std::string GetGameVersion() const override
 	{
-		return "2.4.24";
+		return "2.5.39.19";
 	}
 
 	virtual std::string GetNamespaceName() const override
