@@ -229,7 +229,6 @@ class FUObjectItem
 public:
 	UObject* Object;
 	int32_t Flags;
-	int32_t ClusterIndex;
 	int32_t SerialNumber;
 
 	enum class EInternalObjectFlags : int32_t
