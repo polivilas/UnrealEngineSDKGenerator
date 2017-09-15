@@ -196,7 +196,7 @@ public:
 	}
 	virtual std::string GetGameVersion() const override
 	{
-		return "2.5.39.19";
+		return "2.6.23";
 	}
 
 	virtual std::string GetNamespaceName() const override
@@ -605,7 +605,7 @@ struct FText
 
 struct FScriptDelegate
 {
-	char UnknownData[20];
+	char UnknownData[14];
 };
 
 struct FScriptMulticastDelegate
