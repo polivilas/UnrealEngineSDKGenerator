@@ -37,13 +37,13 @@ FUObjectArray* GlobalObjects = nullptr;
 
 bool ObjectsStore::Initialize()
 {
-	auto address = FindPattern(GetModuleHandleW(L"FortniteClient-Win64-Shipping.exe"), reinterpret_cast<const unsigned char*>("\x48\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x8B\xD6"), "xxx????x????x????xxx");
+	const auto address = FindPattern(GetModuleHandleW(L"FortniteClient-Win64-Shipping.exe"), reinterpret_cast<const unsigned char*>("\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x01\x33\xC9\x84\xD2\x41\x8B\x40\x08\x49\x89\x48\x10\x0F\x45\x05\x00\x00\x00\x00\xFF\xC0\x49\x89\x48\x10\x41\x89\x40\x08"), "xxx????xxxxxxxxxxxxxxxxxx????xxxxxxxxxx");
 	if (address == -1)
 	{
 		return false;
 	}
 
-	auto offset = *reinterpret_cast<uint32_t*>(address + 3);
+	const auto offset = *reinterpret_cast<uint32_t*>(address + 3);
 	GlobalObjects = reinterpret_cast<decltype(GlobalObjects)>(address + 7 + offset);
 
 	return true;
