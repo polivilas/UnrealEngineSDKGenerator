@@ -822,7 +822,7 @@ void Package::PrintEnum(std::ostream& os, const Enum& e) const
 {
 	using namespace cpplinq;
 
-	os << "// " << e.FullName << "\nenum class " << e.Name << "\n{\n";
+	os << "// " << e.FullName << "\nenum class " << e.Name << " : uint8_t\n{\n";
 	os << (from(e.Values)
 		>> select([](auto&& name, auto&& i) { return tfm::format("\t%-30s = %d", name, i); })
 		>> concatenate(",\n"))
