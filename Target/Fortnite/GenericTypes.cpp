@@ -69,7 +69,7 @@ std::vector<std::string> UEEnum::GetNames() const
 
 	for (auto i = 0; i < names.Num(); ++i)
 	{
-		buffer.push_back(NamesStore().GetById(names[i].Key.ComparisonIndex));
+		buffer.push_back(SimplifyEnumName(NamesStore().GetById(names[i].Key.ComparisonIndex)));
 	}
 
 	return buffer;

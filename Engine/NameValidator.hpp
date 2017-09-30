@@ -13,6 +13,8 @@ class UEStruct;
 /// <returns>A valid C++ name.</returns>
 std::string MakeValidName(std::string&& name);
 
+std::string SimplifyEnumName(std::string&& name);
+
 std::string MakeUniqueCppName(const UEConst& c);
 std::string MakeUniqueCppName(const UEEnum& e);
 std::string MakeUniqueCppName(const UEStruct& ss);

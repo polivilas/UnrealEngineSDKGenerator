@@ -45,6 +45,17 @@ std::string MakeValidName(std::string&& name)
 	return valid;
 }
 
+std::string SimplifyEnumName(std::string&& name)
+{
+	const auto index = name.find_last_of(':');
+	if (index == std::string::npos)
+	{
+		return name;
+	}
+
+	return name.substr(index + 1);
+}
+
 template<typename T>
 std::string MakeUniqueCppNameImpl(const T& t)
 {
