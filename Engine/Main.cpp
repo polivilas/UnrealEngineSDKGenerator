@@ -221,7 +221,7 @@ DWORD WINAPI OnAttach(LPVOID lpParameter)
 
 	fs::create_directories(outputDirectory);
 
-	auto begin = std::chrono::system_clock::now();
+	const auto begin = std::chrono::system_clock::now();
 
 	ProcessPackages(outputDirectory);
 
