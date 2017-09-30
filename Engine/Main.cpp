@@ -99,7 +99,7 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 	using namespace cpplinq;
 
 	//check for missing structs
-	auto missing = from(processedObjects) >> where([](auto&& kv) { return kv.second == false; });
+	const auto missing = from(processedObjects) >> where([](auto&& kv) { return kv.second == false; });
 	if (missing >> any())
 	{
 		std::ofstream os2(path / "SDK" / tfm::format("%s_MISSING.hpp", generator->GetGameNameShort()));
@@ -139,7 +139,7 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 /// <param name="path">The path where to create the package files.</param>
 void ProcessPackages(const fs::path& path)
 {
-	auto sdkPath = path / "SDK";
+	const auto sdkPath = path / "SDK";
 	fs::create_directories(sdkPath);
 	
 	std::unordered_set<UEObject> uniquePackages;
