@@ -171,7 +171,7 @@ class FLazyObjectPtr : public TPersistentObjectPtr<FUniqueObjectGuid>
 
 struct FScriptDelegate
 {
-	unsigned char UnknownData[20];
+	unsigned char UnknownData[0x10];
 };
 
 struct FScriptMulticastDelegate
@@ -203,7 +203,7 @@ class UEnum : public UField
 public:
 	FString CppType; //0x0030 
 	TArray<TPair<FName, uint64_t>> Names; //0x0040 
-	__int64 CppForm; //0x0050 
+	int64_t CppForm; //0x0050 
 };
 
 class UStruct : public UField
@@ -213,7 +213,7 @@ public:
 	UField* Children;
 	int32_t PropertySize;
 	int32_t MinAlignment;
-	char pad_0x0048[0x40];
+	char pad_0x0048[64];
 };
 
 class UScriptStruct : public UStruct
@@ -225,17 +225,17 @@ public:
 class UFunction : public UStruct
 {
 public:
-	__int32 FunctionFlags; //0x0088
-	__int16 RepOffset; //0x008C
-	__int8 NumParms; //0x008E
+	int32_t FunctionFlags; //0x0088
+	int16_t RepOffset; //0x008C
+	int8_t NumParms; //0x008E
 	char pad_0x008F[0x1]; //0x008F
-	__int16 ParmsSize; //0x0090
-	__int16 ReturnValueOffset; //0x0092
-	__int16 RPCId; //0x0094
-	__int16 RPCResponseId; //0x0096
+	int16_t ParmsSize; //0x0090
+	int16_t ReturnValueOffset; //0x0092
+	int16_t RPCId; //0x0094
+	int16_t RPCResponseId; //0x0096
 	class UProperty* FirstPropertyToInit; //0x0098
 	UFunction* EventGraphFunction; //0x00A0
-	__int32 EventGraphCallOffset; //0x00A8
+	int32_t EventGraphCallOffset; //0x00A8
 	char pad_0x00AC[0x4]; //0x00AC
 	void* Func; //0x00B0
 };
@@ -243,19 +243,22 @@ public:
 class UClass : public UStruct
 {
 public:
-	char pad_0x0088[0x198]; //0x0088
+	char pad_0088[120]; //0x0088
+	class UObject* DefaultObject; //0x0100
+	char pad_0108[328]; //0x0108
 };
 
 class UProperty : public UField
 {
 public:
-	__int32 ArrayDim; //0x0030 
-	__int32 ElementSize; //0x0034 
+	int32_t ArrayDim; //0x0030 
+	int32_t ElementSize; //0x0034 
 	FQWord PropertyFlags; //0x0038
-	__int32 PropertySize; //0x0040 
-	char pad_0x0044[0xC]; //0x0044
-	__int32 Offset; //0x0050 
-	char pad_0x0054[0x24]; //0x0054
+	int32_t PropertySize; //0x0040 
+	int32_t Offset; //0x0044
+	char pad_0048[8]; //0x0048
+	class UProperty* PropertyLinkNext; //0x0050
+	char pad_0058[24]; //0x0058
 };
 
 class UNumericProperty : public UProperty
