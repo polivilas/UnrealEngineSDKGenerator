@@ -485,6 +485,19 @@ public:
 	static UEClass StaticClass();
 };
 
+class UEEnumProperty : public UEProperty
+{
+public:
+	using UEProperty::UEProperty;
+
+	UENumericProperty GetUnderlyingProperty() const;
+	UEEnum GetEnum() const;
+
+	UEProperty::Info GetInfo() const;
+
+	static UEClass StaticClass();
+};
+
 template<typename T>
 bool UEObject::IsA() const
 {

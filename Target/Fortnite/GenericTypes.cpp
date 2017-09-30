@@ -524,7 +524,7 @@ UEProperty UEArrayProperty::GetInner() const
 //---------------------------------------------------------------------------
 UEProperty::Info UEArrayProperty::GetInfo() const
 {
-	auto inner = GetInner().GetInfo();
+	const auto inner = GetInner().GetInfo();
 	if (inner.Type != PropertyType::Unknown)
 	{
 		extern IGenerator* generator;
@@ -555,8 +555,8 @@ UEProperty UEMapProperty::GetValueProperty() const
 //---------------------------------------------------------------------------
 UEProperty::Info UEMapProperty::GetInfo() const
 {
-	auto key = GetKeyProperty().GetInfo();
-	auto value = GetValueProperty().GetInfo();
+	const auto key = GetKeyProperty().GetInfo();
+	const auto value = GetValueProperty().GetInfo();
 	if (key.Type != PropertyType::Unknown && value.Type != PropertyType::Unknown)
 	{
 		extern IGenerator* generator;
@@ -609,3 +609,27 @@ UEClass UEMulticastDelegateProperty::StaticClass()
 	return c;
 }
 //---------------------------------------------------------------------------
+//UEEnumProperty
+//---------------------------------------------------------------------------
+UENumericProperty UEEnumProperty::GetUnderlyingProperty() const
+{
+	return UENumericProperty(static_cast<UEnumProperty*>(object)->UnderlyingProp);
+}
+//---------------------------------------------------------------------------
+UEEnum UEEnumProperty::GetEnum() const
+{
+	return UEEnum(static_cast<UEnumProperty*>(object)->Enum);
+}
+//---------------------------------------------------------------------------
+UEProperty::Info UEEnumProperty::GetInfo() const
+{
+	return Info::Create(PropertyType::PredefinedStruct, sizeof(uint8_t), true, MakeUniqueCppName(GetEnum()));
+}
+//---------------------------------------------------------------------------
+UEClass UEEnumProperty::StaticClass()
+{
+	static auto c = ObjectsStore().FindClass("Class CoreUObject.EnumProperty");
+	return c;
+}
+//---------------------------------------------------------------------------
+// 

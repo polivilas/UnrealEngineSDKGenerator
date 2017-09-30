@@ -48,7 +48,7 @@ std::string UEObject::GetNameCPP() const
 		auto c = Cast<UEClass>();
 		while (c.IsValid())
 		{
-			auto className = c.GetName();
+			const auto className = c.GetName();
 			if (className == "Actor")
 			{
 				name += "A";
@@ -180,6 +180,10 @@ UEProperty::Info UEProperty::GetInfo() const
 		if (IsA<UEMulticastDelegateProperty>())
 		{
 			return Cast<UEMulticastDelegateProperty>().GetInfo();
+		}
+		if (IsA<UEEnumProperty>())
+		{
+			return Cast<UEEnumProperty>().GetInfo();
 		}
 	}
 	return { PropertyType::Unknown };
