@@ -203,7 +203,7 @@ void Package::GenerateMemberPrerequisites(const UEProperty& first)
 			}
 		}
 
-		auto info = prop.GetInfo();
+		const auto info = prop.GetInfo();
 		if (info.Type == UEProperty::PropertyType::CustomStruct)
 		{
 			GeneratePrerequisites(prop.Cast<UEStructProperty>().GetStruct());
@@ -317,7 +317,7 @@ void Package::GenerateEnum(const UEEnum& enumObj)
 	std::unordered_map<std::string, int> conflicts;
 	for (auto&& s : enumObj.GetNames())
 	{
-		auto clean = MakeValidName(std::forward<std::string>(s));
+		const auto clean = MakeValidName(std::move(s));
 
 		auto it = conflicts.find(clean);
 		if (it == std::end(conflicts))
@@ -494,14 +494,14 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 	{
 		if (offset < prop.GetOffset())
 		{
-			auto size = prop.GetOffset() - offset;
+			const auto size = prop.GetOffset() - offset;
 			if (size >= generator->GetGlobalMemberAlignment())
 			{
 				members.emplace_back(Member::Unknown(unknownDataCounter++, offset, size, "MISSED OFFSET"));
 			}
 		}
 
-		auto info = prop.GetInfo();
+		const auto info = prop.GetInfo();
 		if (info.Type != UEProperty::PropertyType::Unknown)
 		{
 			Member sp;
@@ -537,16 +537,15 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 
 			members.emplace_back(std::move(sp));
 
-			auto sizeMismatch = static_cast<int>(prop.GetElementSize() * prop.GetArrayDim()) - static_cast<int>(info.Size * prop.GetArrayDim());
+			const auto sizeMismatch = static_cast<int>(prop.GetElementSize() * prop.GetArrayDim()) - static_cast<int>(info.Size * prop.GetArrayDim());
 			if (sizeMismatch > 0)
 			{
-				members.emplace_back(Member::Unknown(unknownDataCounter++, offset, sizeMismatch, "FIX WRONG TYPE SIZE OF PREVIUS PROPERTY"));
+				members.emplace_back(Member::Unknown(unknownDataCounter++, offset, sizeMismatch, "FIX WRONG TYPE SIZE OF PREVIOUS PROPERTY"));
 			}
 		}
 		else
 		{
-			auto info2 = prop.GetInfo();
-			auto size = prop.GetElementSize() * prop.GetArrayDim();
+			const auto size = prop.GetElementSize() * prop.GetArrayDim();
 			members.emplace_back(Member::Unknown(unknownDataCounter++, offset, size, "UNKNOWN PROPERTY: " + prop.GetFullName()));
 		}
 
