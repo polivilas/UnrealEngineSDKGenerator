@@ -196,7 +196,7 @@ public:
 	}
 	virtual std::string GetGameVersion() const override
 	{
-		return "2.4.24";
+		return "2.6.23";
 	}
 
 	virtual std::string GetNamespaceName() const override
@@ -229,7 +229,6 @@ class FUObjectItem
 public:
 	UObject* Object;
 	int32_t Flags;
-	int32_t ClusterIndex;
 	int32_t SerialNumber;
 
 	enum class EInternalObjectFlags : int32_t
@@ -606,7 +605,7 @@ struct FText
 
 struct FScriptDelegate
 {
-	char UnknownData[20];
+	char UnknownData[14];
 };
 
 struct FScriptMulticastDelegate
