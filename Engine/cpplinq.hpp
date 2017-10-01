@@ -2441,8 +2441,8 @@ namespace cpplinq
                 returns_reference   = 1 ,
             };
 
-            typedef             std::set<value_type>               set_type                         ;
-            typedef    typename set_type::const_iterator           set_iterator_type                ;
+            typedef             std::unordered_set<value_type>                  set_type            ;
+            typedef    typename set_type::const_iterator                        set_iterator_type   ;
 
             range_type                  range               ;
             set_type                    set                 ;
@@ -2793,8 +2793,8 @@ namespace cpplinq
                 returns_reference   = 1 ,
             };
 
-            typedef             std::set<value_type>               set_type                         ;
-            typedef    typename set_type::const_iterator           set_iterator_type                ;
+            typedef             std::unordered_set<value_type>                  set_type            ;
+            typedef    typename set_type::const_iterator                        set_iterator_type   ;
 
             range_type                  range               ;
             other_range_type            other_range         ;
@@ -5084,11 +5084,11 @@ namespace cpplinq
     }
 
     template<typename TContainer>
-    CPPLINQ_INLINEMETHOD detail::from_range<typename TContainer::const_iterator> from (
+    CPPLINQ_INLINEMETHOD auto from (
             TContainer  const & container
         )
     {
-        return detail::from_range<typename TContainer::const_iterator> (
+        return detail::from_range<decltype(container.begin())> (
                 container.begin ()
             ,   container.end ()
             );
