@@ -36,7 +36,7 @@ void Dump(const fs::path& path)
 
 		for (auto obj : ObjectsStore())
 		{
-			tfm::format(o, "[%06i] %-100s 0x%P\n", obj.Index, obj.Object.GetFullName(), obj.Object.GetAddress());
+			tfm::format(o, "[%06i] %-100s 0x%P\n", obj.GetIndex(), obj.GetFullName(), obj.GetAddress());
 		}
 	}
 
@@ -57,7 +57,7 @@ void Dump(const fs::path& path)
 /// <param name="path">The path where to create the sdk header.</param>
 /// <param name="processedObjects">The list of processed objects.</param>
 /// <param name="packageOrder">The package order info.</param>
-void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool>& processedObjects, const std::vector<UEObject>& packageOrder)
+void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool>& processedObjects, const std::vector<std::unique_ptr<Package>>& packages)
 {
 	std::ofstream os(path / "SDK.hpp");
 
@@ -122,13 +122,13 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 
 	os << "\n";
 
-	for (auto&& package : packageOrder)
+	for (auto&& package : packages)
 	{
-		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Structs, package) << "\"\n";
-		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Classes, package) << "\"\n";
+		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Structs, *package) << "\" // " << package->packageObj.GetIndex() << "\n";
+		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Classes, *package) << "\"\n";
 		if (generator->ShouldGenerateFunctionParametersFile())
 		{
-			os << R"(#include "SDK/)" << GenerateFileName(FileContentType::FunctionParameters, package) << "\"\n";
+			os << R"(#include "SDK/)" << GenerateFileName(FileContentType::FunctionParameters, *package) << "\"\n";
 		}
 	}
 }
@@ -139,41 +139,53 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 /// <param name="path">The path where to create the package files.</param>
 void ProcessPackages(const fs::path& path)
 {
+	using namespace cpplinq;
+
 	const auto sdkPath = path / "SDK";
 	fs::create_directories(sdkPath);
 	
+	std::vector<std::unique_ptr<Package>> packages;
 	std::unordered_set<UEObject> uniquePackages;
-	std::unordered_set<UEObject> excludePackage;
-	std::vector<UEObject> packageOrder;
 
 	std::unordered_map<UEObject, bool> processedObjects;
 
 	for (auto obj : ObjectsStore())
 	{
-		auto packageObj = obj.Object.GetPackageObject();
+		auto packageObj = obj.GetPackageObject();
 		if (packageObj.IsValid())
 		{
 			if (uniquePackages.find(packageObj) == std::end(uniquePackages))
 			{
 				uniquePackages.insert(packageObj);
 
-				Package package(packageObj, packageOrder, processedObjects);
-				package.Process();
-				if (!package.Save(sdkPath))
+				auto package = std::make_unique<Package>(obj);
+
+				package->Process(processedObjects);
+				if (package->Save(sdkPath))
 				{
-					excludePackage.insert(packageObj);
+					Package::PackageMap[obj] = package.get();
+
+					packages.emplace_back(std::move(package));
 				}
 			}
 		}
 	}
 
-	//remove excluded (empty) packages
-	for (auto&& package : excludePackage)
+	// std::sort doesn't work, so use a simple bubble sort
+	//std::sort(std::begin(packages), std::end(packages), PackageDependencyComparer());
+	PackageDependencyComparer comparer;
+	for (int i = 0; i < packages.size() - 1; ++i)
 	{
-		packageOrder.erase(std::remove(std::begin(packageOrder), std::end(packageOrder), package), std::end(packageOrder));
+		for (int j = 0; j < packages.size() - i - 1; ++j)
+		{
+			if (!comparer(packages[j], packages[j + 1]))
+			{
+				std::swap(packages[j], packages[j + 1]);
+			}
+		}
 	}
 
-	SaveSDKHeader(path, processedObjects, packageOrder);
+	SaveSDKHeader(path, processedObjects, packages);
 }
 
 DWORD WINAPI OnAttach(LPVOID lpParameter)
