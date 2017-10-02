@@ -158,12 +158,12 @@ void ProcessPackages(const fs::path& path)
 			{
 				uniquePackages.insert(packageObj);
 
-				auto package = std::make_unique<Package>(obj);
+				auto package = std::make_unique<Package>(packageObj);
 
 				package->Process(processedObjects);
 				if (package->Save(sdkPath))
 				{
-					Package::PackageMap[obj] = package.get();
+					Package::PackageMap[packageObj] = package.get();
 
 					packages.emplace_back(std::move(package));
 				}
@@ -171,16 +171,19 @@ void ProcessPackages(const fs::path& path)
 		}
 	}
 
-	// std::sort doesn't work, so use a simple bubble sort
-	//std::sort(std::begin(packages), std::end(packages), PackageDependencyComparer());
-	PackageDependencyComparer comparer;
-	for (int i = 0; i < packages.size() - 1; ++i)
+	if (!packages.empty())
 	{
-		for (int j = 0; j < packages.size() - i - 1; ++j)
+		// std::sort doesn't work, so use a simple bubble sort
+		//std::sort(std::begin(packages), std::end(packages), PackageDependencyComparer());
+		const PackageDependencyComparer comparer;
+		for (auto i = 0u; i < packages.size() - 1; ++i)
 		{
-			if (!comparer(packages[j], packages[j + 1]))
+			for (auto j = 0u; j < packages.size() - i - 1; ++j)
 			{
-				std::swap(packages[j], packages[j + 1]);
+				if (!comparer(packages[j], packages[j + 1]))
+				{
+					std::swap(packages[j], packages[j + 1]);
+				}
 			}
 		}
 	}
