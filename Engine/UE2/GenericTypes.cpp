@@ -137,7 +137,32 @@ UEProperty::Info UEProperty::GetInfo() const
 	return { PropertyType::Unknown };
 }
 
+//---------------------------------------------------------------------------
+//UEByteProperty
+//---------------------------------------------------------------------------
 bool UEByteProperty::IsEnum() const
 {
 	return GetEnum().IsValid();
 }
+//---------------------------------------------------------------------------
+//UEScriptStruct
+//---------------------------------------------------------------------------
+UEClass UEScriptStruct::StaticClass()
+{
+	//Unreal Engine 2 doesn't have the ScriptStruct class
+	return nullptr;
+}
+//---------------------------------------------------------------------------
+//UEEnumProperty
+//---------------------------------------------------------------------------
+UEEnum UEEnumProperty::GetEnum() const
+{
+	return UEEnum(nullptr);
+}
+//---------------------------------------------------------------------------
+UEClass UEEnumProperty::StaticClass()
+{
+	//Unreal Engine 1 doesn't have the EnumProperty class
+	return nullptr;
+}
+//---------------------------------------------------------------------------

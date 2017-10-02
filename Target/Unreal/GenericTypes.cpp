@@ -105,14 +105,6 @@ UEClass UEStruct::StaticClass()
 	return c;
 }
 //---------------------------------------------------------------------------
-//UEScriptStruct
-//---------------------------------------------------------------------------
-UEClass UEScriptStruct::StaticClass()
-{
-	//Unreal Engine 1 doesn't have the ScriptStruct class
-	return nullptr;
-}
-//---------------------------------------------------------------------------
 //UEFunction
 //---------------------------------------------------------------------------
 UEFunctionFlags UEFunction::GetFunctionFlags() const

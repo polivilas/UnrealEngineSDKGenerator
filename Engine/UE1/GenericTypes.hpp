@@ -351,6 +351,16 @@ public:
 	static UEClass StaticClass();
 };
 
+class UEEnumProperty : public UEProperty
+{
+public:
+	using UEProperty::UEProperty;
+
+	UEEnum GetEnum() const;
+
+	static UEClass StaticClass();
+};
+
 template<typename T>
 bool UEObject::IsA() const
 {
@@ -379,6 +389,14 @@ inline bool UEObject::IsA<UEScriptStruct>() const
 	{
 		return !IsA<UEFunction>() && !IsA<UEState>();
 	}
+
+	return false;
+}
+
+template<>
+inline bool UEObject::IsA<UEEnumProperty>() const
+{
+	//UE1 doesn't have an EnumProperty.
 
 	return false;
 }
