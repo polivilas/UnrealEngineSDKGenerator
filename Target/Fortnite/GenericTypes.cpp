@@ -623,7 +623,7 @@ UEEnum UEEnumProperty::GetEnum() const
 //---------------------------------------------------------------------------
 UEProperty::Info UEEnumProperty::GetInfo() const
 {
-	return Info::Create(PropertyType::PredefinedStruct, sizeof(uint8_t), true, MakeUniqueCppName(GetEnum()));
+	return Info::Create(PropertyType::Primitive, sizeof(uint8_t), false, MakeUniqueCppName(GetEnum()));
 }
 //---------------------------------------------------------------------------
 UEClass UEEnumProperty::StaticClass()

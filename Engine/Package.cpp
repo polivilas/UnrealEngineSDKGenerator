@@ -13,6 +13,8 @@
 #include "Flags.hpp"
 #include "PrintHelper.hpp"
 
+std::unordered_map<UEObject, const Package*> Package::PackageMap;
+
 /// <summary>
 /// Compare two properties.
 /// </summary>
@@ -31,35 +33,33 @@ bool ComparePropertyLess(const UEProperty& lhs, const UEProperty& rhs)
 	return lhs.GetOffset() < rhs.GetOffset();
 }
 
-Package::Package(const UEObject& _packageObj, std::vector<UEObject>& _packageOrder, std::unordered_map<UEObject, bool>& _processedObjects)
-	: packageObj(_packageObj),
-	  packageOrder(_packageOrder),
-	  processedObjects(_processedObjects)
+Package::Package(const UEObject& _packageObj)
+	: packageObj(_packageObj)
 {
 }
 
-void Package::Process()
+void Package::Process(std::unordered_map<UEObject, bool>& processedObjects)
 {
 	for (auto obj : ObjectsStore())
 	{
-		auto package = obj.Object.GetPackageObject();
+		auto package = obj.GetPackageObject();
 		if (packageObj == package)
 		{
-			if (obj.Object.IsA<UEEnum>())
+			if (obj.IsA<UEEnum>())
 			{
-				GenerateEnum(obj.Object.Cast<UEEnum>());
+				GenerateEnum(obj.Cast<UEEnum>());
 			}
-			else if (obj.Object.IsA<UEConst>())
+			else if (obj.IsA<UEConst>())
 			{
-				GenerateConst(obj.Object.Cast<UEConst>());
+				GenerateConst(obj.Cast<UEConst>());
 			}
-			else if (obj.Object.IsA<UEClass>())
+			else if (obj.IsA<UEClass>())
 			{
-				GeneratePrerequisites(obj.Object.Cast<UEClass>());
+				GeneratePrerequisites(obj, processedObjects);
 			}
-			else if (obj.Object.IsA<UEScriptStruct>())
+			else if (obj.IsA<UEScriptStruct>())
 			{
-				GeneratePrerequisites(obj.Object.Cast<UEScriptStruct>());
+				GeneratePrerequisites(obj, processedObjects);
 			}
 		}
 	}
@@ -91,36 +91,18 @@ bool Package::Save(const fs::path& path) const
 	return false;
 }
 
-bool Package::UpdatePackageOrder(const UEObject& package) const
+bool Package::AddDependency(const UEObject& package) const
 {
-	if (std::find(std::begin(packageOrder), std::end(packageOrder), packageObj) == std::end(packageOrder))
-	{
-		packageOrder.push_back(packageObj);
-	}
-
 	if (package != packageObj)
 	{
-		auto itPO = std::find(std::begin(packageOrder), std::end(packageOrder), package);
-		auto itPTP = std::find(std::begin(packageOrder), std::end(packageOrder), packageObj);
+		dependencies.insert(package);
 
-		if (itPO == std::end(packageOrder))
-		{
-			packageOrder.insert(itPTP, package);
-		}
-		else if (itPO > itPTP)
-		{
-			packageOrder.insert(itPTP, package);
-			//iterator may be invalid after the insert
-			itPO = std::next(std::find(std::rbegin(packageOrder), std::rend(packageOrder), package)).base();
-			packageOrder.erase(itPO);
-		}
-
-		return false;
+		return true;
 	}
-	return true;
+	return false;
 }
 
-void Package::GeneratePrerequisites(const UEObject& obj)
+void Package::GeneratePrerequisites(const UEObject& obj, std::unordered_map<UEObject, bool>& processedObjects)
 {
 	if (!obj.IsValid())
 	{
@@ -150,7 +132,7 @@ void Package::GeneratePrerequisites(const UEObject& obj)
 		return;
 	}
 
-	if (!UpdatePackageOrder(classPackage))
+	if (AddDependency(classPackage))
 	{
 		return;
 	}
@@ -162,7 +144,7 @@ void Package::GeneratePrerequisites(const UEObject& obj)
 		auto outer = obj.GetOuter();
 		if (outer.IsValid() && outer != obj)
 		{
-			GeneratePrerequisites(outer);
+			GeneratePrerequisites(outer, processedObjects);
 		}
 
 		auto structObj = obj.Cast<UEStruct>();
@@ -170,10 +152,10 @@ void Package::GeneratePrerequisites(const UEObject& obj)
 		auto super = structObj.GetSuper();
 		if (super.IsValid() && super != obj)
 		{
-			GeneratePrerequisites(super);
+			GeneratePrerequisites(super, processedObjects);
 		}
 
-		GenerateMemberPrerequisites(structObj.GetChildren().Cast<UEProperty>());
+		GenerateMemberPrerequisites(structObj.GetChildren().Cast<UEProperty>(), processedObjects);
 
 		if (isClass)
 		{
@@ -186,27 +168,32 @@ void Package::GeneratePrerequisites(const UEObject& obj)
 	}
 }
 
-void Package::GenerateMemberPrerequisites(const UEProperty& first)
+void Package::GenerateMemberPrerequisites(const UEProperty& first, std::unordered_map<UEObject, bool>& processedObjects)
 {
 	using namespace cpplinq;
 
 	for (auto prop = first; prop.IsValid(); prop = prop.GetNext().Cast<UEProperty>())
 	{
-		if (prop.IsA<UEByteProperty>())
+		const auto info = prop.GetInfo();
+		if (info.Type == UEProperty::PropertyType::Primitive)
 		{
-			auto byteProperty = prop.Cast<UEByteProperty>();
-			if (byteProperty.IsEnum())
+			if (prop.IsA<UEByteProperty>())
 			{
-				UpdatePackageOrder(byteProperty.GetEnum().GetPackageObject());
-
-				continue;
+				auto byteProperty = prop.Cast<UEByteProperty>();
+				if (byteProperty.IsEnum())
+				{
+					AddDependency(byteProperty.GetEnum().GetPackageObject());
+				}
+			}
+			else if (prop.IsA<UEEnumProperty>())
+			{
+				auto enumProperty = prop.Cast<UEEnumProperty>();
+				AddDependency(enumProperty.GetEnum().GetPackageObject());
 			}
 		}
-
-		const auto info = prop.GetInfo();
-		if (info.Type == UEProperty::PropertyType::CustomStruct)
+		else if (info.Type == UEProperty::PropertyType::CustomStruct)
 		{
-			GeneratePrerequisites(prop.Cast<UEStructProperty>().GetStruct());
+			GeneratePrerequisites(prop.Cast<UEStructProperty>().GetStruct(), processedObjects);
 		}
 		else if (info.Type == UEProperty::PropertyType::Container)
 		{
@@ -227,8 +214,14 @@ void Package::GenerateMemberPrerequisites(const UEProperty& first)
 				>> where([](auto&& p) { return p.GetInfo().Type == UEProperty::PropertyType::CustomStruct; })
 				>> experimental::container())
 			{
-				GeneratePrerequisites(innerProp.Cast<UEStructProperty>().GetStruct());
+				GeneratePrerequisites(innerProp.Cast<UEStructProperty>().GetStruct(), processedObjects);
 			}
+		}
+		else if (prop.IsA<UEFunction>())
+		{
+			auto function = prop.Cast<UEFunction>();
+
+			GenerateMemberPrerequisites(function.GetChildren().Cast<UEProperty>(), processedObjects);
 		}
 	}
 }
@@ -605,7 +598,7 @@ void Package::GenerateMethods(const UEClass& classObj, std::vector<Method>& meth
 					auto byteProperty = param.Cast<UEByteProperty>();
 					if (byteProperty.IsEnum())
 					{
-						UpdatePackageOrder(byteProperty.GetEnum().GetPackageObject());
+						AddDependency(byteProperty.GetEnum().GetPackageObject());
 					}
 				}
 
@@ -678,7 +671,7 @@ void Package::SaveStructs(const fs::path& path) const
 {
 	extern IGenerator* generator;
 
-	std::ofstream os(path / GenerateFileName(FileContentType::Structs, packageObj));
+	std::ofstream os(path / GenerateFileName(FileContentType::Structs, *this));
 
 	PrintFileHeader(os, true);
 
@@ -711,7 +704,7 @@ void Package::SaveClasses(const fs::path& path) const
 {
 	extern IGenerator* generator;
 
-	std::ofstream os(path / GenerateFileName(FileContentType::Classes, packageObj));
+	std::ofstream os(path / GenerateFileName(FileContentType::Classes, *this));
 
 	PrintFileHeader(os, true);
 
@@ -735,7 +728,7 @@ void Package::SaveFunctions(const fs::path& path) const
 		SaveFunctionParameters(path);
 	}
 
-	std::ofstream os(path / GenerateFileName(FileContentType::Functions, packageObj));
+	std::ofstream os(path / GenerateFileName(FileContentType::Functions, *this));
 
 	PrintFileHeader(os, { "\"../SDK.hpp\"" }, false);
 
@@ -789,7 +782,7 @@ void Package::SaveFunctionParameters(const fs::path& path) const
 {
 	using namespace cpplinq;
 
-	std::ofstream os(path / GenerateFileName(FileContentType::FunctionParameters, packageObj));
+	std::ofstream os(path / GenerateFileName(FileContentType::FunctionParameters, *this));
 
 	PrintFileHeader(os, { "\"../SDK.hpp\"" }, true);
 

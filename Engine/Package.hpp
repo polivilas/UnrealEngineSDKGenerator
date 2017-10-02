@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <filesystem>
 namespace fs = std::experimental::filesystem;
 
@@ -9,20 +10,25 @@ namespace fs = std::experimental::filesystem;
 
 class Package
 {
+	friend struct std::hash<Package>;
+	friend struct PackageDependencyComparer;
+	friend bool operator==(const Package& lhs, const Package& rhs);
+
 public:
+	static std::unordered_map<UEObject, const Package*> PackageMap;
 
 	/// <summary>
 	/// Constructor.
 	/// </summary>
 	/// <param name="packageObj">The package object.</param>
-	/// <param name="packageOrder">[in,out] The package order.</param>
-	/// <param name="processedObjects">[in,out] The defined classes.</param>
-	Package(const UEObject& packageObj, std::vector<UEObject>& packageOrder, std::unordered_map<UEObject, bool>& processedObjects);
+	Package(const UEObject& packageObj);
+
+	std::string GetName() const { return packageObj.GetName(); }
 
 	/// <summary>
 	/// Process the classes the package contains.
 	/// </summary>
-	void Process();
+	void Process(std::unordered_map<UEObject, bool>& processedObjects);
 
 	/// <summary>
 	/// Saves the package classes as C++ code.
@@ -32,21 +38,21 @@ public:
 	/// <returns>true if files got saved, else false.</returns>
 	bool Save(const fs::path& path) const;
 
-private:
-	bool Package::UpdatePackageOrder(const UEObject& package) const;
+//private:
+	bool AddDependency(const UEObject& package) const;
 
 	/// <summary>
 	/// Checks and generates the prerequisites of the object.
 	/// Should be a UEClass or UEScriptStruct.
 	/// </summary>
 	/// <param name="obj">The object.</param>
-	void GeneratePrerequisites(const UEObject& obj);
+	void GeneratePrerequisites(const UEObject& obj, std::unordered_map<UEObject, bool>& processedObjects);
 
 	/// <summary>
 	/// Checks and generates the prerequisites of the members.
 	/// </summary>
 	/// <param name="first">The first member in the chain.</param>
-	void GenerateMemberPrerequisites(const UEProperty& first);
+	void GenerateMemberPrerequisites(const UEProperty& first, std::unordered_map<UEObject, bool>& processedObjects);
 
 	/// <summary>
 	/// Generates a script structure.
@@ -96,9 +102,8 @@ private:
 	/// <param name="path">The path to save to.</param>
 	void SaveFunctionParameters(const fs::path& path) const;
 
-	const UEObject& packageObj;
-	std::vector<UEObject>& packageOrder;
-	std::unordered_map<UEObject, bool>& processedObjects;
+	UEObject packageObj;
+	mutable std::unordered_set<UEObject> dependencies;
 
 	/// <summary>
 	/// Prints the c++ code of the constant.
@@ -254,4 +259,55 @@ private:
 	void PrintClass(std::ostream& os, const Class& c) const;
 
 	std::vector<Class> classes;
+};
+
+namespace std
+{
+	template<>
+	struct hash<Package>
+	{
+		size_t operator()(const Package& package) const
+		{
+			return std::hash<void*>()(package.packageObj.GetAddress());
+		}
+	};
+}
+
+inline bool operator==(const Package& lhs, const Package& rhs) { return rhs.packageObj.GetAddress() == lhs.packageObj.GetAddress(); }
+inline bool operator!=(const Package& lhs, const Package& rhs) { return !(lhs == rhs); }
+
+struct PackageDependencyComparer
+{
+	bool operator()(const std::unique_ptr<Package>& lhs, const std::unique_ptr<Package>& rhs) const
+	{
+		return operator()(*lhs, *rhs);
+	}
+
+	bool operator()(const Package* lhs, const Package* rhs) const
+	{
+		return operator()(*lhs, *rhs);
+	}
+
+	bool operator()(const Package& lhs, const Package& rhs) const
+	{
+		if (rhs.dependencies.empty())
+		{
+			return false;
+		}
+
+		if (std::find(std::begin(rhs.dependencies), std::end(rhs.dependencies), lhs.packageObj) != std::end(rhs.dependencies))
+		{
+			return true;
+		}
+
+		for (const auto dep : rhs.dependencies)
+		{
+			if (operator()(lhs, *Package::PackageMap[dep]))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 };
