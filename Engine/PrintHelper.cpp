@@ -3,7 +3,7 @@
 #include <tinyformat.h>
 
 #include "IGenerator.hpp"
-#include "GenericTypes.hpp"
+#include "Package.hpp"
 
 void PrintFileHeader(std::ostream& os, const std::vector<std::string>& includes, bool isHeaderFile)
 {
@@ -55,7 +55,7 @@ void PrintSectionHeader(std::ostream& os, const char* name)
 		<< "//---------------------------------------------------------------------------\n\n";
 }
 
-std::string GenerateFileName(FileContentType type, const UEObject& package)
+std::string GenerateFileName(FileContentType type, const Package& package)
 {
 	extern IGenerator* generator;
 

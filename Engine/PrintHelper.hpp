@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ostream>
 #include <vector>
 #include <string>
 
@@ -27,4 +26,4 @@ enum class FileContentType
 /// <returns>
 /// The generated file name.
 /// </returns>
-std::string GenerateFileName(FileContentType type, const class UEObject& package);
+std::string GenerateFileName(FileContentType type, const class Package& package);
