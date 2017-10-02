@@ -38,7 +38,7 @@ public:
 	/// <returns>true if files got saved, else false.</returns>
 	bool Save(const fs::path& path) const;
 
-//private:
+private:
 	bool AddDependency(const UEObject& package) const;
 
 	/// <summary>
@@ -302,7 +302,14 @@ struct PackageDependencyComparer
 
 		for (const auto dep : rhs.dependencies)
 		{
-			if (operator()(lhs, *Package::PackageMap[dep]))
+			const auto package = Package::PackageMap[dep];
+			if (package == nullptr)
+			{
+				// Missing package, should not occur...
+				continue;
+			}
+
+			if (operator()(lhs, *package))
 			{
 				return true;
 			}

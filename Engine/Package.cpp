@@ -42,7 +42,7 @@ void Package::Process(std::unordered_map<UEObject, bool>& processedObjects)
 {
 	for (auto obj : ObjectsStore())
 	{
-		auto package = obj.GetPackageObject();
+		const auto package = obj.GetPackageObject();
 		if (packageObj == package)
 		{
 			if (obj.IsA<UEEnum>())
@@ -109,14 +109,14 @@ void Package::GeneratePrerequisites(const UEObject& obj, std::unordered_map<UEOb
 		return;
 	}
 
-	auto isClass = obj.IsA<UEClass>();
-	auto isScriptStruct = obj.IsA<UEScriptStruct>();
+	const auto isClass = obj.IsA<UEClass>();
+	const auto isScriptStruct = obj.IsA<UEScriptStruct>();
 	if (!isClass && !isScriptStruct)
 	{
 		return;
 	}
 
-	auto name = obj.GetName();
+	const auto name = obj.GetName();
 	if (name.find("Default__") != std::string::npos
 		|| name.find("<uninitialized>") != std::string::npos
 		|| name.find("PLACEHOLDER-CLASS") != std::string::npos)
@@ -251,7 +251,7 @@ void Package::GenerateScriptStruct(const UEScriptStruct& scriptStructObj)
 	ss.NameCppFull = "struct ";
 
 	//some classes need special alignment
-	auto alignment = generator->GetClassAlignas(ss.FullName);
+	const auto alignment = generator->GetClassAlignas(ss.FullName);
 	if (alignment != 0)
 	{
 		ss.NameCppFull += tfm::format("alignas(%d) ", alignment);
@@ -312,7 +312,7 @@ void Package::GenerateEnum(const UEEnum& enumObj)
 	{
 		const auto clean = MakeValidName(std::move(s));
 
-		auto it = conflicts.find(clean);
+		const auto it = conflicts.find(clean);
 		if (it == std::end(conflicts))
 		{
 			e.Values.push_back(clean);
@@ -446,7 +446,7 @@ void Package::GenerateClass(const UEClass& classObj)
 	IGenerator::VirtualFunctionPatterns patterns;
 	if (generator->GetVirtualFunctionPatterns(c.FullName, patterns))
 	{
-		auto vtable = *reinterpret_cast<uintptr_t**>(classObj.GetAddress());
+		const auto vtable = *reinterpret_cast<uintptr_t**>(classObj.GetAddress());
 
 		size_t methodCount = 0;
 		while (true)
@@ -504,7 +504,7 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 			sp.Type = info.CppType;
 			sp.Name = MakeValidName(prop.GetName());
 
-			auto it = uniqueMemberNames.find(sp.Name);
+			const auto it = uniqueMemberNames.find(sp.Name);
 			if (it == std::end(uniqueMemberNames))
 			{
 				uniqueMemberNames[sp.Name] = 1;
@@ -547,7 +547,7 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 
 	if (offset < structObj.GetPropertySize())
 	{
-		auto size = structObj.GetPropertySize() - offset;
+		const auto size = structObj.GetPropertySize() - offset;
 		if (size >= generator->GetGlobalMemberAlignment())
 		{
 			members.emplace_back(Member::Unknown(unknownDataCounter++, offset, size, "MISSED OFFSET"));
@@ -593,16 +593,7 @@ void Package::GenerateMethods(const UEClass& classObj, std::vector<Method>& meth
 					continue;
 				}
 
-				if (param.IsA<UEByteProperty>())
-				{
-					auto byteProperty = param.Cast<UEByteProperty>();
-					if (byteProperty.IsEnum())
-					{
-						AddDependency(byteProperty.GetEnum().GetPackageObject());
-					}
-				}
-
-				auto info = param.GetInfo();
+				const auto info = param.GetInfo();
 				if (info.Type != UEProperty::PropertyType::Unknown)
 				{
 					using Type = Method::Parameter::Type;
@@ -618,7 +609,7 @@ void Package::GenerateMethods(const UEClass& classObj, std::vector<Method>& meth
 					p.PassByReference = false;
 					p.Name = MakeValidName(param.GetName());
 
-					auto it = unique.find(p.Name);
+					const auto it = unique.find(p.Name);
 					if (it == std::end(unique))
 					{
 						unique[p.Name] = 1;

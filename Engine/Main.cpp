@@ -124,7 +124,7 @@ void SaveSDKHeader(const fs::path& path, const std::unordered_map<UEObject, bool
 
 	for (auto&& package : packages)
 	{
-		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Structs, *package) << "\" // " << package->packageObj.GetIndex() << "\n";
+		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Structs, *package) << "\"\n";
 		os << R"(#include "SDK/)" << GenerateFileName(FileContentType::Classes, *package) << "\"\n";
 		if (generator->ShouldGenerateFunctionParametersFile())
 		{
