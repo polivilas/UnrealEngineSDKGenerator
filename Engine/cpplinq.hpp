@@ -27,6 +27,7 @@
 #include <string>
 #include <type_traits>
 #include <vector>
+#include <unordered_set>
 #// ----------------------------------------------------------------------------
 #ifdef _MSC_VER
 #   pragma warning (push)
