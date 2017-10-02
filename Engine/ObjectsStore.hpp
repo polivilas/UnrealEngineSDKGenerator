@@ -68,7 +68,7 @@ public:
 		size_t count = 0;
 		for (auto obj : *this)
 		{
-			if (obj.Object.IsA<T>() && obj.Object.GetName() == name)
+			if (obj.IsA<T>() && obj.GetName() == name)
 			{
 				++count;
 			}
@@ -91,7 +91,7 @@ struct UEObjectInfo
 };
 
 /// <summary>An iterator for objects.</summary>
-class ObjectsIterator : public std::iterator<std::forward_iterator_tag, UEObjectInfo>
+class ObjectsIterator : public std::iterator<std::forward_iterator_tag, UEObject>
 {
 	const ObjectsStore& store;
 	size_t index;
@@ -108,6 +108,8 @@ public:
 	/// <param name="index">Zero-based start index.</param>
 	explicit ObjectsIterator(const ObjectsStore& store, size_t index);
 
+	ObjectsIterator& operator=(const ObjectsIterator& rhs);
+
 	void swap(ObjectsIterator& other) noexcept;
 
 	ObjectsIterator& operator++();
@@ -118,7 +120,7 @@ public:
 
 	bool operator!=(const ObjectsIterator& rhs) const;
 
-	UEObjectInfo operator*() const;
+	UEObject operator*() const;
 
-	UEObjectInfo operator->() const;
+	UEObject operator->() const;
 };

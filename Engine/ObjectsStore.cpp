@@ -25,9 +25,9 @@ UEClass ObjectsStore::FindClass(const std::string& name) const
 {
 	for (auto obj : *this)
 	{
-		if (obj.Object.GetFullName() == name)
+		if (obj.GetFullName() == name)
 		{
-			return obj.Object.Cast<UEClass>();
+			return obj.Cast<UEClass>();
 		}
 	}
 	return UEClass(nullptr);
@@ -44,6 +44,12 @@ ObjectsIterator::ObjectsIterator(const ObjectsStore& _store, size_t _index)
 	  index(_index),
 	  current(_store.GetById(_index))
 {
+}
+
+ObjectsIterator& ObjectsIterator::operator=(const ObjectsIterator& rhs)
+{
+	index = rhs.index;
+	return *this;
 }
 
 void ObjectsIterator::swap(ObjectsIterator& other) noexcept
@@ -81,14 +87,14 @@ bool ObjectsIterator::operator!=(const ObjectsIterator& rhs) const
 	return index != rhs.index;
 }
 
-UEObjectInfo ObjectsIterator::operator*() const
+UEObject ObjectsIterator::operator*() const
 {
 	assert(current.IsValid() && "ObjectsIterator::current is not valid!");
 
-	return { index, current };
+	return current;
 }
 
-UEObjectInfo ObjectsIterator::operator->() const
+UEObject ObjectsIterator::operator->() const
 {
 	return operator*();
 }
