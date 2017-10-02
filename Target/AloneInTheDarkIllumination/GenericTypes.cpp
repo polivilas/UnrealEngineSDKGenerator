@@ -609,3 +609,26 @@ UEClass UEMulticastDelegateProperty::StaticClass()
 	return c;
 }
 //---------------------------------------------------------------------------
+//UEEnumProperty
+//---------------------------------------------------------------------------
+UENumericProperty UEEnumProperty::GetUnderlyingProperty() const
+{
+	return UENumericProperty(static_cast<UEnumProperty*>(object)->UnderlyingProp);
+}
+//---------------------------------------------------------------------------
+UEEnum UEEnumProperty::GetEnum() const
+{
+	return UEEnum(static_cast<UEnumProperty*>(object)->Enum);
+}
+//---------------------------------------------------------------------------
+UEProperty::Info UEEnumProperty::GetInfo() const
+{
+	return Info::Create(PropertyType::Primitive, sizeof(uint8_t), false, MakeUniqueCppName(GetEnum()));
+}
+//---------------------------------------------------------------------------
+UEClass UEEnumProperty::StaticClass()
+{
+	static auto c = ObjectsStore().FindClass("Class CoreUObject.EnumProperty");
+	return c;
+}
+//---------------------------------------------------------------------------

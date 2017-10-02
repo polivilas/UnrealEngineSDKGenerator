@@ -425,3 +425,10 @@ class UMulticastDelegateProperty : public UProperty
 public:
 	UFunction* SignatureFunction;
 };
+
+class UEnumProperty : public UProperty
+{
+public:
+	class UNumericProperty* UnderlyingProp; //0x0070
+	class UEnum* Enum; //0x0078
+}; //Size: 0x0080
