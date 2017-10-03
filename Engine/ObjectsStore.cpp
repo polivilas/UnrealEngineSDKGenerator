@@ -46,15 +46,31 @@ ObjectsIterator::ObjectsIterator(const ObjectsStore& _store, size_t _index)
 {
 }
 
+ObjectsIterator::ObjectsIterator(const ObjectsIterator& other)
+	: store(other.store),
+	  index(other.index),
+	  current(other.current)
+{
+}
+
+ObjectsIterator::ObjectsIterator(ObjectsIterator&& other) noexcept
+	: store(other.store),
+	  index(other.index),
+	  current(other.current)
+{
+}
+
 ObjectsIterator& ObjectsIterator::operator=(const ObjectsIterator& rhs)
 {
 	index = rhs.index;
+	current = rhs.current;
 	return *this;
 }
 
 void ObjectsIterator::swap(ObjectsIterator& other) noexcept
 {
 	std::swap(index, other.index);
+	std::swap(current, other.current);
 }
 
 ObjectsIterator& ObjectsIterator::operator++()

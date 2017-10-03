@@ -145,29 +145,25 @@ void ProcessPackages(const fs::path& path)
 	fs::create_directories(sdkPath);
 	
 	std::vector<std::unique_ptr<Package>> packages;
-	std::unordered_set<UEObject> uniquePackages;
 
 	std::unordered_map<UEObject, bool> processedObjects;
 
-	for (auto obj : ObjectsStore())
+	auto packageObjects = from(ObjectsStore())
+		>> select([](auto&& o) { return o.GetPackageObject(); })
+		>> where([](auto&& o) { return o.IsValid(); })
+		>> distinct()
+		>> to_vector();
+
+	for (auto obj : packageObjects)
 	{
-		auto packageObj = obj.GetPackageObject();
-		if (packageObj.IsValid())
+		auto package = std::make_unique<Package>(obj);
+
+		package->Process(processedObjects);
+		if (package->Save(sdkPath))
 		{
-			if (uniquePackages.find(packageObj) == std::end(uniquePackages))
-			{
-				uniquePackages.insert(packageObj);
+			Package::PackageMap[obj] = package.get();
 
-				auto package = std::make_unique<Package>(packageObj);
-
-				package->Process(processedObjects);
-				if (package->Save(sdkPath))
-				{
-					Package::PackageMap[packageObj] = package.get();
-
-					packages.emplace_back(std::move(package));
-				}
-			}
+			packages.emplace_back(std::move(package));
 		}
 	}
 

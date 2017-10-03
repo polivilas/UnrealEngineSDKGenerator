@@ -108,6 +108,9 @@ public:
 	/// <param name="index">Zero-based start index.</param>
 	explicit ObjectsIterator(const ObjectsStore& store, size_t index);
 
+	ObjectsIterator(const ObjectsIterator& other);
+	ObjectsIterator(ObjectsIterator&& other) noexcept;
+
 	ObjectsIterator& operator=(const ObjectsIterator& rhs);
 
 	void swap(ObjectsIterator& other) noexcept;
