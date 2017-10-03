@@ -101,16 +101,11 @@ namespace cpplinq
 	};
 
 	// -------------------------------------------------------------------------
-
-	// -------------------------------------------------------------------------
 	// Tedious implementation details of cpplinq
 	// -------------------------------------------------------------------------
 
 	namespace detail
 	{
-
-		// -------------------------------------------------------------------------
-
 		size_type const invalid_size = static_cast<size_type>(-1);
 
 		// -------------------------------------------------------------------------
@@ -161,7 +156,7 @@ namespace cpplinq
 			typedef     TValue  value_type;
 
 			CPPLINQ_INLINEMETHOD opt() CPPLINQ_NOEXCEPT
-				:   is_initialized(false)
+				: is_initialized(false)
 			{
 			}
 
@@ -196,8 +191,8 @@ namespace cpplinq
 				}
 			}
 
-			CPPLINQ_INLINEMETHOD opt(opt && v)  CPPLINQ_NOEXCEPT
-				:   is_initialized(v.is_initialized)
+			CPPLINQ_INLINEMETHOD opt(opt && v) CPPLINQ_NOEXCEPT
+				: is_initialized(v.is_initialized)
 			{
 				if (v.is_initialized)
 				{
@@ -234,7 +229,7 @@ namespace cpplinq
 				}
 			}
 
-			CPPLINQ_INLINEMETHOD opt & operator= (opt const & v)
+			CPPLINQ_INLINEMETHOD opt& operator=(opt const & v)
 			{
 				if (this == std::addressof(v))
 				{
@@ -248,7 +243,7 @@ namespace cpplinq
 				return *this;
 			}
 
-			CPPLINQ_INLINEMETHOD opt & operator= (opt && v)
+			CPPLINQ_INLINEMETHOD opt& operator=(opt && v)
 			{
 				if (this == std::addressof(v))
 				{
@@ -260,7 +255,7 @@ namespace cpplinq
 				return *this;
 			}
 
-			CPPLINQ_INLINEMETHOD opt & operator= (value_type v)
+			CPPLINQ_INLINEMETHOD opt& operator=(value_type v)
 			{
 				return *this = opt(std::move(v));
 			}
@@ -298,12 +293,14 @@ namespace cpplinq
 			CPPLINQ_INLINEMETHOD value_type const & get() const CPPLINQ_NOEXCEPT
 			{
 				CPPLINQ_ASSERT(is_initialized);
+
 				return *get_ptr();
 			}
 
 			CPPLINQ_INLINEMETHOD value_type & get() CPPLINQ_NOEXCEPT
 			{
 				CPPLINQ_ASSERT(is_initialized);
+
 				return *get_ptr();
 			}
 
@@ -315,60 +312,49 @@ namespace cpplinq
 			// TODO: To be replaced with explicit operator bool ()
 			typedef bool (opt::*type_safe_bool_type) () const;
 
-			CPPLINQ_INLINEMETHOD operator type_safe_bool_type () const CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD operator type_safe_bool_type() const CPPLINQ_NOEXCEPT
 			{
 				return is_initialized ? &opt::has_value : nullptr;
 			}
 
-			CPPLINQ_INLINEMETHOD value_type const & operator* () const CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD value_type const & operator*() const CPPLINQ_NOEXCEPT
 			{
 				return get();
 			}
 
-			CPPLINQ_INLINEMETHOD value_type & operator* () CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD value_type & operator*() CPPLINQ_NOEXCEPT
 			{
 				return get();
 			}
 
-			CPPLINQ_INLINEMETHOD value_type const * operator-> () const CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD value_type const * operator->() const CPPLINQ_NOEXCEPT
 			{
 				return get_ptr();
 			}
 
-			CPPLINQ_INLINEMETHOD value_type * operator-> () CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD value_type * operator->() CPPLINQ_NOEXCEPT
 			{
 				return get_ptr();
 			}
 
 		private:
-			typedef typename std::aligned_storage<
-				sizeof(value_type)
-				, std::alignment_of<value_type>::value
-			>::type storage_type;
+			typedef typename std::aligned_storage<sizeof(value_type), std::alignment_of<value_type>::value>::type storage_type;
 
 			storage_type    storage;
 			bool            is_initialized;
 
-			CPPLINQ_INLINEMETHOD static void move(
-				storage_type * to
-				, storage_type * from
-			) CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD static void move(storage_type * to, storage_type * from) CPPLINQ_NOEXCEPT
 			{
 				auto f = reinterpret_cast<value_type*> (from);
 				new (to) value_type(std::move(*f));
 				f->~value_type();
 			}
 
-			CPPLINQ_INLINEMETHOD static void copy(
-				storage_type * to
-				, storage_type const * from
-			)
+			CPPLINQ_INLINEMETHOD static void copy(storage_type * to, storage_type const * from)
 			{
 				auto f = reinterpret_cast<value_type const *> (from);
 				new (to) value_type(*f);
 			}
-
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -525,8 +511,6 @@ namespace cpplinq
 
 		// -------------------------------------------------------------------------
 
-		// -------------------------------------------------------------------------
-
 		template<typename TContainer>
 		struct from_copy_range : base_range
 		{
@@ -549,33 +533,33 @@ namespace cpplinq
 
 			CPPLINQ_INLINEMETHOD from_copy_range(container_type&& container)
 				: container(std::move(container)),
-				current(container.begin()),
-				upcoming(container.begin()),
-				end(container.end())
+				  current(container.begin()),
+				  upcoming(container.begin()),
+				  end(container.end())
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD from_copy_range(container_type const & container)
 				: container(container),
-				current(container.begin()),
-				upcoming(container.begin()),
-				end(container.end())
+				  current(container.begin()),
+				  upcoming(container.begin()),
+				  end(container.end())
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD from_copy_range(from_copy_range const & v)
 				: container(v.container),
-				current(v.current),
-				upcoming(v.upcoming),
-				end(v.end)
+				  current(v.current),
+				  upcoming(v.upcoming),
+				  end(v.end)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD from_copy_range(from_copy_range && v) CPPLINQ_NOEXCEPT
 				: container(std::move(v.container)),
-				current(std::move(v.current)),
-				upcoming(std::move(v.upcoming)),
-				end(std::move(v.end))
+				  current(std::move(v.current)),
+				  upcoming(std::move(v.upcoming)),
+				  end(std::move(v.end))
 			{
 			}
 
@@ -1517,9 +1501,9 @@ namespace cpplinq
 			}
 
 			CPPLINQ_INLINEMETHOD take_while_range(take_while_range const & v) CPPLINQ_NOEXCEPT
-				: range(v.range)
-				, predicate(v.predicate)
-				, done(v.done)
+				: range(v.range),
+				  predicate(v.predicate),
+				  done(v.done)
 			{
 			}
 
@@ -1531,17 +1515,17 @@ namespace cpplinq
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				return range.front();
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				if (done)
 				{
@@ -1573,7 +1557,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD take_while_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -1588,7 +1572,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD take_while_range<TRange, TPredicate> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return take_while_range<TRange, TPredicate>(std::move(range), predicate);
 			}
@@ -1614,42 +1598,39 @@ namespace cpplinq
 			size_type               count;
 			size_type               current;
 
-			CPPLINQ_INLINEMETHOD skip_range(
-				range_type      range
-				, size_type       count
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, count(std::move(count))
-				, current(0)
+			CPPLINQ_INLINEMETHOD skip_range(range_type range, size_type count) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  count(std::move(count)),
+				  current(0)
 			{
 			}
 
-			CPPLINQ_INLINEMETHOD skip_range(skip_range const & v)
-				: range(v.range)
-				, count(v.count)
-				, current(v.current)
+			CPPLINQ_INLINEMETHOD skip_range(skip_range const & v) CPPLINQ_NOEXCEPT
+				: range(v.range),
+				  count(v.count),
+				  current(v.current)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD skip_range(skip_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, count(std::move(v.count))
-				, current(std::move(v.current))
+				: range(std::move(v.range)),
+				  count(std::move(v.count)),
+				  current(std::move(v.current))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				return range.front();
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				if (current == invalid_size)
 				{
@@ -1678,7 +1659,7 @@ namespace cpplinq
 			size_type               count;
 
 			CPPLINQ_INLINEMETHOD explicit skip_builder(size_type count) CPPLINQ_NOEXCEPT
-				:   count(std::move(count))
+				: count(std::move(count))
 			{
 			}
 
@@ -1693,7 +1674,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD skip_range<TRange> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return skip_range<TRange>(std::move(range), count);
 			}
@@ -1720,42 +1701,39 @@ namespace cpplinq
 			predicate_type          predicate;
 			bool                    skipping;
 
-			CPPLINQ_INLINEMETHOD skip_while_range(
-				range_type      range
-				, predicate_type  predicate
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, predicate(std::move(predicate))
-				, skipping(true)
+			CPPLINQ_INLINEMETHOD skip_while_range(range_type range, predicate_type  predicate) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  predicate(std::move(predicate)),
+				  skipping(true)
 			{
 			}
 
-			CPPLINQ_INLINEMETHOD skip_while_range(skip_while_range const & v)
-				: range(v.range)
-				, predicate(v.predicate)
-				, skipping(v.skipping)
+			CPPLINQ_INLINEMETHOD skip_while_range(skip_while_range const & v) CPPLINQ_NOEXCEPT
+				: range(v.range),
+				  predicate(v.predicate),
+				  skipping(v.skipping)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD skip_while_range(skip_while_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, predicate(std::move(v.predicate))
-				, skipping(std::move(v.skipping))
+				: range(std::move(v.range)),
+				  predicate(std::move(v.predicate)),
+				  skipping(std::move(v.skipping))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				return range.front();
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				if (!skipping)
 				{
@@ -1784,7 +1762,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD skip_while_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -1799,7 +1777,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD skip_while_range<TRange, TPredicate> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return skip_while_range<TRange, TPredicate>(std::move(range), predicate);
 			}
@@ -1824,18 +1802,13 @@ namespace cpplinq
 
 			range_type              range;
 
-			CPPLINQ_INLINEMETHOD ref_range(
-				range_type      range
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
+			CPPLINQ_INLINEMETHOD ref_range(range_type range) CPPLINQ_NOEXCEPT
+				: range(std::move(range))
 			{
-				static_assert (
-					TRange::returns_reference
-					, "ref may only follow a range that returns references"
-					);
+				static_assert(TRange::returns_reference, "ref may only follow a range that returns references");
 			}
 
-			CPPLINQ_INLINEMETHOD ref_range(ref_range const & v)
+			CPPLINQ_INLINEMETHOD ref_range(ref_range const & v) CPPLINQ_NOEXCEPT
 				: range(v.range)
 			{
 			}
@@ -1846,17 +1819,17 @@ namespace cpplinq
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				return value_type(range.front());
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				return range.next();
 			}
@@ -1870,7 +1843,7 @@ namespace cpplinq
 			{
 			}
 
-			CPPLINQ_INLINEMETHOD ref_builder(ref_builder const & v)
+			CPPLINQ_INLINEMETHOD ref_builder(ref_builder const & v) CPPLINQ_NOEXCEPT
 			{
 			}
 
@@ -1879,14 +1852,11 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD ref_range<TRange> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return ref_range<TRange>(std::move(range));
 			}
-
 		};
-
-		// -------------------------------------------------------------------------
 
 		// -------------------------------------------------------------------------
 
@@ -1902,10 +1872,7 @@ namespace cpplinq
 			static          TPredicate get_predicate();
 
 
-			typedef        decltype (choose(get_predicate(),
-				std::make_tuple(get_source()),
-				std::make_tuple(get_source(), 0)))
-				raw_value_type;
+			typedef        decltype(choose(get_predicate(), std::make_tuple(get_source()), std::make_tuple(get_source(), 0))) raw_value_type;
 			typedef        typename cleanup_type<raw_value_type>::type  value_type;
 			typedef                 value_type const &                  return_type;
 			enum
@@ -1923,45 +1890,43 @@ namespace cpplinq
 			opt<value_type>         cache_value;
 			size_type               current_index;
 
-			CPPLINQ_INLINEMETHOD select_range(
-				range_type      range
-				, predicate_type  predicate
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, predicate(std::move(predicate))
-				, current_index(0)
+			CPPLINQ_INLINEMETHOD select_range(range_type range, predicate_type predicate) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  predicate(std::move(predicate)),
+				  current_index(0)
 			{
 			}
 
-			CPPLINQ_INLINEMETHOD select_range(select_range const & v)
-				: range(v.range)
-				, predicate(v.predicate)
-				, cache_value(v.cache_value)
-				, current_index(v.current_index)
+			CPPLINQ_INLINEMETHOD select_range(select_range const & v) CPPLINQ_NOEXCEPT
+				: range(v.range),
+				  predicate(v.predicate),
+				  cache_value(v.cache_value),
+				  current_index(v.current_index)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD select_range(select_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, predicate(std::move(v.predicate))
-				, cache_value(std::move(v.cache_value))
-				, current_index(std::move(v.current_index))
+				: range(std::move(v.range)),
+				  predicate(std::move(v.predicate)),
+				  cache_value(std::move(v.cache_value)),
+				  current_index(std::move(v.current_index))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				CPPLINQ_ASSERT(cache_value);
+
 				return *cache_value;
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				if (range.next())
 				{
@@ -1975,13 +1940,13 @@ namespace cpplinq
 			}
 
 			template<typename TPredicate_>
-			CPPLINQ_INLINEMETHOD auto evaluate_predicate(TPredicate_& pred) -> decltype (pred(range.front()))
+			CPPLINQ_INLINEMETHOD auto evaluate_predicate(TPredicate_&& pred) -> decltype (pred(range.front()))
 			{
 				return pred(range.front());
 			}
 
 			template<typename TPredicate_, int = 0 /* VisualStudio Workaround (http://stackoverflow.com/a/28204207/3647361) */>
-			CPPLINQ_INLINEMETHOD auto evaluate_predicate(TPredicate_& pred) -> decltype (pred(range.front(), 0))
+			CPPLINQ_INLINEMETHOD auto evaluate_predicate(TPredicate_&& pred) -> decltype (pred(range.front(), 0))
 			{
 				return pred(range.front(), current_index++);
 			}
@@ -1996,11 +1961,11 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD explicit select_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
-			CPPLINQ_INLINEMETHOD select_builder(select_builder const & v)
+			CPPLINQ_INLINEMETHOD select_builder(select_builder const & v) CPPLINQ_NOEXCEPT
 				: predicate(v.predicate)
 			{
 			}
@@ -2011,11 +1976,10 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD select_range<TRange, TPredicate> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return select_range<TRange, TPredicate>(std::move(range), predicate);
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -2028,10 +1992,7 @@ namespace cpplinq
 			static          TPredicate get_predicate();
 
 
-			typedef        decltype (choose(get_predicate(),
-				std::make_tuple(get_source()),
-				std::make_tuple(get_source(), 0)))
-				raw_inner_range_type;
+			typedef        decltype(choose(get_predicate(), std::make_tuple(get_source()), std::make_tuple(get_source(), 0))) raw_inner_range_type;
 			typedef        typename cleanup_type<raw_inner_range_type>::type    inner_range_type;
 
 			static         inner_range_type get_inner_range();
@@ -2065,45 +2026,43 @@ namespace cpplinq
 			size_type               current_index;
 
 
-			CPPLINQ_INLINEMETHOD select_many_range(
-				range_type      range
-				, predicate_type  predicate
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, predicate(std::move(predicate))
-				, current_index(0)
+			CPPLINQ_INLINEMETHOD select_many_range(range_type range, predicate_type predicate) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  predicate(std::move(predicate)),
+				  current_index(0)
 			{
 			}
 
-			CPPLINQ_INLINEMETHOD select_many_range(select_many_range const & v)
-				: range(v.range)
-				, predicate(v.predicate)
-				, inner_range(v.inner_range)
-				, current_index(v.current_index)
+			CPPLINQ_INLINEMETHOD select_many_range(select_many_range const & v) CPPLINQ_NOEXCEPT
+				: range(v.range),
+				  predicate(v.predicate),
+				  inner_range(v.inner_range),
+				  current_index(v.current_index)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD select_many_range(select_many_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, predicate(std::move(v.predicate))
-				, inner_range(std::move(v.inner_range))
-				, current_index(std::move(v.current_index))
+				: range(std::move(v.range)),
+				  predicate(std::move(v.predicate)),
+				  inner_range(std::move(v.inner_range)),
+				  current_index(std::move(v.current_index))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				CPPLINQ_ASSERT(inner_range);
+
 				return inner_range->front();
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				if (inner_range && inner_range->next())
 				{
@@ -2143,11 +2102,11 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD explicit select_many_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
-			CPPLINQ_INLINEMETHOD select_many_builder(select_many_builder const & v)
+			CPPLINQ_INLINEMETHOD select_many_builder(select_many_builder const & v) CPPLINQ_NOEXCEPT
 				: predicate(v.predicate)
 			{
 			}
@@ -2158,7 +2117,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD select_many_range<TRange, TPredicate> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return select_many_range<TRange, TPredicate>(std::move(range), predicate);
 			}
@@ -2167,14 +2126,8 @@ namespace cpplinq
 
 		// -------------------------------------------------------------------------
 
-		template<
-			typename TRange
-			, typename TOtherRange
-			, typename TKeySelector
-			, typename TOtherKeySelector
-			, typename TCombiner
-		>
-			struct join_range : base_range
+		template<typename TRange, typename TOtherRange, typename TKeySelector, typename TOtherKeySelector, typename TCombiner>
+		struct join_range : base_range
 		{
 			static typename TRange::value_type      get_source();
 			static typename TOtherRange::value_type get_other_source();
@@ -2198,22 +2151,13 @@ namespace cpplinq
 				returns_reference = 0,
 			};
 
-			typedef                 join_range<
-				TRange
-				, TOtherRange
-				, TKeySelector
-				, TOtherKeySelector
-				, TCombiner
-			>                                               this_type;
+			typedef join_range<TRange, TOtherRange, TKeySelector, TOtherKeySelector, TCombiner> this_type;
 			typedef                 TRange                      range_type;
 			typedef                 TOtherRange                 other_range_type;
 			typedef                 TKeySelector                key_selector_type;
 			typedef                 TOtherKeySelector           other_key_selector_type;
 			typedef                 TCombiner                   combiner_type;
-			typedef                 std::multimap<
-				other_key_type
-				, typename TOtherRange::value_type
-			>                       map_type;
+			typedef                 std::multimap<other_key_type, typename TOtherRange::value_type> map_type;
 			typedef     typename    map_type::const_iterator    map_iterator_type;
 
 			range_type                  range;
@@ -2226,59 +2170,54 @@ namespace cpplinq
 			map_type                    map;
 			map_iterator_type           current;
 
-			CPPLINQ_INLINEMETHOD join_range(
-				range_type              range
-				, other_range_type        other_range
-				, key_selector_type       key_selector
-				, other_key_selector_type other_key_selector
-				, combiner_type           combiner
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, other_range(std::move(other_range))
-				, key_selector(std::move(key_selector))
-				, other_key_selector(std::move(other_key_selector))
-				, combiner(std::move(combiner))
-				, start(true)
+			CPPLINQ_INLINEMETHOD join_range(range_type range, other_range_type other_range, key_selector_type key_selector, other_key_selector_type other_key_selector, combiner_type combiner) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  other_range(std::move(other_range)),
+				  key_selector(std::move(key_selector)),
+				  other_key_selector(std::move(other_key_selector)),
+				  combiner(std::move(combiner)),
+				  start(true)
 			{
 			}
 
-			CPPLINQ_INLINEMETHOD join_range(join_range const & v)
-				: range(v.range)
-				, other_range(v.other_range)
-				, key_selector(v.key_selector)
-				, other_key_selector(v.other_key_selector)
-				, combiner(v.combiner)
-				, start(v.start)
-				, map(v.map)
-				, current(v.current)
+			CPPLINQ_INLINEMETHOD join_range(join_range const & v) CPPLINQ_NOEXCEPT
+				: range(v.range),
+				  other_range(v.other_range),
+				  key_selector(v.key_selector),
+				  other_key_selector(v.other_key_selector),
+				  combiner(v.combiner),
+				  start(v.start),
+				  map(v.map),
+				  current(v.current)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD join_range(join_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, other_range(std::move(v.other_range))
-				, key_selector(std::move(v.key_selector))
-				, other_key_selector(std::move(v.other_key_selector))
-				, combiner(std::move(v.combiner))
-				, start(std::move(v.start))
-				, map(std::move(v.map))
-				, current(std::move(v.current))
+				: range(std::move(v.range)),
+				  other_range(std::move(v.other_range)),
+				  key_selector(std::move(v.key_selector)),
+				  other_key_selector(std::move(v.other_key_selector)),
+				  combiner(std::move(v.combiner)),
+				  start(std::move(v.start)),
+				  map(std::move(v.map)),
+				  current(std::move(v.current))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				CPPLINQ_ASSERT(current != map.end());
+
 				return combiner(range.front(), current->second);
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				if (start)
 				{
@@ -2323,20 +2262,10 @@ namespace cpplinq
 			}
 		};
 
-		template<
-			typename TOtherRange
-			, typename TKeySelector
-			, typename TOtherKeySelector
-			, typename TCombiner
-		>
-			struct join_builder : base_builder
+		template<typename TOtherRange, typename TKeySelector, typename TOtherKeySelector, typename TCombiner>
+		struct join_builder : base_builder
 		{
-			typedef                 join_builder<
-				TOtherRange
-				, TKeySelector
-				, TOtherKeySelector
-				, TCombiner
-			>                                               this_type;
+			typedef join_builder<TOtherRange, TKeySelector, TOtherKeySelector, TCombiner> this_type;
 
 			typedef                 TOtherRange                 other_range_type;
 			typedef                 TKeySelector                key_selector_type;
@@ -2348,48 +2277,36 @@ namespace cpplinq
 			other_key_selector_type other_key_selector;
 			combiner_type           combiner;
 
-			CPPLINQ_INLINEMETHOD join_builder(
-				other_range_type        other_range
-				, key_selector_type       key_selector
-				, other_key_selector_type other_key_selector
-				, combiner_type           combiner
-			) CPPLINQ_NOEXCEPT
-				:   other_range(std::move(other_range))
-				, key_selector(std::move(key_selector))
-				, other_key_selector(std::move(other_key_selector))
-				, combiner(std::move(combiner))
+			CPPLINQ_INLINEMETHOD join_builder(other_range_type other_range, key_selector_type key_selector, other_key_selector_type other_key_selector, combiner_type combiner) CPPLINQ_NOEXCEPT
+				: other_range(std::move(other_range)),
+				  key_selector(std::move(key_selector)),
+				  other_key_selector(std::move(other_key_selector)),
+				  combiner(std::move(combiner))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD join_builder(join_builder const & v)
-				: other_range(v.other_range)
-				, key_selector(v.key_selector)
-				, other_key_selector(v.other_key_selector)
-				, combiner(v.combiner)
+				: other_range(v.other_range),
+				  key_selector(v.key_selector),
+				  other_key_selector(v.other_key_selector),
+				  combiner(v.combiner)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD join_builder(join_builder && v) CPPLINQ_NOEXCEPT
-				:   other_range(std::move(v.other_range))
-				, key_selector(std::move(v.key_selector))
-				, other_key_selector(std::move(v.other_key_selector))
-				, combiner(std::move(v.combiner))
+				: other_range(std::move(v.other_range)),
+				  key_selector(std::move(v.key_selector)),
+				  other_key_selector(std::move(v.other_key_selector)),
+				  combiner(std::move(v.combiner))
 			{
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD join_range<TRange, TOtherRange, TKeySelector, TOtherKeySelector, TCombiner> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
-				return join_range<TRange, TOtherRange, TKeySelector, TOtherKeySelector, TCombiner>(
-					std::move(range)
-					, other_range
-					, key_selector
-					, other_key_selector
-					, combiner
-					);
+				return join_range<TRange, TOtherRange, TKeySelector, TOtherKeySelector, TCombiner>(std::move(range), other_range, key_selector, other_key_selector, combiner);
 			}
 		};
-
 
 		// -------------------------------------------------------------------------
 
@@ -2413,39 +2330,37 @@ namespace cpplinq
 			set_type                    set;
 			set_iterator_type           current;
 
-			CPPLINQ_INLINEMETHOD distinct_range(
-				range_type          range
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
+			CPPLINQ_INLINEMETHOD distinct_range(range_type range) CPPLINQ_NOEXCEPT
+				: range(std::move(range))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD distinct_range(distinct_range const & v) CPPLINQ_NOEXCEPT
-				: range(v.range)
-				, set(v.set)
-				, current(v.current)
+				: range(v.range),
+				  set(v.set),
+				  current(v.current)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD distinct_range(distinct_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, set(std::move(v.set))
-				, current(std::move(v.current))
+				: range(std::move(v.range)),
+				  set(std::move(v.set)),
+				  current(std::move(v.current))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				return *current;
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				while (range.next())
 				{
@@ -2478,7 +2393,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD distinct_range<TRange> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return distinct_range<TRange>(std::move(range));
 			}
@@ -2507,41 +2422,38 @@ namespace cpplinq
 			key_selector_type           key_selector;
 			set_type                    set;
 
-			CPPLINQ_INLINEMETHOD distinct_key_selector_range(
-				range_type          range
-				, key_selector_type   key_selector
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, key_selector(std::move(key_selector))
+			CPPLINQ_INLINEMETHOD distinct_key_selector_range(range_type range, key_selector_type key_selector) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  key_selector(std::move(key_selector))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD distinct_key_selector_range(distinct_key_selector_range const & v) CPPLINQ_NOEXCEPT
-				: range(v.range)
-				, key_selector(v.key_selector)
-				, set(v.set)
+				: range(v.range),
+				  key_selector(v.key_selector),
+				  set(v.set)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD distinct_key_selector_range(distinct_key_selector_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, key_selector(std::move(v.key_selector))
-				, set(std::move(v.set))
+				: range(std::move(v.range)),
+				  key_selector(std::move(v.key_selector)),
+				  set(std::move(v.set))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				return range.front();
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				while (range.next())
 				{
@@ -2565,7 +2477,7 @@ namespace cpplinq
 			key_selector_type       key_selector;
 
 			CPPLINQ_INLINEMETHOD distinct_key_selector_builder(key_selector_type key_selector) CPPLINQ_NOEXCEPT
-				:   key_selector(std::move(key_selector))
+				: key_selector(std::move(key_selector))
 			{
 			}
 
@@ -2580,7 +2492,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD distinct_key_selector_range<TRange, TSelector> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return distinct_key_selector_range<TRange, TSelector>(std::move(range), key_selector);
 			}
@@ -2611,43 +2523,40 @@ namespace cpplinq
 			set_type                    set;
 			set_iterator_type           current;
 
-			CPPLINQ_INLINEMETHOD union_range(
-				range_type          range
-				, other_range_type    other_range
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, other_range(std::move(other_range))
+			CPPLINQ_INLINEMETHOD union_range(range_type range, other_range_type other_range) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  other_range(std::move(other_range))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD union_range(union_range const & v) CPPLINQ_NOEXCEPT
-				: range(v.range)
-				, other_range(v.other_range)
-				, set(v.set)
-				, current(v.current)
+				: range(v.range),
+				  other_range(v.other_range),
+				  set(v.set),
+				  current(v.current)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD union_range(union_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, other_range(std::move(v.other_range))
-				, set(std::move(v.set))
-				, current(std::move(v.current))
+				: range(std::move(v.range)),
+				  other_range(std::move(v.other_range)),
+				  set(std::move(v.set)),
+				  current(std::move(v.current))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				return *current;
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				while (range.next())
 				{
@@ -2697,7 +2606,7 @@ namespace cpplinq
 			}
 
 			template <typename TRange>
-			CPPLINQ_INLINEMETHOD union_range<TRange, TOtherRange> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return union_range<TRange, TOtherRange>(std::move(range), std::move(other_range));
 			}
@@ -2729,31 +2638,28 @@ namespace cpplinq
 			set_iterator_type           current;
 			bool                        start;
 
-			CPPLINQ_INLINEMETHOD intersect_range(
-				range_type          range
-				, other_range_type    other_range
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, other_range(std::move(other_range))
-				, start(true)
+			CPPLINQ_INLINEMETHOD intersect_range(range_type range, other_range_type other_range) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  other_range(std::move(other_range)),
+				  start(true)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD intersect_range(intersect_range const & v) CPPLINQ_NOEXCEPT
-				:   range(v.range)
-				, other_range(v.other_range)
-				, set(v.set)
-				, current(v.current)
-				, start(v.start)
+				: range(v.range),
+				  other_range(v.other_range),
+				  set(v.set),
+				  current(v.current),
+				  start(v.start)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD intersect_range(intersect_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, other_range(std::move(v.other_range))
-				, set(std::move(v.set))
-				, current(std::move(v.current))
-				, start(std::move(v.start))
+				: range(std::move(v.range)),
+				  other_range(std::move(v.other_range)),
+				  set(std::move(v.set)),
+				  current(std::move(v.current)),
+				  start(std::move(v.start))
 			{
 			}
 
@@ -3353,7 +3259,7 @@ namespace cpplinq
 					}
 				}
 
-				CPPLINQ_INLINEMETHOD bool operator!=(this_type const & v) const CPPLINQ_NOEXCEPT
+				CPPLINQ_INLINEMETHOD auto operator!=(this_type const & v) const CPPLINQ_NOEXCEPT
 				{
 					return !(*this == v);
 				}
@@ -3388,12 +3294,12 @@ namespace cpplinq
 				{
 				}
 
-				CPPLINQ_INLINEMETHOD container_iterator<TRange> begin() CPPLINQ_NOEXCEPT
+				CPPLINQ_INLINEMETHOD auto begin() CPPLINQ_NOEXCEPT
 				{
 					return container_iterator<TRange>(range);
 				}
 
-				CPPLINQ_INLINEMETHOD container_iterator<TRange> end() CPPLINQ_NOEXCEPT
+				CPPLINQ_INLINEMETHOD auto end() CPPLINQ_NOEXCEPT
 				{
 					return container_iterator<TRange>();
 				}
@@ -3660,7 +3566,7 @@ namespace cpplinq
 			template<typename TRange, typename TKeySelector, typename TValueSelector>
 			CPPLINQ_METHOD lookup(size_type capacity, TRange range, TKeySelector key_selector, TValueSelector value_selector)
 			{
-				keys_type   k;
+				keys_type k;
 				values_type v;
 				k.reserve(capacity);
 				v.reserve(capacity);
@@ -3679,14 +3585,14 @@ namespace cpplinq
 			}
 
 			CPPLINQ_INLINEMETHOD lookup(lookup const & v)
-				: values(v.values)
-				, keys(v.keys)
+				: values(v.values),
+				  keys(v.keys)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD lookup(lookup && v) CPPLINQ_NOEXCEPT
-				: values(std::move(v.values))
-				, keys(std::move(v.keys))
+				: values(std::move(v.values)),
+				  keys(std::move(v.keys))
 			{
 			}
 
@@ -3696,7 +3602,7 @@ namespace cpplinq
 				keys.swap(v.keys);
 			}
 
-			CPPLINQ_INLINEMETHOD lookup & operator= (lookup const & v)
+			CPPLINQ_INLINEMETHOD lookup& operator=(lookup const & v)
 			{
 				if (this == std::addressof(v))
 				{
@@ -3710,7 +3616,7 @@ namespace cpplinq
 				return *this;
 			}
 
-			CPPLINQ_INLINEMETHOD lookup & operator= (lookup && v) CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD lookup& operator=(lookup&& v) CPPLINQ_NOEXCEPT
 			{
 				if (this == std::addressof(v))
 				{
@@ -3746,42 +3652,38 @@ namespace cpplinq
 				size_type               end;
 				state                   state;
 
-				CPPLINQ_INLINEMETHOD lookup_range(
-					values_type const *     values
-					, size_type               iter
-					, size_type               end
-				) CPPLINQ_NOEXCEPT
-					:   values(values)
-					, iter(iter)
-					, end(end)
-					, state(state_initial)
+				CPPLINQ_INLINEMETHOD lookup_range(values_type const * values, size_type iter, size_type end) CPPLINQ_NOEXCEPT
+					: values(values),
+					  iter(iter),
+					  end(end),
+					  state(state_initial)
 				{
 					CPPLINQ_ASSERT(values);
 				}
 
 				CPPLINQ_INLINEMETHOD lookup_range(lookup_range const & v) CPPLINQ_NOEXCEPT
-					:   values(v.values)
-					, iter(v.iter)
-					, end(v.end)
-					, state(v.state)
+					: values(v.values),
+					  iter(v.iter),
+					  end(v.end),
+					  state(v.state)
 				{
 				}
 
 				CPPLINQ_INLINEMETHOD lookup_range(lookup_range && v) CPPLINQ_NOEXCEPT
-					:   values(std::move(v.values))
-					, iter(std::move(v.iter))
-					, end(std::move(v.end))
-					, state(std::move(v.state))
+					: values(std::move(v.values)),
+					  iter(std::move(v.iter)),
+					  end(std::move(v.end)),
+					  state(std::move(v.state))
 				{
 				}
 
 				template<typename TRangeBuilder>
-				CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+				CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 				{
 					return range_builder.build(*this);
 				}
 
-				CPPLINQ_INLINEMETHOD return_type front() const CPPLINQ_NOEXCEPT
+				CPPLINQ_INLINEMETHOD auto front() const CPPLINQ_NOEXCEPT
 				{
 					CPPLINQ_ASSERT(state == state_iterating);
 					CPPLINQ_ASSERT(iter < end);
@@ -3789,7 +3691,7 @@ namespace cpplinq
 					return (*values)[iter];
 				}
 
-				CPPLINQ_INLINEMETHOD bool next() CPPLINQ_NOEXCEPT
+				CPPLINQ_INLINEMETHOD auto next() CPPLINQ_NOEXCEPT
 				{
 					switch (state)
 					{
@@ -3817,18 +3719,15 @@ namespace cpplinq
 
 			};
 
-			CPPLINQ_METHOD lookup_range operator[](key_type const & key) const CPPLINQ_NOEXCEPT
+			CPPLINQ_METHOD auto operator[](key_type const & key) const CPPLINQ_NOEXCEPT
 			{
 				if (values.empty())
 				{
 					return lookup_range(std::addressof(values), 0U, 0U);
 				}
 
-				auto find = std::lower_bound(
-					keys.begin()
-					, keys.end()
-					, typename keys_type::value_type(key, 0U)
-					, [](typename keys_type::value_type const & l, typename keys_type::value_type const & r)
+				auto find = std::lower_bound(keys.begin(), keys.end(), typename keys_type::value_type(key, 0U),
+					[](typename keys_type::value_type const & l, typename keys_type::value_type const & r)
 				{
 					return l.first < r.first;
 				});
@@ -3847,12 +3746,12 @@ namespace cpplinq
 				return lookup_range(std::addressof(values), find->second, next->second);
 			}
 
-			CPPLINQ_INLINEMETHOD size_type size_of_keys() const CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD auto size_of_keys() const CPPLINQ_NOEXCEPT
 			{
 				return keys.size();
 			}
 
-			CPPLINQ_INLINEMETHOD size_type size_of_values() const CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD auto size_of_values() const CPPLINQ_NOEXCEPT
 			{
 				return values.size();
 			}
@@ -3881,7 +3780,7 @@ namespace cpplinq
 			key_selector_type          key_selector;
 
 			CPPLINQ_INLINEMETHOD explicit to_lookup_builder(key_selector_type key_selector) CPPLINQ_NOEXCEPT
-				:   key_selector(std::move(key_selector))
+				: key_selector(std::move(key_selector))
 			{
 			}
 
@@ -3921,28 +3820,25 @@ namespace cpplinq
 			value_selector_type        value_selector;
 
 			CPPLINQ_INLINEMETHOD explicit to_lookup_value_selector_builder(key_selector_type key_selector, value_selector_type value_selector) CPPLINQ_NOEXCEPT
-				:   key_selector(std::move(key_selector))
-				, value_selector(std::move(value_selector))
+				: key_selector(std::move(key_selector)),
+				  value_selector(std::move(value_selector))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD to_lookup_value_selector_builder(to_lookup_value_selector_builder const & v)
-				: key_selector(v.key_selector)
-				, value_selector(v.value_selector)
+				: key_selector(v.key_selector),
+				  value_selector(v.value_selector)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD to_lookup_value_selector_builder(to_lookup_value_selector_builder && v) CPPLINQ_NOEXCEPT
-				: key_selector(std::move(v.key_selector))
-				, value_selector(std::move(v.value_selector))
+				: key_selector(std::move(v.key_selector)),
+				  value_selector(std::move(v.value_selector))
 			{
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD lookup<
-				typename get_transformed_type<key_selector_type, typename TRange::value_type>::type
-				, typename get_transformed_type<value_selector_type, typename TRange::value_type>::type
-			> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				typedef lookup<
 					typename get_transformed_type<key_selector_type, typename TRange::value_type>::type
@@ -3953,7 +3849,6 @@ namespace cpplinq
 
 				return result;
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -3967,7 +3862,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD explicit for_each_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -3981,7 +3876,6 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
 			CPPLINQ_INLINEMETHOD void build(TRange range) const
 			{
@@ -3990,7 +3884,6 @@ namespace cpplinq
 					predicate(range.front());
 				}
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4004,7 +3897,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD first_predicate_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -4019,7 +3912,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range)
+			CPPLINQ_INLINEMETHOD auto build(TRange range)
 			{
 				while (range.next())
 				{
@@ -4031,7 +3924,6 @@ namespace cpplinq
 
 				throw sequence_empty_exception();
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4053,7 +3945,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range)
+			CPPLINQ_INLINEMETHOD auto build(TRange range)
 			{
 				if (range.next())
 				{
@@ -4062,7 +3954,6 @@ namespace cpplinq
 
 				throw sequence_empty_exception();
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4076,7 +3967,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD first_or_default_predicate_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -4091,7 +3982,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				while (range.next())
 				{
@@ -4103,9 +3994,7 @@ namespace cpplinq
 
 				return typename TRange::value_type();
 			}
-
 		};
-
 
 		struct first_or_default_builder : base_builder
 		{
@@ -4124,7 +4013,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				if (range.next())
 				{
@@ -4133,7 +4022,6 @@ namespace cpplinq
 
 				return typename TRange::value_type();
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4147,7 +4035,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD last_predicate_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -4162,7 +4050,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range)
+			CPPLINQ_INLINEMETHOD auto build(TRange range)
 			{
 				opt<typename TRange::value_type>    current;
 
@@ -4183,7 +4071,6 @@ namespace cpplinq
 					throw sequence_empty_exception();
 				}
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4205,7 +4092,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range)
+			CPPLINQ_INLINEMETHOD auto build(TRange range)
 			{
 				opt<typename TRange::value_type>    current;
 
@@ -4223,7 +4110,6 @@ namespace cpplinq
 					throw sequence_empty_exception();
 				}
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4237,7 +4123,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD last_or_default_predicate_builder(predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -4252,7 +4138,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto current = typename TRange::value_type();
 
@@ -4266,7 +4152,6 @@ namespace cpplinq
 
 				return current;
 			}
-
 		};
 
 		struct last_or_default_builder : base_builder
@@ -4286,7 +4171,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto current = typename TRange::value_type();
 
@@ -4297,7 +4182,6 @@ namespace cpplinq
 
 				return current;
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4311,7 +4195,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD count_predicate_builder(predicate_type  predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -4325,9 +4209,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD size_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				size_type count = 0U;
 				while (range.next())
@@ -4339,7 +4222,6 @@ namespace cpplinq
 				}
 				return count;
 			}
-
 		};
 
 		struct count_builder : base_builder
@@ -4358,9 +4240,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD size_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				size_type count = 0U;
 				while (range.next())
@@ -4369,7 +4250,6 @@ namespace cpplinq
 				}
 				return count;
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4383,7 +4263,7 @@ namespace cpplinq
 			selector_type           selector;
 
 			CPPLINQ_INLINEMETHOD sum_selector_builder(selector_type selector) CPPLINQ_NOEXCEPT
-				:   selector(std::move(selector))
+				: selector(std::move(selector))
 			{
 			}
 
@@ -4398,7 +4278,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename get_transformed_type<selector_type, typename TRange::value_type>::type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				typedef typename get_transformed_type<selector_type, typename TRange::value_type>::type value_type;
 
@@ -4409,7 +4289,6 @@ namespace cpplinq
 				}
 				return sum;
 			}
-
 		};
 
 		struct sum_builder : base_builder
@@ -4429,7 +4308,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto sum = typename TRange::value_type();
 				while (range.next())
@@ -4438,7 +4317,6 @@ namespace cpplinq
 				}
 				return sum;
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4452,7 +4330,7 @@ namespace cpplinq
 			selector_type           selector;
 
 			CPPLINQ_INLINEMETHOD max_selector_builder(selector_type selector) CPPLINQ_NOEXCEPT
-				:   selector(std::move(selector))
+				: selector(std::move(selector))
 			{
 			}
 
@@ -4467,7 +4345,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename get_transformed_type<selector_type, typename TRange::value_type>::type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				typedef typename get_transformed_type<selector_type, typename TRange::value_type>::type value_type;
 
@@ -4483,7 +4361,6 @@ namespace cpplinq
 
 				return current;
 			}
-
 		};
 
 		struct max_builder : base_builder
@@ -4504,7 +4381,7 @@ namespace cpplinq
 
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto current = std::numeric_limits<typename TRange::value_type>::lowest();
 				while (range.next())
@@ -4518,7 +4395,6 @@ namespace cpplinq
 
 				return current;
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4532,7 +4408,7 @@ namespace cpplinq
 			selector_type           selector;
 
 			CPPLINQ_INLINEMETHOD min_selector_builder(selector_type selector) CPPLINQ_NOEXCEPT
-				:   selector(std::move(selector))
+				: selector(std::move(selector))
 			{
 			}
 
@@ -4546,9 +4422,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename get_transformed_type<selector_type, typename TRange::value_type>::type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				typedef typename get_transformed_type<selector_type, typename TRange::value_type>::type value_type;
 
@@ -4564,7 +4439,6 @@ namespace cpplinq
 
 				return current;
 			}
-
 		};
 
 		struct min_builder : base_builder
@@ -4583,9 +4457,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto current = std::numeric_limits<typename TRange::value_type>::max();
 				while (range.next())
@@ -4599,7 +4472,6 @@ namespace cpplinq
 
 				return current;
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4613,7 +4485,7 @@ namespace cpplinq
 			selector_type           selector;
 
 			CPPLINQ_INLINEMETHOD avg_selector_builder(selector_type selector) CPPLINQ_NOEXCEPT
-				:   selector(std::move(selector))
+				: selector(std::move(selector))
 			{
 			}
 
@@ -4627,9 +4499,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename get_transformed_type<selector_type, typename TRange::value_type>::type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				typedef typename get_transformed_type<selector_type, typename TRange::value_type>::type value_type;
 
@@ -4667,9 +4538,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto sum = typename TRange::value_type();
 				int  count = 0;
@@ -4686,7 +4556,6 @@ namespace cpplinq
 
 				return sum / count;
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4700,7 +4569,7 @@ namespace cpplinq
 			accumulator_type        accumulator;
 
 			CPPLINQ_INLINEMETHOD aggregate_without_seed_builder(accumulator_type accumulator) CPPLINQ_NOEXCEPT
-				:   accumulator(std::move(accumulator))
+				: accumulator(std::move(accumulator))
 			{
 			}
 
@@ -4715,7 +4584,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range)
+			CPPLINQ_INLINEMETHOD auto build(TRange range)
 			{
 				if (!range.next())
 				{
@@ -4729,7 +4598,6 @@ namespace cpplinq
 				}
 				return std::move(sum);
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4745,25 +4613,25 @@ namespace cpplinq
 			accumulator_type        accumulator;
 
 			CPPLINQ_INLINEMETHOD aggregate_builder(seed_type seed, accumulator_type accumulator) CPPLINQ_NOEXCEPT
-				:   seed(std::move(seed))
-				, accumulator(std::move(accumulator))
+				: seed(std::move(seed)),
+				  accumulator(std::move(accumulator))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD aggregate_builder(aggregate_builder const & v) CPPLINQ_NOEXCEPT
-				: seed(v.seed)
-				, accumulator(v.accumulator)
+				: seed(v.seed),
+				  accumulator(v.accumulator)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD aggregate_builder(aggregate_builder && v) CPPLINQ_NOEXCEPT
-				: seed(std::move(v.seed))
-				, accumulator(std::move(v.accumulator))
+				: seed(std::move(v.seed)),
+				  accumulator(std::move(v.accumulator))
 			{
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD seed_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto sum = seed;
 				while (range.next())
@@ -4772,7 +4640,6 @@ namespace cpplinq
 				}
 				return sum;
 			}
-
 		};
 
 		template <typename TAccumulate, typename TAccumulator, typename TSelector>
@@ -4788,23 +4655,23 @@ namespace cpplinq
 			result_selector_type    result_selector;
 
 			CPPLINQ_INLINEMETHOD aggregate_result_selector_builder(seed_type seed, accumulator_type accumulator, result_selector_type result_selector) CPPLINQ_NOEXCEPT
-				:   seed(std::move(seed))
-				, accumulator(std::move(accumulator))
-				, result_selector(std::move(result_selector))
+				: seed(std::move(seed)),
+				  accumulator(std::move(accumulator)),
+				  result_selector(std::move(result_selector))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD aggregate_result_selector_builder(aggregate_result_selector_builder const & v) CPPLINQ_NOEXCEPT
-				:   seed(v.seed)
-				, accumulator(v.accumulator)
-				, result_selector(v.result_selector)
+				: seed(v.seed),
+				  accumulator(v.accumulator),
+				  result_selector(v.result_selector)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD aggregate_result_selector_builder(aggregate_result_selector_builder && v) CPPLINQ_NOEXCEPT
-				:   seed(std::move(v.seed))
-				, accumulator(std::move(v.accumulator))
-				, result_selector(std::move(v.result_selector))
+				: seed(std::move(v.seed)),
+				  accumulator(std::move(v.accumulator)),
+				  result_selector(std::move(v.result_selector))
 			{
 			}
 
@@ -4819,7 +4686,6 @@ namespace cpplinq
 
 				return result_selector(sum);
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -4834,28 +4700,26 @@ namespace cpplinq
 			other_range_type        other_range;
 			comparer_type           comparer;
 
-			CPPLINQ_INLINEMETHOD sequence_equal_predicate_builder(
-				TOtherRange     other_range
-				, comparer_type   comparer) CPPLINQ_NOEXCEPT
-				:   other_range(std::move(other_range))
-				, comparer(std::move(comparer))
+			CPPLINQ_INLINEMETHOD sequence_equal_predicate_builder(TOtherRange other_range, comparer_type comparer) CPPLINQ_NOEXCEPT
+				: other_range(std::move(other_range)),
+				  comparer(std::move(comparer))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD sequence_equal_predicate_builder(sequence_equal_predicate_builder const & v) CPPLINQ_NOEXCEPT
-				: other_range(v.other_range)
-				, comparer(v.comparer)
+				: other_range(v.other_range),
+				  comparer(v.comparer)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD sequence_equal_predicate_builder(sequence_equal_predicate_builder && v) CPPLINQ_NOEXCEPT
-				: other_range(std::move(v.other_range))
-				, comparer(std::move(v.comparer))
+				: other_range(std::move(v.other_range)),
+				  comparer(std::move(v.comparer))
 			{
 			}
 
 			template <typename TRange>
-			CPPLINQ_INLINEMETHOD bool build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto copy = other_range;
 				for (;;)
@@ -4907,7 +4771,7 @@ namespace cpplinq
 			}
 
 			template <typename TRange>
-			CPPLINQ_INLINEMETHOD bool build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				auto copy = other_range;
 				for (;;)
@@ -4945,35 +4809,31 @@ namespace cpplinq
 			std::basic_string<TCharType>    separator;
 			size_type                       capacity;
 
-			CPPLINQ_INLINEMETHOD concatenate_builder(
-				std::basic_string<TCharType>    separator
-				, size_type capacity
-			) CPPLINQ_NOEXCEPT
-				:   separator(std::move(separator))
-				, capacity(capacity)
+			CPPLINQ_INLINEMETHOD concatenate_builder(std::basic_string<TCharType> separator, size_type capacity) CPPLINQ_NOEXCEPT
+				: separator(std::move(separator)),
+				  capacity(capacity)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD concatenate_builder(concatenate_builder const & v) CPPLINQ_NOEXCEPT
-				: separator(v.separator)
-				, capacity(v.capacity)
+				: separator(v.separator),
+				  capacity(v.capacity)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD concatenate_builder(concatenate_builder && v) CPPLINQ_NOEXCEPT
-				: separator(std::move(v.separator))
-				, capacity(std::move(v.capacity))
+				: separator(std::move(v.separator)),
+				  capacity(std::move(v.capacity))
 			{
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename std::basic_string<TCharType> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
-				auto                    first = true;
-				std::vector<TCharType>  buffer;
+				auto first = true;
+				std::vector<TCharType> buffer;
 
 				buffer.reserve(capacity);
-
 
 				while (range.next())
 				{
@@ -4983,31 +4843,20 @@ namespace cpplinq
 					}
 					else
 					{
-						buffer.insert(
-							buffer.end()
-							, separator.begin()
-							, separator.end()
-						);
+						buffer.insert(buffer.end(), separator.begin(), separator.end());
 					}
 
 					auto v = range.front();
 
-					buffer.insert(
-						buffer.end()
-						, v.begin()
-						, v.end()
-					);
+					buffer.insert(buffer.end(), v.begin(), v.end());
 				}
 
-				return std::basic_string<TCharType>(
-					buffer.begin()
-					, buffer.end()
-					);
+				return std::basic_string<TCharType>(buffer.begin(), buffer.end());
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
+
 		template <typename TPredicate>
 		struct any_predicate_builder : base_builder
 		{
@@ -5017,7 +4866,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD any_predicate_builder(predicate_type  predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -5031,9 +4880,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD bool build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				bool any = false;
 				while (range.next() && !any)
@@ -5060,13 +4908,11 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD bool build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return range.next();
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -5080,7 +4926,7 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD all_predicate_builder(predicate_type  predicate) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+				: predicate(std::move(predicate))
 			{
 			}
 
@@ -5095,7 +4941,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD bool build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				while (range.next())
 				{
@@ -5120,7 +4966,7 @@ namespace cpplinq
 			value_type              value;
 
 			CPPLINQ_INLINEMETHOD contains_builder(value_type value) CPPLINQ_NOEXCEPT
-				:   value(std::move(value))
+				: value(std::move(value))
 			{
 			}
 
@@ -5134,9 +4980,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD bool build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				while (range.next())
 				{
@@ -5148,7 +4993,6 @@ namespace cpplinq
 
 				return false;
 			}
-
 		};
 
 		template <typename TValue, typename TPredicate>
@@ -5162,26 +5006,25 @@ namespace cpplinq
 			predicate_type          predicate;
 
 			CPPLINQ_INLINEMETHOD contains_predicate_builder(value_type value, predicate_type predicate) CPPLINQ_NOEXCEPT
-				:   value(std::move(value))
-				, predicate(std::move(predicate))
+				: value(std::move(value)),
+				  predicate(std::move(predicate))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD contains_predicate_builder(contains_predicate_builder const & v) CPPLINQ_NOEXCEPT
-				: value(v.value)
-				, predicate(v.predicate)
+				: value(v.value),
+				  predicate(v.predicate)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD contains_predicate_builder(contains_predicate_builder && v) CPPLINQ_NOEXCEPT
-				: value(std::move(v.value))
-				, predicate(std::move(v.predicate))
+				: value(std::move(v.value)),
+				  predicate(std::move(v.predicate))
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD bool build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				while (range.next())
 				{
@@ -5193,7 +5036,6 @@ namespace cpplinq
 
 				return false;
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -5205,7 +5047,7 @@ namespace cpplinq
 			size_type               index;
 
 			CPPLINQ_INLINEMETHOD element_at_or_default_builder(size_type index) CPPLINQ_NOEXCEPT
-				:   index(std::move(index))
+				: index(std::move(index))
 			{
 			}
 
@@ -5219,9 +5061,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				size_type current = 0U;
 
@@ -5238,9 +5079,7 @@ namespace cpplinq
 				}
 
 				return typename TRange::value_type();
-
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -5252,7 +5091,7 @@ namespace cpplinq
 			size_type               index;
 
 			CPPLINQ_INLINEMETHOD element_at_builder(size_type index) CPPLINQ_NOEXCEPT
-				:   index(std::move(index))
+				: index(std::move(index))
 			{
 			}
 
@@ -5266,9 +5105,8 @@ namespace cpplinq
 			{
 			}
 
-
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD typename TRange::value_type build(TRange range)
+			CPPLINQ_INLINEMETHOD auto build(TRange range)
 			{
 				size_type current = 0U;
 
@@ -5285,9 +5123,7 @@ namespace cpplinq
 				}
 
 				throw out_of_range_exception();
-
 			}
-
 		};
 
 		// -------------------------------------------------------------------------
@@ -5307,46 +5143,44 @@ namespace cpplinq
 				returns_reference = 0,
 			};
 
-
 			range_type                   range;
 			opt<element_type>            previous;
 			opt<element_type>            current;
 
-			CPPLINQ_INLINEMETHOD pairwise_range(
-				range_type          range
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
+			CPPLINQ_INLINEMETHOD pairwise_range(range_type range) CPPLINQ_NOEXCEPT
+				: range(std::move(range))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD pairwise_range(pairwise_range const & v) CPPLINQ_NOEXCEPT
-				: range(v.range)
-				, previous(v.previous)
-				, current(v.current)
+				: range(v.range),
+				  previous(v.previous),
+				  current(v.current)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD pairwise_range(pairwise_range && v) CPPLINQ_NOEXCEPT
-				:   range(std::move(v.range))
-				, previous(std::move(v.previous))
-				, current(std::move(v.current))
+				: range(std::move(v.range)),
+				  previous(std::move(v.previous)),
+				  current(std::move(v.current))
 			{
 			}
 
 			template<typename TPairwiseBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TPairwiseBuilder, this_type>::type operator>>(TPairwiseBuilder pairwise_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TPairwiseBuilder pairwise_builder) const
 			{
 				return pairwise_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				CPPLINQ_ASSERT(previous.has_value());
 				CPPLINQ_ASSERT(current.has_value());
+
 				return std::make_pair(previous.get(), current.get());
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				if (!previous.has_value())
 				{
@@ -5392,7 +5226,7 @@ namespace cpplinq
 			}
 
 			template<typename TRange>
-			CPPLINQ_INLINEMETHOD pairwise_range<TRange> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return pairwise_range<TRange>(std::move(range));
 			}
@@ -5419,39 +5253,36 @@ namespace cpplinq
 			range_type                  range;
 			other_range_type            other_range;
 
-			CPPLINQ_INLINEMETHOD zip_with_range(
-				range_type          range
-				, other_range_type    other_range
-			) CPPLINQ_NOEXCEPT
-				:   range(std::move(range))
-				, other_range(std::move(other_range))
+			CPPLINQ_INLINEMETHOD zip_with_range(range_type range, other_range_type other_range) CPPLINQ_NOEXCEPT
+				: range(std::move(range)),
+				  other_range(std::move(other_range))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD zip_with_range(zip_with_range const & v) CPPLINQ_NOEXCEPT
-				: range(v.range)
-				, other_range(v.other_range)
+				: range(v.range),
+				  other_range(v.other_range)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD zip_with_range(zip_with_range && v) CPPLINQ_NOEXCEPT
-				: range(std::move(v.range))
-				, other_range(std::move(v.other_range))
+				: range(std::move(v.range)),
+				  other_range(std::move(v.other_range))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				return std::make_pair(range.front(), other_range.front());
 			}
 
-			CPPLINQ_INLINEMETHOD bool next()
+			CPPLINQ_INLINEMETHOD auto next()
 			{
 				return range.next() && other_range.next();
 			}
@@ -5481,7 +5312,7 @@ namespace cpplinq
 			}
 
 			template <typename TRange>
-			CPPLINQ_INLINEMETHOD zip_with_range<TRange, TOtherRange> build(TRange range) const
+			CPPLINQ_INLINEMETHOD auto build(TRange range) const
 			{
 				return zip_with_range<TRange, TOtherRange>(std::move(range), std::move(other_range));
 			}
@@ -5512,53 +5343,53 @@ namespace cpplinq
 			TPredicate              predicate;
 			opt_value_type          current_value;
 
-			CPPLINQ_INLINEMETHOD generate_range(
-				TPredicate predicate
-			) CPPLINQ_NOEXCEPT
-				:   predicate(std::move(predicate))
+			CPPLINQ_INLINEMETHOD generate_range(TPredicate predicate) CPPLINQ_NOEXCEPT
+				: predicate(std::move(predicate))
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD generate_range(generate_range const & v) CPPLINQ_NOEXCEPT
-				: predicate(v.predicate)
-				, current_value(v.current_value)
+				: predicate(v.predicate),
+				  current_value(v.current_value)
 			{
 			}
 
 			CPPLINQ_INLINEMETHOD generate_range(generate_range && v) CPPLINQ_NOEXCEPT
-				: predicate(std::move(v.predicate))
-				, current_value(std::move(v.current_value))
+				: predicate(std::move(v.predicate)),
+				  current_value(std::move(v.current_value))
 			{
 			}
 
 			template<typename TRangeBuilder>
-			CPPLINQ_INLINEMETHOD typename get_builtup_type<TRangeBuilder, this_type>::type operator>>(TRangeBuilder range_builder) const
+			CPPLINQ_INLINEMETHOD auto operator>>(TRangeBuilder range_builder) const
 			{
 				return range_builder.build(*this);
 			}
 
-			CPPLINQ_INLINEMETHOD return_type front() const
+			CPPLINQ_INLINEMETHOD auto front() const
 			{
 				CPPLINQ_ASSERT(current_value);
+
 				return *current_value;
 			}
 
-			CPPLINQ_INLINEMETHOD bool next() CPPLINQ_NOEXCEPT
+			CPPLINQ_INLINEMETHOD auto next() CPPLINQ_NOEXCEPT
 			{
 				current_value = predicate();
+
 				return current_value;
 			}
 		};
 
 		// -------------------------------------------------------------------------
 
-	}   // namespace detail
+	} // namespace detail
 
-		// -------------------------------------------------------------------------
-		// The interface of cpplinq
-		// -------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
+	// The interface of cpplinq
+	// -------------------------------------------------------------------------
 
-		// Range sources
+	// Range sources
 
 	template<typename TValueIterator>
 	CPPLINQ_INLINEMETHOD auto from_iterators(TValueIterator begin, TValueIterator end) CPPLINQ_NOEXCEPT
@@ -5573,9 +5404,7 @@ namespace cpplinq
 	}
 
 	template<typename TValueArray>
-	CPPLINQ_INLINEMETHOD detail::from_range<typename detail::get_array_properties<TValueArray>::iterator_type> from_array(
-		TValueArray & a
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto from_array(TValueArray & a) CPPLINQ_NOEXCEPT
 	{
 		typedef detail::get_array_properties<TValueArray>   array_properties;
 		typedef typename array_properties::iterator_type    iterator_type;
@@ -5587,21 +5416,15 @@ namespace cpplinq
 	}
 
 	template<typename TContainer>
-	CPPLINQ_INLINEMETHOD detail::from_copy_range<typename detail::cleanup_type<TContainer>::type> from_copy(
-		TContainer&& container
-	)
+	CPPLINQ_INLINEMETHOD auto from_copy(TContainer&& container)
 	{
 		typedef typename detail::cleanup_type<TContainer>::type container_type;
 
-		return detail::from_copy_range<container_type>(
-			std::forward<TContainer>(container)
-			);
+		return detail::from_copy_range<container_type>(std::forward<TContainer>(container));
 	}
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::generate_range<TPredicate> generate(
-		TPredicate predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto generate(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::generate_range<TPredicate>(std::move(predicate));
 	}
@@ -5609,78 +5432,47 @@ namespace cpplinq
 	// Restriction operators
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::where_builder<TPredicate> where(
-		TPredicate      predicate
-		) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto where(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::where_builder<TPredicate>(std::move(predicate));
 	}
 
 	// Projection operators
 
-	CPPLINQ_INLINEMETHOD detail::ref_builder ref() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto ref() CPPLINQ_NOEXCEPT
 	{
 		return detail::ref_builder();
 	}
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::select_builder<TPredicate> select(
-		TPredicate      predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto select(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::select_builder<TPredicate>(std::move(predicate));
 	}
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::select_many_builder<TPredicate> select_many(
-		TPredicate      predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto select_many(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::select_many_builder<TPredicate>(std::move(predicate));
 	}
 
-	template<
-		typename TOtherRange
-		, typename TKeySelector
-		, typename TOtherKeySelector
-		, typename TCombiner
-	>
-		CPPLINQ_INLINEMETHOD detail::join_builder<
-		TOtherRange
-		, TKeySelector
-		, TOtherKeySelector
-		, TCombiner
-		> join(
-			TOtherRange         other_range
-			, TKeySelector        key_selector
-			, TOtherKeySelector   other_key_selector
-			, TCombiner           combiner
-		) CPPLINQ_NOEXCEPT
+	template<typename TOtherRange, typename TKeySelector, typename TOtherKeySelector, typename TCombiner>
+	CPPLINQ_INLINEMETHOD auto join(TOtherRange other_range, TKeySelector key_selector, TOtherKeySelector other_key_selector, TCombiner combiner) CPPLINQ_NOEXCEPT
 	{
-		return detail::join_builder<
-			TOtherRange
-			, TKeySelector
-			, TOtherKeySelector
-			, TCombiner
-		>
-			(
-				std::move(other_range)
-				, std::move(key_selector)
-				, std::move(other_key_selector)
-				, std::move(combiner)
-				);
+		return detail::join_builder<TOtherRange, TKeySelector, TOtherKeySelector, TCombiner>
+			(std::move(other_range), std::move(key_selector), std::move(other_key_selector), std::move(combiner));
 	}
 
 	// Concatenation operators
 
 	template <typename TOtherRange>
-	CPPLINQ_INLINEMETHOD detail::concat_builder<TOtherRange> concat(TOtherRange other_range) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto concat(TOtherRange other_range) CPPLINQ_NOEXCEPT
 	{
 		return detail::concat_builder<TOtherRange>(std::move(other_range));
 	}
 
 	template <typename TOtherRange>
-	CPPLINQ_INLINEMETHOD detail::start_with_builder<TOtherRange> start_with(TOtherRange other_range) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto start_with(TOtherRange other_range) CPPLINQ_NOEXCEPT
 	{
 		return detail::start_with_builder<TOtherRange>(std::move(other_range));
 	}
@@ -5688,31 +5480,23 @@ namespace cpplinq
 	// Partitioning operators
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::take_while_builder<TPredicate> take_while(
-		TPredicate        predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto take_while(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::take_while_builder<TPredicate>(std::move(predicate));
 	}
 
-	CPPLINQ_INLINEMETHOD detail::take_builder take(
-		size_type     count
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto take(size_type count) CPPLINQ_NOEXCEPT
 	{
 		return detail::take_builder(count);
 	}
 
 	template <typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::skip_while_builder<TPredicate> skip_while(
-		TPredicate        predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto skip_while(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::skip_while_builder<TPredicate>(predicate);
 	}
 
-	CPPLINQ_INLINEMETHOD detail::skip_builder skip(
-		size_type       count
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto skip(size_type count) CPPLINQ_NOEXCEPT
 	{
 		return detail::skip_builder(count);
 	}
@@ -5720,127 +5504,111 @@ namespace cpplinq
 	// Ordering operators
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::orderby_builder<TPredicate> orderby(
-		TPredicate      predicate
-		, bool            sort_ascending = true
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto orderby(TPredicate predicate, bool sort_ascending = true) CPPLINQ_NOEXCEPT
 	{
 		return detail::orderby_builder<TPredicate>(std::move(predicate), sort_ascending);
 	}
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::orderby_builder<TPredicate> orderby_ascending(
-		TPredicate      predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto orderby_ascending(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::orderby_builder<TPredicate>(std::move(predicate), true);
 	}
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::orderby_builder<TPredicate> orderby_descending(
-		TPredicate      predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto orderby_descending(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::orderby_builder<TPredicate>(std::move(predicate), false);
 	}
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::thenby_builder<TPredicate> thenby(
-		TPredicate      predicate
-		, bool            sort_ascending = true
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto thenby(TPredicate predicate, bool sort_ascending = true) CPPLINQ_NOEXCEPT
 	{
 		return detail::thenby_builder<TPredicate>(std::move(predicate), sort_ascending);
 	}
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::thenby_builder<TPredicate> thenby_ascending(
-		TPredicate      predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto thenby_ascending(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::thenby_builder<TPredicate>(std::move(predicate), true);
 	}
 
 	template<typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::thenby_builder<TPredicate> thenby_descending(
-		TPredicate      predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto thenby_descending(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::thenby_builder<TPredicate>(std::move(predicate), false);
 	}
 
-	CPPLINQ_INLINEMETHOD detail::reverse_builder reverse(size_type capacity = 16U) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto reverse(size_type capacity = 16U) CPPLINQ_NOEXCEPT
 	{
 		return detail::reverse_builder(capacity);
 	}
-
 
 	// Conversion operators
 
 	namespace experimental
 	{
-		CPPLINQ_INLINEMETHOD detail::experimental::container_builder container() CPPLINQ_NOEXCEPT
+		CPPLINQ_INLINEMETHOD auto container() CPPLINQ_NOEXCEPT
 		{
 			return detail::experimental::container_builder();
 		}
 	}
 
 	template<typename TValue>
-	CPPLINQ_INLINEMETHOD detail::opt<typename detail::cleanup_type<TValue>::type> to_opt(TValue && v)
+	CPPLINQ_INLINEMETHOD auto to_opt(TValue && v)
 	{
 		return detail::opt<typename detail::cleanup_type<TValue>::type>(std::forward<TValue>(v));
 	}
 
 	template<typename TValue>
-	CPPLINQ_INLINEMETHOD detail::opt<TValue> to_opt()
+	CPPLINQ_INLINEMETHOD auto to_opt()
 	{
 		return detail::opt<TValue>();
 	}
 
-	CPPLINQ_INLINEMETHOD detail::to_vector_builder to_vector(size_type capacity = 16U) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto to_vector(size_type capacity = 16U) CPPLINQ_NOEXCEPT
 	{
 		return detail::to_vector_builder(capacity);
 	}
 
-	CPPLINQ_INLINEMETHOD detail::to_deque_builder to_deque() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto to_deque() CPPLINQ_NOEXCEPT
 	{
 		return detail::to_deque_builder();
 	}
 
-	CPPLINQ_INLINEMETHOD detail::to_list_builder to_list() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto to_list() CPPLINQ_NOEXCEPT
 	{
 		return detail::to_list_builder();
 	}
 
 	template<typename TKeySelector>
-	CPPLINQ_INLINEMETHOD detail::to_map_builder<TKeySelector> to_map(TKeySelector key_selector) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto to_map(TKeySelector key_selector) CPPLINQ_NOEXCEPT
 	{
 		return detail::to_map_builder<TKeySelector>(std::move(key_selector));
 	}
 
 	template<typename TKeySelector>
-	CPPLINQ_INLINEMETHOD detail::to_lookup_builder<TKeySelector> to_lookup(TKeySelector key_selector) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto to_lookup(TKeySelector key_selector) CPPLINQ_NOEXCEPT
 	{
 		return detail::to_lookup_builder<TKeySelector>(std::move(key_selector));
 	}
 
 	template<typename TKeySelector, typename TValueSelector>
-	CPPLINQ_INLINEMETHOD detail::to_lookup_value_selector_builder<TKeySelector, TValueSelector> to_lookup(TKeySelector key_selector, TValueSelector value_selector) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto to_lookup(TKeySelector key_selector, TValueSelector value_selector) CPPLINQ_NOEXCEPT
 	{
 		return detail::to_lookup_value_selector_builder<TKeySelector, TValueSelector>(std::move(key_selector), std::move(value_selector));
 	}
 
 	// Equality operators
+
 	template <typename TOtherRange>
-	CPPLINQ_INLINEMETHOD detail::sequence_equal_builder<TOtherRange> sequence_equal(TOtherRange other_range) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto sequence_equal(TOtherRange other_range) CPPLINQ_NOEXCEPT
 	{
 		return detail::sequence_equal_builder<TOtherRange>(std::move(other_range));
 	}
 
 	template <typename TOtherRange, typename TComparer>
-	CPPLINQ_INLINEMETHOD detail::sequence_equal_predicate_builder<TOtherRange, TComparer> sequence_equal(
-		TOtherRange other_range
-		, TComparer   comparer) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto sequence_equal(TOtherRange other_range, TComparer comparer) CPPLINQ_NOEXCEPT
 	{
 		return detail::sequence_equal_predicate_builder<TOtherRange, TComparer>(std::move(other_range), std::move(comparer));
 	}
@@ -5848,77 +5616,62 @@ namespace cpplinq
 	// Element operators
 
 	template <typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::first_predicate_builder<TPredicate> first(
-		TPredicate predicate
-	)
+	CPPLINQ_INLINEMETHOD auto first(TPredicate predicate)
 	{
 		return detail::first_predicate_builder<TPredicate>(std::move(predicate));
 	}
 
-	CPPLINQ_INLINEMETHOD detail::first_builder first()
+	CPPLINQ_INLINEMETHOD auto first()
 	{
 		return detail::first_builder();
 	}
 
 	template <typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::first_or_default_predicate_builder<TPredicate> first_or_default(
-		TPredicate predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto first_or_default(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::first_or_default_predicate_builder<TPredicate>(predicate);
 	}
 
-	CPPLINQ_INLINEMETHOD detail::first_or_default_builder first_or_default() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto first_or_default() CPPLINQ_NOEXCEPT
 	{
 		return detail::first_or_default_builder();
 	}
 
 	template <typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::last_or_default_predicate_builder<TPredicate> last_or_default(
-		TPredicate predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto last_or_default(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
-		return detail::last_or_default_predicate_builder<TPredicate>(predicate);
+		return detail::last_or_default_predicate_builder<TPredicate>(std::move(predicate));
 	}
 
 	template <typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::last_predicate_builder<TPredicate> last(
-		TPredicate predicate
-	)
+	CPPLINQ_INLINEMETHOD auto last(TPredicate predicate)
 	{
 		return detail::last_predicate_builder<TPredicate>(std::move(predicate));
 	}
 
-	CPPLINQ_INLINEMETHOD detail::last_builder last()
+	CPPLINQ_INLINEMETHOD auto last()
 	{
 		return detail::last_builder();
 	}
 
-	CPPLINQ_INLINEMETHOD detail::last_or_default_builder last_or_default() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto last_or_default() CPPLINQ_NOEXCEPT
 	{
 		return detail::last_or_default_builder();
 	}
 
-	CPPLINQ_INLINEMETHOD detail::element_at_builder element_at(
-		size_type   index
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto element_at(size_type index) CPPLINQ_NOEXCEPT
 	{
 		return detail::element_at_builder(index);
 	}
 
-	CPPLINQ_INLINEMETHOD detail::element_at_or_default_builder element_at_or_default(
-		size_type   index
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto element_at_or_default(size_type index) CPPLINQ_NOEXCEPT
 	{
 		return detail::element_at_or_default_builder(index);
 	}
 
 	// Generation operators
 
-	CPPLINQ_INLINEMETHOD detail::int_range range(
-		int         start
-		, int         count
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto range(int start, int count) CPPLINQ_NOEXCEPT
 	{
 		auto c = count > 0 ? count : 0;
 		auto end = (INT_MAX - c) > start ? (start + c) : INT_MAX;
@@ -5926,23 +5679,20 @@ namespace cpplinq
 	}
 
 	template <typename TValue>
-	CPPLINQ_INLINEMETHOD detail::repeat_range<TValue> repeat(
-		TValue      element
-		, int         count
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto repeat(TValue element, int count) CPPLINQ_NOEXCEPT
 	{
 		auto c = count > 0 ? count : 0;
 		return detail::repeat_range<TValue>(element, c);
 	}
 
 	template <typename TValue>
-	CPPLINQ_INLINEMETHOD detail::empty_range<TValue> empty() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto empty() CPPLINQ_NOEXCEPT
 	{
 		return detail::empty_range<TValue>();
 	}
 
 	template<typename TValue>
-	CPPLINQ_INLINEMETHOD detail::singleton_range<typename detail::cleanup_type<TValue>::type> singleton(TValue&& value) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto singleton(TValue&& value) CPPLINQ_NOEXCEPT
 	{
 		return detail::singleton_range<typename detail::cleanup_type<TValue>::type>(std::forward<TValue>(value));
 	}
@@ -5950,80 +5700,65 @@ namespace cpplinq
 	// Quantifiers
 
 	template <typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::any_predicate_builder<TPredicate> any(
-		TPredicate predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto any(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::any_predicate_builder<TPredicate>(std::move(predicate));
 	}
 
-	CPPLINQ_INLINEMETHOD detail::any_builder any() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto any() CPPLINQ_NOEXCEPT
 	{
 		return detail::any_builder();
 	}
 
 	template <typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::all_predicate_builder<TPredicate> all(
-		TPredicate predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto all(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::all_predicate_builder<TPredicate>(std::move(predicate));
 	}
 
 	template <typename TValue>
-	CPPLINQ_INLINEMETHOD detail::contains_builder<TValue> contains(
-		TValue value
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto contains(TValue value) CPPLINQ_NOEXCEPT
 	{
 		return detail::contains_builder<TValue>(value);
 	}
 
 	template <typename TValue, typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::contains_predicate_builder<TValue, TPredicate> contains(
-		TValue value
-		, TPredicate predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto contains(TValue value, TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
-		return detail::contains_predicate_builder<TValue, TPredicate>(value, predicate);
+		return detail::contains_predicate_builder<TValue, TPredicate>(value, std::move(predicate));
 	}
 
 	// Aggregate operators
 
 	template <typename TPredicate>
-	CPPLINQ_INLINEMETHOD detail::count_predicate_builder<TPredicate> count(
-		TPredicate predicate
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto count(TPredicate predicate) CPPLINQ_NOEXCEPT
 	{
 		return detail::count_predicate_builder<TPredicate>(std::move(predicate));
 	}
 
-	CPPLINQ_INLINEMETHOD detail::count_builder count() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto count() CPPLINQ_NOEXCEPT
 	{
 		return detail::count_builder();
 	}
 
 	template<typename TSelector>
-	CPPLINQ_INLINEMETHOD detail::sum_selector_builder<TSelector> sum(
-		TSelector selector
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto sum(TSelector selector) CPPLINQ_NOEXCEPT
 	{
 		return detail::sum_selector_builder<TSelector>(std::move(selector));
 	}
 
-	CPPLINQ_INLINEMETHOD detail::sum_builder sum() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto sum() CPPLINQ_NOEXCEPT
 	{
 		return detail::sum_builder();
 	}
 
 	template<typename TSelector>
-	CPPLINQ_INLINEMETHOD detail::max_selector_builder<TSelector> max(
-		TSelector selector
-	) CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto max(TSelector selector) CPPLINQ_NOEXCEPT
 	{
 		return detail::max_selector_builder<TSelector>(std::move(selector));
 	}
 
-	CPPLINQ_INLINEMETHOD detail::max_builder max() CPPLINQ_NOEXCEPT
+	CPPLINQ_INLINEMETHOD auto max() CPPLINQ_NOEXCEPT
 	{
 		return detail::max_builder();
 	}
