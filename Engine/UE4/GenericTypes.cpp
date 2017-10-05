@@ -189,7 +189,50 @@ UEProperty::Info UEProperty::GetInfo() const
 	return { PropertyType::Unknown };
 }
 
+//---------------------------------------------------------------------------
+//UEByteProperty
+//---------------------------------------------------------------------------
 bool UEByteProperty::IsEnum() const
 {
 	return GetEnum().IsValid();
+}
+//---------------------------------------------------------------------------
+//UEBoolProperty
+//---------------------------------------------------------------------------
+
+int GetBitPosition(uint8_t value)
+{
+	int i4 = !(value & 0xf) << 2;
+	value >>= i4;
+
+	int i2 = !(value & 0x3) << 1;
+	value >>= i2;
+
+	int i1 = !(value & 0x1);
+
+	int i0 = (value >> i1) & 1 ? 0 : -8;
+
+	return i4 + i2 + i1 + i0;
+}
+
+std::array<int, 2> UEBoolProperty::GetMissingBitsCount(const UEBoolProperty& other) const
+{
+	// If there is no previous bitfield member, just calculate the missing bits.
+	if (!other.IsValid())
+	{
+		return { GetBitPosition(GetByteMask()), -1 };
+	}
+
+	// If both bitfield member belong to the same byte, calculate the bit position difference.
+	if (GetOffset() == other.GetOffset())
+	{
+		return { GetBitPosition(GetByteMask()) - GetBitPosition(other.GetByteMask()) - 1, -1 };
+	}
+
+	// If they have different offsets, we need two distances
+	// |00001000|00100000|
+	// 1.   ^---^
+	// 2.       ^--^
+	
+	return { std::numeric_limits<uint8_t>::digits - GetBitPosition(other.GetByteMask()) - 1, GetBitPosition(GetByteMask()) };
 }

@@ -27,7 +27,7 @@ bool ComparePropertyLess(const UEProperty& lhs, const UEProperty& rhs)
 		&& lhs.IsA<UEBoolProperty>()
 		&& rhs.IsA<UEBoolProperty>())
 	{
-		return lhs.Cast<UEBoolProperty>().GetBitMask() < rhs.Cast<UEBoolProperty>().GetBitMask();
+		return lhs.Cast<UEBoolProperty>() < rhs.Cast<UEBoolProperty>();
 	}
 	
 	return lhs.GetOffset() < rhs.GetOffset();
@@ -224,17 +224,6 @@ void Package::GenerateMemberPrerequisites(const UEProperty& first, std::unordere
 			GenerateMemberPrerequisites(function.GetChildren().Cast<UEProperty>(), processedObjects);
 		}
 	}
-}
-
-Package::Member Package::Member::Unknown(size_t id, size_t offset, size_t size, std::string reason)
-{
-	Member ss;
-	ss.Name = tfm::format("UnknownData%02d[0x%X]", id, size);
-	ss.Type = "unsigned char";
-	ss.Offset = offset;
-	ss.Size = size;
-	ss.Comment = std::move(reason);
-	return ss;
 }
 
 void Package::GenerateScriptStruct(const UEScriptStruct& scriptStructObj)
@@ -476,21 +465,45 @@ void Package::GenerateClass(const UEClass& classObj)
 	classes.emplace_back(std::move(c));
 }
 
+Package::Member Package::CreatePadding(size_t id, size_t offset, size_t size, std::string reason)
+{
+	Member ss;
+	ss.Name = tfm::format("UnknownData%02d[0x%X]", id, size);
+	ss.Type = "unsigned char";
+	ss.Offset = offset;
+	ss.Size = size;
+	ss.Comment = std::move(reason);
+	return ss;
+}
+
+Package::Member Package::CreateBitfieldPadding(size_t id, size_t offset, std::string type, size_t bits)
+{
+	Member ss;
+	ss.Name = tfm::format("UnknownData%02d : %d", id, bits);
+	ss.Type = std::move(type);
+	ss.Offset = offset;
+	ss.Size = 1;
+	return ss;
+}
+
 void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const std::vector<UEProperty>& properties, std::vector<Member>& members) const
 {
 	extern IGenerator* generator;
 
 	std::unordered_map<std::string, size_t> uniqueMemberNames;
 	size_t unknownDataCounter = 0;
+	UEBoolProperty previousBitfieldProperty;
 
-	for (auto& prop : properties)
+	for (auto&& prop : properties)
 	{
 		if (offset < prop.GetOffset())
 		{
+			previousBitfieldProperty = UEBoolProperty();
+
 			const auto size = prop.GetOffset() - offset;
 			if (size >= generator->GetGlobalMemberAlignment())
 			{
-				members.emplace_back(Member::Unknown(unknownDataCounter++, offset, size, "MISSED OFFSET"));
+				members.emplace_back(CreatePadding(unknownDataCounter++, offset, size, "MISSED OFFSET"));
 			}
 		}
 
@@ -520,9 +533,34 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 				sp.Name += tfm::format("[0x%X]", prop.GetArrayDim());
 			}
 
-			if (prop.IsA<UEBoolProperty>())
+			if (prop.IsA<UEBoolProperty>() && prop.Cast<UEBoolProperty>().IsBitfield())
 			{
+				auto boolProp = prop.Cast<UEBoolProperty>();
+
+				const auto missingBits = boolProp.GetMissingBitsCount(previousBitfieldProperty);
+				if (missingBits[1] != -1)
+				{
+					if (missingBits[0] > 0)
+					{
+						members.emplace_back(CreateBitfieldPadding(unknownDataCounter++, previousBitfieldProperty.GetOffset(), info.CppType, missingBits[0]));
+					}
+					if (missingBits[1] > 0)
+					{
+						members.emplace_back(CreateBitfieldPadding(unknownDataCounter++, sp.Offset, info.CppType, missingBits[1]));
+					}
+				}
+				else if(missingBits[0] > 0)
+				{
+					members.emplace_back(CreateBitfieldPadding(unknownDataCounter++, sp.Offset, info.CppType, missingBits[0]));
+				}
+
+				previousBitfieldProperty = boolProp;
+
 				sp.Name += " : 1";
+			}
+			else
+			{
+				previousBitfieldProperty = UEBoolProperty();
 			}
 
 			sp.Flags = static_cast<size_t>(prop.GetPropertyFlags());
@@ -533,16 +571,16 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 			const auto sizeMismatch = static_cast<int>(prop.GetElementSize() * prop.GetArrayDim()) - static_cast<int>(info.Size * prop.GetArrayDim());
 			if (sizeMismatch > 0)
 			{
-				members.emplace_back(Member::Unknown(unknownDataCounter++, offset, sizeMismatch, "FIX WRONG TYPE SIZE OF PREVIOUS PROPERTY"));
+				members.emplace_back(CreatePadding(unknownDataCounter++, offset, sizeMismatch, "FIX WRONG TYPE SIZE OF PREVIOUS PROPERTY"));
 			}
 		}
 		else
 		{
 			const auto size = prop.GetElementSize() * prop.GetArrayDim();
-			members.emplace_back(Member::Unknown(unknownDataCounter++, offset, size, "UNKNOWN PROPERTY: " + prop.GetFullName()));
+			members.emplace_back(CreatePadding(unknownDataCounter++, offset, size, "UNKNOWN PROPERTY: " + prop.GetFullName()));
 		}
 
-		offset = prop.GetOffset() + (prop.GetElementSize() * prop.GetArrayDim());
+		offset = prop.GetOffset() + prop.GetElementSize() * prop.GetArrayDim();
 	}
 
 	if (offset < structObj.GetPropertySize())
@@ -550,7 +588,7 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 		const auto size = structObj.GetPropertySize() - offset;
 		if (size >= generator->GetGlobalMemberAlignment())
 		{
-			members.emplace_back(Member::Unknown(unknownDataCounter++, offset, size, "MISSED OFFSET"));
+			members.emplace_back(CreatePadding(unknownDataCounter++, offset, size, "MISSED OFFSET"));
 		}
 	}
 }

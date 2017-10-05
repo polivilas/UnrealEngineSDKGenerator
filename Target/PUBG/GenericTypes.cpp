@@ -323,13 +323,32 @@ UEClass UEDoubleProperty::StaticClass()
 //---------------------------------------------------------------------------
 //UEBoolProperty
 //---------------------------------------------------------------------------
-size_t UEBoolProperty::GetBitMask() const
+uint8_t UEBoolProperty::GetFieldSize() const
 {
-	return static_cast<UBoolProperty*>(object)->BitMask;
+	return static_cast<UBoolProperty*>(object)->FieldSize;
+}
+//---------------------------------------------------------------------------
+uint8_t UEBoolProperty::GetByteOffset() const
+{
+	return static_cast<UBoolProperty*>(object)->ByteOffset;
+}
+//---------------------------------------------------------------------------
+uint8_t UEBoolProperty::GetByteMask() const
+{
+	return static_cast<UBoolProperty*>(object)->ByteMask;
+}
+//---------------------------------------------------------------------------
+uint8_t UEBoolProperty::GetFieldMask() const
+{
+	return static_cast<UBoolProperty*>(object)->FieldMask;
 }
 //---------------------------------------------------------------------------
 UEProperty::Info UEBoolProperty::GetInfo() const
 {
+	if (IsNativeBool())
+	{
+		return Info::Create(PropertyType::Primitive, sizeof(bool), false, "bool");
+	}
 	return Info::Create(PropertyType::Primitive, sizeof(unsigned char), false, "unsigned char");
 }
 //---------------------------------------------------------------------------

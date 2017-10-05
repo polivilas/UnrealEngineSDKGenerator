@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 #include "Flags.hpp"
 #include "../IGenerator.hpp"
@@ -231,12 +232,23 @@ class UEBoolProperty : public UEProperty
 public:
 	using UEProperty::UEProperty;
 
+	bool IsNativeBool() const { return false; }
+
+	bool IsBitfield() const { return !IsNativeBool(); }
+
 	size_t GetBitMask() const;
+
+	std::array<int, 2> GetMissingBitsCount(const UEBoolProperty& other) const;
 
 	UEProperty::Info GetInfo() const;
 
 	static UEClass StaticClass();
 };
+
+inline bool operator<(const UEBoolProperty& lhs, const UEBoolProperty& rhs)
+{
+	return lhs.GetBitMask() < rhs.GetBitMask();
+}
 
 class UEObjectProperty : public UEProperty
 {

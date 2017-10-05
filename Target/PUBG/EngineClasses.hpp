@@ -327,7 +327,10 @@ public:
 class UBoolProperty : public UProperty
 {
 public:
-	unsigned long		BitMask;									// 0x0088 (0x04)
+	uint8_t FieldSize;
+	uint8_t ByteOffset;
+	uint8_t ByteMask;
+	uint8_t FieldMask;
 };
 
 class UObjectPropertyBase : public UProperty

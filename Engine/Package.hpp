@@ -142,17 +142,27 @@ private:
 		std::string FlagsString;
 
 		std::string Comment;
-
-		/// <summary>
-		/// Generates a padding member.
-		/// </summary>
-		/// <param name="id">The unique name identifier.</param>
-		/// <param name="offset">The offset.</param>
-		/// <param name="size">The size.</param>
-		/// <param name="reason">The reason.</param>
-		/// <returns>A padding member.</returns>
-		static Member Unknown(size_t id, size_t offset, size_t size, std::string reason);
 	};
+
+	/// <summary>
+	/// Generates a padding member.
+	/// </summary>
+	/// <param name="id">The unique name identifier.</param>
+	/// <param name="offset">The offset.</param>
+	/// <param name="size">The size.</param>
+	/// <param name="reason">The reason.</param>
+	/// <returns>A padding member.</returns>
+	static Member CreatePadding(size_t id, size_t offset, size_t size, std::string reason);
+
+	/// <summary>
+	/// Generates a padding member.
+	/// </summary>
+	/// <param name="id">The unique name identifier.</param>
+	/// <param name="offset">The offset.</param>
+	/// <param name="size">The size.</param>
+	/// <param name="reason">The reason.</param>
+	/// <returns>A padding member.</returns>
+	static Member CreateBitfieldPadding(size_t id, size_t offset, std::string type, size_t bits);
 
 	/// <summary>
 	/// Generates the members of a struct or class.

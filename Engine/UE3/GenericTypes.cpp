@@ -154,7 +154,52 @@ UEEnum UEEnumProperty::GetEnum() const
 //---------------------------------------------------------------------------
 UEClass UEEnumProperty::StaticClass()
 {
-	//Unreal Engine 1 doesn't have the EnumProperty class
+	//Unreal Engine 3 doesn't have the EnumProperty class
 	return nullptr;
+}
+//---------------------------------------------------------------------------
+//UEBoolProperty
+//---------------------------------------------------------------------------
+int GetBitPosition(uint32_t value)
+{
+	int i16 = !(value & 0xffff) << 4;
+	value >>= i16;
+
+	int i8 = !(value & 0xff) << 3;
+	value >>= i8;
+
+	int i4 = !(value & 0xf) << 2;
+	value >>= i4;
+
+	int i2 = !(value & 0x3) << 1;
+	value >>= i2;
+
+	int i1 = !(value & 0x1);
+
+	int i0 = (value >> i1) & 1 ? 0 : -32;
+
+	return i16 + i8 + i4 + i2 + i1 + i0;
+}
+//---------------------------------------------------------------------------
+std::array<int, 2> UEBoolProperty::GetMissingBitsCount(const UEBoolProperty& other) const
+{
+	// If there is no previous bitfield member, just calculate the missing bits.
+	if (!other.IsValid())
+	{
+		return { GetBitPosition(GetBitMask()), -1 };
+	}
+
+	// If both bitfield member belong to the same int, calculate the bit position difference.
+	if (GetOffset() == other.GetOffset())
+	{
+		return { GetBitPosition(GetBitMask()) - GetBitPosition(other.GetBitMask()) - 1, -1 };
+	}
+
+	// If they have different offsets, we need two distances
+	// |0000...1000|0010...0000|
+	// 1.      ^---^
+	// 2.          ^--^
+
+	return { std::numeric_limits<uint32_t>::digits - GetBitPosition(other.GetBitMask()) - 1, GetBitPosition(GetBitMask()) };
 }
 //---------------------------------------------------------------------------
