@@ -501,10 +501,7 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 			previousBitfieldProperty = UEBoolProperty();
 
 			const auto size = prop.GetOffset() - offset;
-			if (size >= generator->GetGlobalMemberAlignment())
-			{
-				members.emplace_back(CreatePadding(unknownDataCounter++, offset, size, "MISSED OFFSET"));
-			}
+			members.emplace_back(CreatePadding(unknownDataCounter++, offset, size, "MISSED OFFSET"));
 		}
 
 		const auto info = prop.GetInfo();
@@ -586,10 +583,7 @@ void Package::GenerateMembers(const UEStruct& structObj, size_t offset, const st
 	if (offset < structObj.GetPropertySize())
 	{
 		const auto size = structObj.GetPropertySize() - offset;
-		if (size >= generator->GetGlobalMemberAlignment())
-		{
-			members.emplace_back(CreatePadding(unknownDataCounter++, offset, size, "MISSED OFFSET"));
-		}
+		members.emplace_back(CreatePadding(unknownDataCounter++, offset, size, "MISSED OFFSET"));
 	}
 }
 
