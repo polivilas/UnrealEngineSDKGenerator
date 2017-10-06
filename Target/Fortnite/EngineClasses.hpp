@@ -171,7 +171,7 @@ class FLazyObjectPtr : public TPersistentObjectPtr<FUniqueObjectGuid>
 
 struct FScriptDelegate
 {
-	unsigned char UnknownData[0x10];
+	unsigned char UnknownData[16];
 };
 
 struct FScriptMulticastDelegate
