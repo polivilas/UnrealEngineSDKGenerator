@@ -27,28 +27,28 @@ struct TArray
 	friend struct FString;
 
 public:
-	inline TArray()
+	TArray()
 	{
 		Data = nullptr;
 		Count = Max = 0;
 	};
 
-	inline size_t Num() const
+	size_t Num() const
 	{
 		return Count;
 	};
 
-	inline T& operator[](size_t i)
+	T& operator[](size_t i)
 	{
 		return Data[i];
 	};
 
-	inline const T& operator[](size_t i) const
+	const T& operator[](size_t i) const
 	{
 		return Data[i];
 	};
 
-	inline bool IsValidIndex(size_t i) const
+	bool IsValidIndex(size_t i) const
 	{
 		return i < Num();
 	}
@@ -77,17 +77,17 @@ private:
 	void* InterfacePointer;
 
 public:
-	inline UObject* GetObject() const
+	UObject* GetObject() const
 	{
 		return ObjectPointer;
 	}
 
-	inline UObject*& GetObjectRef()
+	UObject*& GetObjectRef()
 	{
 		return ObjectPointer;
 	}
 
-	inline void* GetInterface() const
+	void* GetInterface() const
 	{
 		return ObjectPointer != nullptr ? InterfacePointer : nullptr;
 	}
@@ -97,17 +97,17 @@ template<class InterfaceType>
 class TScriptInterface : public FScriptInterface
 {
 public:
-	inline InterfaceType* operator->() const
+	InterfaceType* operator->() const
 	{
 		return (InterfaceType*)GetInterface();
 	}
 
-	inline InterfaceType& operator*() const
+	InterfaceType& operator*() const
 	{
 		return *((InterfaceType*)GetInterface());
 	}
 
-	inline operator bool() const
+	operator bool() const
 	{
 		return GetInterface() != nullptr;
 	}

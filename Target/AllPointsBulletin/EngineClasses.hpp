@@ -77,17 +77,17 @@ private:
 	void* InterfacePointer;
 
 public:
-	inline UObject* GetObject() const
+	UObject* GetObject() const
 	{
 		return ObjectPointer;
 	}
 
-	inline UObject*& GetObjectRef()
+	UObject*& GetObjectRef()
 	{
 		return ObjectPointer;
 	}
 
-	inline void* GetInterface() const
+	void* GetInterface() const
 	{
 		return ObjectPointer != nullptr ? InterfacePointer : nullptr;
 	}
@@ -97,17 +97,17 @@ template<class InterfaceType>
 class TScriptInterface : public FScriptInterface
 {
 public:
-	inline InterfaceType* operator->() const
+	InterfaceType* operator->() const
 	{
 		return (InterfaceType*)GetInterface();
 	}
 
-	inline InterfaceType& operator*() const
+	InterfaceType& operator*() const
 	{
 		return *((InterfaceType*)GetInterface());
 	}
 
-	inline operator bool() const
+	operator bool() const
 	{
 		return GetInterface() != nullptr;
 	}

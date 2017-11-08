@@ -5,7 +5,7 @@
 class Generator : public IGenerator
 {
 public:
-	virtual bool Initialize(void* module) override
+	bool Initialize(void* module) override
 	{
 		virtualFunctionPattern["Class Core.Object"] = {
 			{ "\x33\xF6\x89\x65\xF0\x89\x4D\xEC\x89\x75\xFC\x0F\x31", "xxxxxxxxxxxxx", 0x200, R"(	void ProcessEvent(class UFunction* function, void* parms)
@@ -142,30 +142,32 @@ public:
 		return true;
 	}
 
-	virtual std::string GetGameName() const override
+	std::string GetGameName() const override
 	{
 		return "Unreal 2";
 	}
-	virtual std::string GetGameNameShort() const override
+
+	std::string GetGameNameShort() const override
 	{
 		return "U2";
 	}
-	virtual std::string GetGameVersion() const override
+
+	std::string GetGameVersion() const override
 	{
 		return "2001";
 	}
 
-	virtual std::string GetNamespaceName() const override
+	std::string GetNamespaceName() const override
 	{
 		return "Classes";
 	}
 
-	virtual std::vector<std::string> GetIncludes() const override
+	std::vector<std::string> GetIncludes() const override
 	{
 		return { };
 	}
 
-	virtual std::string GetBasicDeclarations() const override
+	std::string GetBasicDeclarations() const override
 	{
 		return R"(template<typename Fn>
 inline Fn GetVFunction(const void *instance, std::size_t index)
@@ -387,7 +389,7 @@ struct FScriptDelegate
 };)";
 	}
 
-	virtual std::string GetBasicDefinitions() const override
+	std::string GetBasicDefinitions() const override
 	{
 		return R"(TArray<FNameEntry*>* FName::GNames = nullptr;
 TArray<UObject*>* UObject::GObjects = nullptr;)";

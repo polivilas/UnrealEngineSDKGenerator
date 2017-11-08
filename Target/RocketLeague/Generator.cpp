@@ -6,7 +6,7 @@ class Generator : public IGenerator
 {
 public:
 
-	virtual bool Initialize(void* module) override
+	bool Initialize(void* module) override
 	{
 		predefinedStaticMembers["Class Core.Object"] = {
 			{ "TArray<UObject*>*", "GObjects" }
@@ -158,30 +158,32 @@ public:
 		return true;
 	}
 
-	virtual std::string GetGameName() const override
+	std::string GetGameName() const override
 	{
 		return "Rocket League";
 	}
-	virtual std::string GetGameNameShort() const override
+
+	std::string GetGameNameShort() const override
 	{
 		return "RL";
 	}
-	virtual std::string GetGameVersion() const override
+
+	std::string GetGameVersion() const override
 	{
 		return "1.31";
 	}
 
-	virtual std::string GetNamespaceName() const override
+	std::string GetNamespaceName() const override
 	{
 		return "SDK";
 	}
 
-	virtual std::vector<std::string> GetIncludes() const override
+	std::vector<std::string> GetIncludes() const override
 	{
 		return { };
 	}
 
-	virtual std::string GetBasicDeclarations() const override
+	std::string GetBasicDeclarations() const override
 	{
 		return R"(template<typename Fn>
 inline Fn GetVFunction(const void *instance, std::size_t index)
@@ -484,7 +486,7 @@ struct FScriptDelegate
 };)";
 	}
 
-	virtual std::string GetBasicDefinitions() const override
+	std::string GetBasicDefinitions() const override
 	{
 		return R"(TArray<FNameEntry*>* FName::GNames = nullptr;
  TArray<UObject*>* UObject::GObjects = nullptr;)";

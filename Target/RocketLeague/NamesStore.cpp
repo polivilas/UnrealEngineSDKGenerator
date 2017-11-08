@@ -20,22 +20,22 @@ public:
 		wchar_t WideName[1024];
 	};
 
-	inline const int32_t GetIndex() const
+	const int32_t GetIndex() const
 	{
 		return Index >> NAME_INDEX_SHIFT;
 	}
 
-	inline bool IsWide() const
+	bool IsWide() const
 	{
 		return Index & NAME_WIDE_MASK;
 	}
 
-	inline const char* GetAnsiName() const
+	const char* GetAnsiName() const
 	{
 		return AnsiName;
 	}
 
-	inline const wchar_t* GetWideName() const
+	const wchar_t* GetWideName() const
 	{
 		return WideName;
 	}

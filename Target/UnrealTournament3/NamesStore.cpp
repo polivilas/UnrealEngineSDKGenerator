@@ -12,12 +12,12 @@ public:
 	char UnknownData00[0x0C];
 	wchar_t WideName[1024];
 
-	inline int32_t GetIndex() const
+	int32_t GetIndex() const
 	{
 		return Index;
 	}
 
-	inline const wchar_t* GetWideName() const
+	const wchar_t* GetWideName() const
 	{
 		return WideName;
 	}
