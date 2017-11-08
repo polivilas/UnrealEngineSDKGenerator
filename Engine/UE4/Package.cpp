@@ -2,14 +2,14 @@
 
 bool Package::Method::Parameter::MakeType(UEPropertyFlags flags, Type& type)
 {
-	if (flags & UEPropertyFlags::CPF_ReturnParm)
+	if (flags & UEPropertyFlags::ReturnParm)
 	{
 		type = Type::Return;
 	}
-	else if (flags & UEPropertyFlags::CPF_OutParm)
+	else if (flags & UEPropertyFlags::OutParm)
 	{
 		//if it is a const parameter make it a default parameter
-		if (flags & UEPropertyFlags::CPF_ConstParm)
+		if (flags & UEPropertyFlags::ConstParm)
 		{
 			type = Type::Default;
 		}
@@ -18,7 +18,7 @@ bool Package::Method::Parameter::MakeType(UEPropertyFlags flags, Type& type)
 			type = Type::Out;
 		}
 	}
-	else if (flags & UEPropertyFlags::CPF_Parm)
+	else if (flags & UEPropertyFlags::Parm)
 	{
 		type = Type::Default;
 	}

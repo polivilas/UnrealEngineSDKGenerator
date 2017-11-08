@@ -611,8 +611,8 @@ void Package::GenerateMethods(const UEClass& classObj, std::vector<Method>& meth
 			}
 			uniqueMethods.insert(m.FullName);
 
-			m.IsNative = function.GetFunctionFlags() & UEFunctionFlags::FUNC_Native;
-			m.IsStatic = function.GetFunctionFlags() & UEFunctionFlags::FUNC_Static;
+			m.IsNative = function.GetFunctionFlags() & UEFunctionFlags::Native;
+			m.IsStatic = function.GetFunctionFlags() & UEFunctionFlags::Static;
 			m.FlagsString = StringifyFlags(function.GetFunctionFlags());
 
 			std::vector<std::pair<UEProperty, Method::Parameter>> parameters;
@@ -1064,7 +1064,7 @@ std::string Package::BuildMethodBody(const Class& c, const Method& m) const
 	ss << "\tauto flags = fn->FunctionFlags;\n";
 	if (m.IsNative)
 	{
-		ss << "\tfn->FunctionFlags |= 0x" << tfm::format("%X", static_cast<std::underlying_type_t<UEFunctionFlags>>(UEFunctionFlags::FUNC_Native)) << ";\n";
+		ss << "\tfn->FunctionFlags |= 0x" << tfm::format("%X", static_cast<std::underlying_type_t<UEFunctionFlags>>(UEFunctionFlags::Native)) << ";\n";
 	}
 
 	ss << "\n";
