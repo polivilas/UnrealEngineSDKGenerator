@@ -221,7 +221,7 @@ public:
 	int32_t Flags;
 	int32_t SerialNumber;
 
-	enum class EInternalObjectFlags : int32_t
+	enum class ObjectFlags : int32_t
 	{
 		None = 0,
 		Native = 1 << 25,
@@ -235,11 +235,11 @@ public:
 
 	inline bool IsUnreachable() const
 	{
-		return !!(Flags & static_cast<std::underlying_type_t<EInternalObjectFlags>>(EInternalObjectFlags::Unreachable));
+		return !!(Flags & static_cast<std::underlying_type_t<ObjectFlags>>(ObjectFlags::Unreachable));
 	}
 	inline bool IsPendingKill() const
 	{
-		return !!(Flags & static_cast<std::underlying_type_t<EInternalObjectFlags>>(EInternalObjectFlags::PendingKill));
+		return !!(Flags & static_cast<std::underlying_type_t<ObjectFlags>>(ObjectFlags::PendingKill));
 	}
 };
 
@@ -418,7 +418,6 @@ struct FName
 			int32_t Number;
 		};
 
-		// DO NOT REMOVE: needed for memory alignment! biggest member is now uint64_t
 		uint64_t CompositeComparisonValue;
 	};
 

@@ -4,7 +4,8 @@
 #include <vector>
 #include <array>
 
-#include "UnrealFlags.hpp"
+#include "PropertyFlags.hpp"
+#include "FunctionFlags.hpp"
 #include "../IGenerator.hpp"
 
 class UObject;

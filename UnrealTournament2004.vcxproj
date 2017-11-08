@@ -91,7 +91,8 @@
     <ClCompile Include="Engine\UE2\GenericTypes.cpp" />
     <ClCompile Include="Engine\NamesStore.cpp" />
     <ClCompile Include="Engine\ObjectsStore.cpp" />
-    <ClCompile Include="Engine\UE2\UnrealUnrealFlags.cpp" />
+    <ClCompile Include="Engine\UE2\PropertyFlags.cpp" />
+    <ClCompile Include="Engine\UE2\FunctionFlags.cpp" />
     <ClCompile Include="Engine\UE2\Package.cpp" />
     <ClCompile Include="Target\UnrealTournament2004\Generator.cpp" />
     <ClCompile Include="Target\UnrealTournament2004\GenericTypes.cpp" />
@@ -110,7 +111,8 @@
     <ClInclude Include="Engine\UE2\GenericTypes.hpp" />
     <ClInclude Include="Engine\NamesStore.hpp" />
     <ClInclude Include="Engine\ObjectsStore.hpp" />
-    <ClInclude Include="Engine\UE2\UnrealUnrealFlags.hpp" />
+    <ClInclude Include="Engine\UE2\PropertyFlags.hpp" />
+    <ClInclude Include="Engine\UE2\FunctionFlags.hpp" />
     <ClInclude Include="Target\UnrealTournament2004\EngineClasses.hpp" />
     <ClInclude Include="Engine\Logger.hpp" />
     <ClInclude Include="Engine\NameValidator.hpp" />

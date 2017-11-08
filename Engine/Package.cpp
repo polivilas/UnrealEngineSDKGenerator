@@ -10,7 +10,8 @@
 #include "NameValidator.hpp"
 #include "PatternFinder.hpp"
 #include "ObjectsStore.hpp"
-#include "UnrealFlags.hpp"
+#include "PropertyFlags.hpp"
+#include "FunctionFlags.hpp"
 #include "PrintHelper.hpp"
 
 std::unordered_map<UEObject, const Package*> Package::PackageMap;

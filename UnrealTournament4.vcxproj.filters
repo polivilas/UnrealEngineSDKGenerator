@@ -36,7 +36,10 @@
     <ClCompile Include="Engine\UE4\GenericTypes.cpp">
       <Filter>Engine\UE4</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UE4\UnrealFlags.cpp">
+    <ClCompile Include="Engine\UE4\PropertyFlags.cpp">
+      <Filter>Engine\UE4</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UE4\FunctionFlags.cpp">
       <Filter>Engine\UE4</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PrintHelper.cpp">
@@ -75,7 +78,10 @@
     <ClInclude Include="Engine\NameValidator.hpp">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UE4\UnrealFlags.hpp">
+    <ClInclude Include="Engine\UE4\PropertyFlags.hpp">
+      <Filter>Engine\UE4</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UE4\FunctionFlags.hpp">
       <Filter>Engine\UE4</Filter>
     </ClInclude>
     <ClInclude Include="Engine\cpplinq.hpp">

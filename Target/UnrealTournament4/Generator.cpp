@@ -406,7 +406,6 @@ struct FName
 			int32_t Number;
 		};
 
-		// DO NOT REMOVE: needed for memory alignment! biggest member is now uint64_t
 		uint64_t CompositeComparisonValue;
 	};
 

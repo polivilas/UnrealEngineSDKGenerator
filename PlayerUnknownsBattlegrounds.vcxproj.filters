@@ -39,7 +39,10 @@
     <ClCompile Include="Engine\PrintHelper.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UE4\UnrealUnrealFlags.cpp">
+    <ClCompile Include="Engine\UE4\PropertyFlags.cpp">
+      <Filter>Engine\UE4</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UE4\FunctionFlags.cpp">
       <Filter>Engine\UE4</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,7 +90,10 @@
     <ClInclude Include="Engine\PrintHelper.hpp">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UE4\UnrealUnrealFlags.hpp">
+    <ClInclude Include="Engine\UE4\PropertyFlags.hpp">
+      <Filter>Engine\UE4</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UE4\FunctionFlags.hpp">
       <Filter>Engine\UE4</Filter>
     </ClInclude>
   </ItemGroup>
