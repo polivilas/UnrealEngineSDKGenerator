@@ -16,14 +16,6 @@ public:
 			{ "ScriptStruct Engine.RootMotionSourceGroup", 8 }
 		};
 
-		/*overrideTypes = {
-			{ "struct FVector", "class Vector3D" },
-			{ "struct FVector_NetQuantize", "class Vector3D" },
-			{ "struct FVector_NetQuantizeNormal", "class Vector3D" },
-			{ "struct FVector2D", "class Vector2D" },
-			{ "struct FRotator", "class Rotator" }
-		};*/
-
 		virtualFunctionPattern["Class CoreUObject.Object"] = {
 			{ "\x45\x33\xF6\x3B\x05\x00\x00\x00\x00\x4D\x8B\xE0", "xxxxx????xxx", 0x200, R"(	inline void ProcessEvent(class UFunction* function, void* parms)
 	{
@@ -207,11 +199,7 @@ public:
 
 	virtual std::vector<std::string> GetIncludes() const override
 	{
-		return {
-			/*R"("../../Math/Vector3D.hpp")",
-			R"("../../Math/Vector2D.hpp")",
-			R"("../../Math/Rotator.hpp")"*/
-		};
+		return { };
 	}
 
 	virtual std::string GetBasicDeclarations() const override

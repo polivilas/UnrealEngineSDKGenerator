@@ -8,8 +8,6 @@ public:
 
 	virtual bool Initialize(void* module) override
 	{
-		overrideTypes = {};
-
 		predefinedStaticMembers["Class Core.Object"] = {
 			{ "TArray<UObject*>*", "GObjects" }
 		};
@@ -180,9 +178,7 @@ public:
 
 	virtual std::vector<std::string> GetIncludes() const override
 	{
-		return {
-
-		};
+		return { };
 	}
 
 	virtual std::string GetBasicDeclarations() const override

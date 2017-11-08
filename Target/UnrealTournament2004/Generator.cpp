@@ -7,11 +7,6 @@ class Generator : public IGenerator
 public:
 	virtual bool Initialize(void* module) override
 	{
-		overrideTypes = {
-			{ "struct FVector", "class Vector3D" },
-			{ "struct FVector2D", "class Vector2D" }
-		};
-
 		virtualFunctionPattern["Class Core.Object"] = {
 			{ "\xA1\x00\x00\x00\x00\x85\xC0\x53\x56\x57\x8B", "x????xxxxxx", 0x200, R"(	inline void ProcessEvent(class UFunction* function, void* parms)
 	{
@@ -168,10 +163,7 @@ public:
 
 	virtual std::vector<std::string> GetIncludes() const override
 	{
-		return {
-			R"("../../Math/Vector3D.hpp")",
-			R"("../../Math/Vector2D.hpp")"
-		};
+		return { };
 	}
 
 	virtual std::string GetBasicDeclarations() const override
