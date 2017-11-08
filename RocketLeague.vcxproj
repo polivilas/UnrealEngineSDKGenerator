@@ -91,7 +91,7 @@
     <ClCompile Include="Engine\UE3\GenericTypes.cpp" />
     <ClCompile Include="Engine\NamesStore.cpp" />
     <ClCompile Include="Engine\ObjectsStore.cpp" />
-    <ClCompile Include="Engine\UE3\Flags.cpp" />
+    <ClCompile Include="Engine\UE3\UnrealFlags.cpp" />
     <ClCompile Include="Engine\UE3\Package.cpp" />
     <ClCompile Include="Target\RocketLeague\Generator.cpp" />
     <ClCompile Include="Target\RocketLeague\GenericTypes.cpp" />
@@ -110,7 +110,7 @@
     <ClInclude Include="Engine\UE3\GenericTypes.hpp" />
     <ClInclude Include="Engine\NamesStore.hpp" />
     <ClInclude Include="Engine\ObjectsStore.hpp" />
-    <ClInclude Include="Engine\UE3\Flags.hpp" />
+    <ClInclude Include="Engine\UE3\UnrealFlags.hpp" />
     <ClInclude Include="Target\RocketLeague\EngineClasses.hpp" />
     <ClInclude Include="Engine\Logger.hpp" />
     <ClInclude Include="Engine\NameValidator.hpp" />

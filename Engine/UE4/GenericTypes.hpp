@@ -4,7 +4,7 @@
 #include <vector>
 #include <array>
 
-#include "Flags.hpp"
+#include "UnrealFlags.hpp"
 #include "../IGenerator.hpp"
 
 class UObject;

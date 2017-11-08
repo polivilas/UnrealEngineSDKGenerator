@@ -36,7 +36,7 @@
     <ClCompile Include="Engine\UE2\GenericTypes.cpp">
       <Filter>Engine\UE2</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UE2\Flags.cpp">
+    <ClCompile Include="Engine\UE2\UnrealFlags.cpp">
       <Filter>Engine\UE2</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PrintHelper.cpp">
@@ -75,7 +75,7 @@
     <ClInclude Include="Engine\NameValidator.hpp">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UE2\Flags.hpp">
+    <ClInclude Include="Engine\UE2\UnrealFlags.hpp">
       <Filter>Engine\UE2</Filter>
     </ClInclude>
     <ClInclude Include="Engine\cpplinq.hpp">
